@@ -1,0 +1,15 @@
+Package: DataTriangulationStream2
+Title: Nigeria RI/VPDs Data Triangulation Dashboard
+Version: 0.0.0.9000
+Authors@R: person('AFENET', 'GEEKS', email = 'afenetgeeks@gmail.com', role = c('cre', 'aut'))
+Description: The Nigeria Routine Immunization (RI) & Vaccine Preventable Diseases Surveillance (VPDs) Data Triangulation Dashboard visualizes selected indicators across RI & VPDs programme.
+  The dashboard developed on R Shiny technology will be integrated with the country's DHIS2 national instance, Surveillance Outbreak Response Management and Analysis System (SORMAS), and the Multi-Source Data Analytics and Triangulation (MSDAT) Platform
+  The dashboard provides access to timely information required for decision making at the national and sub-national levels.
+License: MIT + file LICENSE
+Imports: 
+    config (>= 0.3.1),
+    golem (>= 0.3.1.9010),
+    shiny (>= 1.7.1)
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.1.1

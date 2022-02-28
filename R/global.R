@@ -51,13 +51,6 @@ global <- quote({
   #hrbrthemes::import_roboto_condensed()
 
 
-  # stream2_con <- dbConnect(RMariaDB::MariaDB(),
-  #                          username = "Bilikisu",
-  #                          password = "bilikisuafenet2021.",
-  #                          host     = "data-traingulation-db-cluster-instance-1.cyrpttqljrmg.us-east-1.rds.amazonaws.com",
-  #                          port     = 3306,
-  #                          dbname   = "stream2")
-
 
   dw <- config::get(file = "./inst/app/www/config.yml", "development_stream2")
 

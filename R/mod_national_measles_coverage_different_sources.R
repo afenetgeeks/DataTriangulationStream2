@@ -1,4 +1,4 @@
-#' single_plot_row UI Function
+#' national_measles_coverage_different_sources UI Function
 #'
 #' @description A shiny Module.
 #'
@@ -7,8 +7,7 @@
 #' @noRd
 #'
 #' @importFrom shiny NS tagList
-#' @import shinyMobile
-mod_single_plot_row_ui <- function(id, chart_title = "Chart"){
+mod_national_measles_coverage_different_sources_ui <- function(id){
   ns <- NS(id)
   tagList(
 
@@ -19,7 +18,7 @@ mod_single_plot_row_ui <- function(id, chart_title = "Chart"){
           hover = TRUE,
           f7Card(
             title = NULL,
-            splitLayout(h4(chart_title, align = "center"),
+            splitLayout(h4("Chart 1: National Measles Coverage (%) by different sources, Nigeria (National)", align = "center"),
                         f7DownloadButton(ns("download_ch1Data"), label = NULL),
                         cellWidths = c("95%", "5%")),
             withSpinner(plotlyOutput(ns("slide1")),type = 6, size = 0.3,hide.ui = F)
@@ -31,10 +30,12 @@ mod_single_plot_row_ui <- function(id, chart_title = "Chart"){
   )
 }
 
-#' single_plot_row Server Functions
+#' national_measles_coverage_different_sources Server Functions
 #'
 #' @noRd
-mod_single_plot_row_server <- function(id){
+mod_national_measles_coverage_different_sources_server <- function(id){
+
+
   moduleServer( id, function(input, output, session, picker_year_var, picker_month_var, picker_state_var){
     ns <- session$ns
 
@@ -180,12 +181,11 @@ mod_single_plot_row_server <- function(id){
       }
     )
 
-
   })
 }
 
 ## To be copied in the UI
-# mod_single_plot_row_ui("single_plot_row_1")
+# mod_national_measles_coverage_different_sources_ui("national_measles_coverage_different_sources_1")
 
 ## To be copied in the server
-# mod_single_plot_row_server("single_plot_row_1")
+# mod_national_measles_coverage_different_sources_server("national_measles_coverage_different_sources_1")

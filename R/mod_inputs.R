@@ -38,22 +38,34 @@ mod_inputs_ui <- function(id){
 #' @noRd
 mod_inputs_server <- function(id){
 
-  moduleServer( id, function(input, output, session){
+  moduleServer(id, function(input, output, session){
+
     ns <- session$ns
 
-    stream2_data <- reactiveValues()
-
-
-    dropdown_inputs <-  reactiveValues()
+   dropdown_inputs <-  reactiveValues()
 
     observeEvent(input$apply >=0,{
 
       dropdown_inputs$picker_year_var   <- input$picker_year
       dropdown_inputs$picker_month_var  <- input$picker_month
       dropdown_inputs$picker_state_var  <- input$picker_state
+
     })
 
-return(dropdown_inputs)
+    return(dropdown_inputs)
+
+# return(
+#   list(
+#   picker_year_var <- eventReactive(input$apply >=0,{
+#     input$picker_year
+#   }),
+#
+#   picker_month_var <- eventReactive(input$apply >=0,
+#                                     {input$picker_month}),
+#
+#   picker_state_var <- eventReactive(input$apply >=0,{
+#     input$picker_state})
+# ))
 
   })
 }

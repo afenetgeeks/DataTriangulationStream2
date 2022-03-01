@@ -62,7 +62,7 @@ mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_server <- function(id,
 
     else{stream2_data$sormas_mvc <- sm_plus_lga_latlon_cleaned %>%
       filter(Year == picker_year_var()&
-               `Responsible state` == picker_state_var())}
+               State == picker_state_var())}
     })
 
 
@@ -85,7 +85,7 @@ mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_server <- function(id,
     #
     # else{reactive({sormas_mvc}) <- reactive({sm_plus_lga_latlon_cleaned %>%
     #   filter(Year == picker_year_var()&
-    #            `Responsible state` == picker_state_var())})
+    #            State == picker_state_var())})
     #   }
 
 

@@ -21,7 +21,11 @@ app_ui <- function(request) {
       f7SingleLayout(
         navbar = NULL,
 
+       mod_dashboard_heading_ui("dashboard_heading_1"),
+
       mod_inputs_ui("inputs_1"),
+
+      f7Row(tags$i(style="color:#0e7290;font-size:10px","Hover over a chart to display the chart download button on the top right corner of that chart")),
 
       mod_national_measles_coverage_different_sources_ui("national_measles_coverage_different_sources_1"),
 
@@ -40,6 +44,10 @@ app_ui <- function(request) {
       f7Row(
         mod_mcv1_mcv2_drop_out_rate_ui("mcv1_mcv2_drop_out_rate_1"),
         mod_discrepancy_mcv1_yellow_fever_given_by_state_ui("discrepancy_mcv1_yellow_fever_given_by_state_1")
+      ),
+
+      f7Row(
+        mod_inputs_ui("inputs_maps")
       ),
 
       f7Row(

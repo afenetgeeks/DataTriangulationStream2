@@ -64,7 +64,7 @@ mod_map_confirmed_yellow_fever_cases_yellow_fever_coverage_annual_data_server <-
           filter(Year == picker_year_var())}
       else{stream2_data$sormas_yfc <- syf_plus_lga_latlon_cleaned %>%
         filter(Year == picker_year_var() &
-                 `Responsible state` == picker_state_var())}
+                 State == picker_state_var())}
 
     })
 

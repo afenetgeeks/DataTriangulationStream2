@@ -153,25 +153,22 @@ s10_combined <- tbl(stream2_pool, "s10_combined")%>%collect()%>%
 
   # Map 11 MVC
   mvc_gadm_data <- tbl(stream2_pool, "measles_coverage_s11_states")%>%collect() %>%
-    mutate(State = str_replace(string = State, pattern = "Nasarawa",replacement = "Nassarawa")) %>%
-    mutate(State = str_replace(string = State, pattern = "FCT",replacement = "Federal Capital Territory"),
-           across(c(Year,State,`Coverage %`), as.factor))
+           mutate(across(c(Year,State,`Coverage %`), as.factor))
+
   # mvc_gadm_data <- tbl(stream2_pool, "mvc_gadm_data")%>%collect()
   #mvc_gadm_data <- read_rds("www/data/rds/mvc_gadm_data.rds")
 
   #sormas_measles_cases <- tbl(stream2_pool, "sormas_measles_cases")%>%collect()%>%
 
   sm_plus_lga_latlon_cleaned <- tbl(stream2_pool, "sormas_measles_geocodes")%>%collect() %>%
-    mutate(across(c(Year,`Responsible state`, `Responsible LGA`), as.factor))
+    mutate(across(c(Year,State, LGA), as.factor))
   #sormas_measles_cases <- read_rds("www/data/rds/sormas_measles_cases.rds")
 
   #gadm_data_mvc <- read_rds("www/gadm36_NGA_1_sp.rds")
 
   # Map 12 YF
   yfc_gadm_data <- tbl(stream2_pool, "yf_coverage_s12_states")%>% collect()%>%
-    mutate(State = str_replace(string = State, pattern = "Nasarawa",replacement = "Nassarawa")) %>%
-    mutate(State = str_replace(string = State, pattern = "FCT",replacement = "Federal Capital Territory"),
-           across(c(Year,State,`Coverage %`), as.factor))
+    mutate(across(c(Year,State,`Coverage %`), as.factor))
 
 
   #yfc_gadm_data <- tbl(stream2_pool, "yfc_gadm_data")%>%collect()
@@ -181,7 +178,7 @@ s10_combined <- tbl(stream2_pool, "s10_combined")%>%collect()%>%
   #sormas_yf_cases <- read_rds("www/data/rds/sormas_yf_cases.rds")
   #sormas_yf_cases <- tbl(stream2_pool, "sormas_yf_cases")%>%collect()%>%
   syf_plus_lga_latlon_cleaned <- tbl(stream2_pool, "sormas_yf_geocodes")%>%collect()%>%
-    mutate(across(c(Year,`Responsible state`, `Responsible LGA`), as.factor))
+    mutate(across(c(Year,State, LGA), as.factor))
 
   #gadm_data_yfc <- read_rds("www/gadm36_NGA_1_sp.rds")
 
@@ -199,8 +196,8 @@ s10_combined <- tbl(stream2_pool, "s10_combined")%>%collect()%>%
 
   ## Creating  add_state_clusters function to create clusters at state level.
 
-  responsible_states_measles <- levels(sm_plus_lga_latlon_cleaned$`Responsible state`)
-  responsible_states_yf <- levels(syf_plus_lga_latlon_cleaned$`Responsible state`)
+  responsible_states_measles <- levels(sm_plus_lga_latlon_cleaned$State)
+  responsible_states_yf <- levels(syf_plus_lga_latlon_cleaned$State)
 
 
   add_state_clusters <- function(leaflet_map, data, states){
@@ -208,7 +205,7 @@ s10_combined <- tbl(stream2_pool, "s10_combined")%>%collect()%>%
     for(state in states){
 
       leaflet_map <- leaflet_map %>%
-        addMarkers(data = filter(data ,`Responsible state` == state),
+        addMarkers(data = filter(data ,State == state),
                    lat = ~Lat,
                    lng = ~Long,
                    clusterOptions = markerClusterOptions(maxClusterRadius = 200,

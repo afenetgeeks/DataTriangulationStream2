@@ -52,13 +52,15 @@ app_server <- function( input, output, session ) {
                                                           picker_month_var = reactive({dropdown_inputs$picker_month_var}),
                                                           picker_state_var = reactive({dropdown_inputs$picker_state_var}))
 
+  dropdown_inputs_maps <- mod_inputs_server("inputs_maps")
+
   mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_server("map_confirmed_measles_cases_mcv1_coverage_annual_data_1",
-                                                                   picker_year_var = reactive({dropdown_inputs$picker_year_var}),
-                                                                   picker_month_var = reactive({dropdown_inputs$picker_month_var}),
-                                                                   picker_state_var = reactive({dropdown_inputs$picker_state_var}))
+                                                                   picker_year_var = reactive({dropdown_inputs_maps$picker_year_var}),
+                                                                   picker_month_var = reactive({dropdown_inputs_maps$picker_month_var}),
+                                                                   picker_state_var = reactive({dropdown_inputs_maps$picker_state_var}))
 
   mod_map_confirmed_yellow_fever_cases_yellow_fever_coverage_annual_data_server("map_confirmed_yellow_fever_cases_yellow_fever_coverage_annual_data_1",
-                                                                                picker_year_var = reactive({dropdown_inputs$picker_year_var}),
-                                                                                picker_month_var = reactive({dropdown_inputs$picker_month_var}),
-                                                                                picker_state_var = reactive({dropdown_inputs$picker_state_var}))
+                                                                                picker_year_var = reactive({dropdown_inputs_maps$picker_year_var}),
+                                                                                picker_month_var = reactive({dropdown_inputs_maps$picker_month_var}),
+                                                                                picker_state_var = reactive({dropdown_inputs_maps$picker_state_var}))
 }

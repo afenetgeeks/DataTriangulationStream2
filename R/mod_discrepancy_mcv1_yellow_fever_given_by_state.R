@@ -1,12 +1,13 @@
 #' discrepancy_mcv1_yellow_fever_given_by_state UI Function
 #'
-#' @description A shiny Module.
+#' @description A shiny Module slide 10
 #'
 #' @param id,input,output,session Internal parameters for {shiny}.
 #'
 #' @noRd
 #'
 #' @importFrom shiny NS tagList
+#' @importFrom shinyMobile  f7Col  f7Shadow  f7DownloadButton
 mod_discrepancy_mcv1_yellow_fever_given_by_state_ui <- function(id){
   ns <- NS(id)
   tagList(
@@ -17,10 +18,10 @@ mod_discrepancy_mcv1_yellow_fever_given_by_state_ui <- function(id){
         hover = TRUE,
         f7Card(
           title = NULL,
-          splitLayout(h4("Chart 10: Discrepancy (MCV1 & Yellow Fever given)  by State",align = "center"),
-                      f7DownloadButton(ns("download_ch10Data"),label = NULL),
+          splitLayout(h4("Chart 9: Discrepancy (MCV1 & Yellow Fever given)  by State",align = "center"),
+                      f7DownloadButton(ns("download_chart_data"),label = NULL),
                       cellWidths = c("95%", "5%")),
-          withSpinner(plotlyOutput(ns("slide10")),type = 6, size = 0.3,hide.ui = F))
+          withSpinner(plotlyOutput(ns("plot")),type = 6, size = 0.3,hide.ui = F))
       )
     )
 
@@ -35,14 +36,14 @@ mod_discrepancy_mcv1_yellow_fever_given_by_state_server <- function(id, picker_y
 
     ns <- session$ns
 
-    # slide 10 ------
-    slide10_data <- reactive({s10_combined %>%
-      filter(Year == picker_year_var())})
+    chart_data <- reactive({s10_combined %>%
+      filter(Year %in% picker_year_var() &
+               Months %in% picker_month_var())})
 
 
-    output$slide10 <- renderPlotly({
+    output$plot <- renderPlotly({
 
-      plotM <- plot_ly(data = slide10_data() %>%
+      plotM <- plot_ly(data = chart_data() %>%
                          dplyr::mutate(State = fct_reorder(State,`Measles 1 given`, .desc = TRUE)) )
 
       plotM <- plotM %>% add_trace(x = ~State,
@@ -88,7 +89,9 @@ mod_discrepancy_mcv1_yellow_fever_given_by_state_server <- function(id, picker_y
 
                                 yaxis = list(side = 'left', title = 'Number of Doses.',rangemode="tozero",showline = TRUE, showgrid = FALSE, zeroline = T, ticks = "outside",
                                              title = font_axis_title, tickfont = font),
-                                yaxis2 = list(range = c(0, 100),side = 'right', overlaying = "y", title = 'Rate (%)',showgrid = FALSE,ticks = "outside",
+                                yaxis2 = list(#range = c(0, 100),
+                                              rangemode="tozero",
+                                              side = 'right', overlaying = "y", title = 'Rate (%)',showgrid = FALSE,ticks = "outside",
                                               zeroline = FALSE,showline = TRUE, title = font_axis_title, tickfont = font),
 
 
@@ -98,17 +101,17 @@ mod_discrepancy_mcv1_yellow_fever_given_by_state_server <- function(id, picker_y
                                 hoverlabel = list(font = font2),
                                 font = font)%>%
         config(modeBarButtons = list(list("toImage", "resetScale2d", "zoomIn2d", "zoomOut2d")),
-               displaylogo = FALSE, toImageButtonOptions = list(filename = "Chart 10- Discrepancy (MCV1 & Yellow Fever given)  by State.png"))
+               displaylogo = FALSE, toImageButtonOptions = list(filename = "Chart 9- Discrepancy (MCV1 & Yellow Fever given)  by State.png"))
 
       plotM
 
     })
 
 
-    output$download_ch10Data <- downloadHandler(
-      filename = "Chart 10- Discrepancy (MCV1 & Yellow Fever given)  by State.csv",
+    output$download_chart_data <- downloadHandler(
+      filename = "Chart 9- Discrepancy (MCV1 & Yellow Fever given)  by State.csv",
       content = function(file) {
-        readr::write_csv(slide10_data(), file)
+        readr::write_csv(chart_data(), file)
       }
     )
 

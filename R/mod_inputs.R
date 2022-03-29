@@ -10,15 +10,15 @@
 #'
 #'@import shinyMobile
 #'
-mod_inputs_ui <- function(id){
+mod_inputs_ui <- function(id, multiple_year = FALSE,  multiple_state = FALSE){
   ns <- NS(id)
 
   tagList(
 
     f7Row( f7Col(),f7Col(f7SmartSelect(ns("picker_month"),label = "Months", choices = c("Jan", "Feb", "Mar", "Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec"),
                                        selected = c("Jan", "Feb", "Mar", "Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec"),searchbar =F,multiple = T,openIn = "popover")),
-           f7Col(f7SmartSelect(ns("picker_year"),label = "Year",choices = c("2017", "2018", "2019", "2020", "2021", "2022"),selected = "2021",searchbar =F,multiple = F,openIn = "popover")),
-           f7Col(f7SmartSelect(ns("picker_state"),label = "State", choices = c(national,sort(states_vec)), selected = "Federal Government",searchbar =F,multiple = F,openIn = "popover")),
+           f7Col(f7SmartSelect(ns("picker_year"),label = "Year",choices = c("2017", "2018", "2019", "2020", "2021", "2022"), selected = "2021",searchbar = F,multiple =  multiple_year,openIn = "popover")),
+           f7Col(f7SmartSelect(ns("picker_state"),label = "State", choices = c(national,sort(states_vec)), selected = "Federal Government",searchbar =F,multiple = multiple_state,openIn = "popover")),
            f7Col(tags$div(style = "margin: 34px 3px 5px 6px;",f7Button(inputId = ns("apply"), label = "Update",size = "large", fill = T,shadow = T)))
     )
 

@@ -1,6 +1,6 @@
 #' yellow_fever_vaccine_stock_analysis_yellow_fever_coverage UI Function
 #'
-#' @description A shiny Module.
+#' @description A shiny Module. slide 7 ------
 #'
 #' @param id,input,output,session Internal parameters for {shiny}.
 #'
@@ -17,10 +17,10 @@ mod_yellow_fever_vaccine_stock_analysis_yellow_fever_coverage_ui <- function(id)
         hover = TRUE,
         f7Card(
           title = NULL,
-          splitLayout(h4("Chart 7: Yellow Fever Vaccine Stock Analysis & Yellow Fever Coverage",align = "center"),
-                      f7DownloadButton(ns("download_ch7Data"),label = NULL),
+          splitLayout(h4("Chart 6: Yellow Fever Vaccine Stock Analysis & Yellow Fever Coverage",align = "center"),
+                      f7DownloadButton(ns("download_chart_data"),label = NULL),
                       cellWidths = c("95%", "5%")),
-          withSpinner(plotlyOutput(ns("slide7")),type = 6, size = 0.3,hide.ui = F),
+          withSpinner(plotlyOutput(ns("plot")),type = 6, size = 0.3,hide.ui = F),
         ))
     )
   )
@@ -34,17 +34,17 @@ mod_yellow_fever_vaccine_stock_analysis_yellow_fever_coverage_server <- function
     ns <- session$ns
 
 
-    # slide 7 ------
-    slide7_data_combined <- reactive({s7_combined %>%
+
+    chart_data <- reactive({s7_combined %>%
       dplyr::filter(Year == picker_year_var() &
                       Month %in% picker_month_var() &
                       State == picker_state_var()) %>%
       mutate(Months = lubridate::month(as.Date(str_c(Year, Months, 01,sep = "-"), "%Y-%b-%d"))) %>%
       tibble() %>% arrange(Months)})
 
-    output$slide7 <- renderPlotly({
+    output$plot <- renderPlotly({
 
-      plotYF <- plot_ly(data = slide7_data_combined())
+      plotYF <- plot_ly(data = chart_data())
 
       plotYF <- plotYF %>% add_trace(x = ~Months, y = ~`Yellow Fever Coverage`,
                                      type = 'bar',
@@ -107,7 +107,9 @@ mod_yellow_fever_vaccine_stock_analysis_yellow_fever_coverage_server <- function
                                    plot_bgcolor = "rgba(0, 0, 0, 0)",
                                    paper_bgcolor = 'rgba(0, 0, 0, 0)',
 
-                                   yaxis = list(side = 'right',range = c(0, 100), title = 'Coverage (%)',showline = TRUE, showgrid = FALSE, zeroline = T, ticks = "outside",
+                                   yaxis = list(side = 'right',
+                                                #range = c(0, 100),
+                                                title = 'Coverage (%)',showline = TRUE, showgrid = FALSE, zeroline = T, ticks = "outside",
                                                 title = font_axis_title, tickfont = font),
                                    yaxis2 = list(side = 'left', rangemode="tozero", overlaying = "y", title = 'Number',showgrid = FALSE,ticks = "outside",
                                                  zeroline = FALSE,showline = TRUE, title = font_axis_title, tickfont = font),
@@ -120,7 +122,7 @@ mod_yellow_fever_vaccine_stock_analysis_yellow_fever_coverage_server <- function
                                    hoverlabel = list(font = font2),
                                    font = font)%>%
         config(modeBarButtons = list(list("toImage", "resetScale2d", "zoomIn2d", "zoomOut2d")),
-               displaylogo = FALSE, toImageButtonOptions = list(filename = "Chart 7- Yellow Fever Vaccine Stock Analysis & Yellow Fever Coverage.png"))
+               displaylogo = FALSE, toImageButtonOptions = list(filename = "Chart 6- Yellow Fever Vaccine Stock Analysis & Yellow Fever Coverage.png"))
 
 
       plotYF
@@ -128,10 +130,10 @@ mod_yellow_fever_vaccine_stock_analysis_yellow_fever_coverage_server <- function
 
     })
 
-    output$download_ch7Data <- downloadHandler(
-      filename = "Chart 7- Yellow Fever Vaccine Stock Analysis & Yellow Fever Coverage.csv",
+    output$download_chart_data <- downloadHandler(
+      filename = "Chart 6- Yellow Fever Vaccine Stock Analysis & Yellow Fever Coverage.csv",
       content = function(file) {
-        readr::write_csv(slide7_data_combined(), file)
+        readr::write_csv(chart_data(), file)
       }
     )
 

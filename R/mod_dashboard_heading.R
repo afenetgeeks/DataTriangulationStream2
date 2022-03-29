@@ -11,9 +11,9 @@ mod_dashboard_heading_ui <- function(id){
   ns <- NS(id)
   tagList(
 
-    f7Row(splitLayout(img(src = "flag.jpeg", height = 60, width = 110,align = "left"),
+    f7Row(splitLayout(img(src = "www/flag.jpeg", height = 60, width = 110,align = "left"),
                       h1("RI/VPDs triangulation dashboard", align = "center"),
-                      img(src = "nigeria-coat-of-arms.svg", height = 60, width = 110, align = "right"),
+                      img(src = "www/nigeria-coat-of-arms.svg", height = 60, width = 110, align = "right"),
                       cellWidths = c("20%","58%", "20%"),
                       cellArgs = list(style = "padding: 20px"))
           )

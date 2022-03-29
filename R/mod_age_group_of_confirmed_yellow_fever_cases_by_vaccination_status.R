@@ -1,6 +1,6 @@
 #' age_group_of_confirmed_yellow_fever_cases_by_vaccination_status UI Function
 #'
-#' @description A shiny Module.
+#' @description A shiny Module for slide 5 for chart 4 in on the dashboard
 #'
 #' @param id,input,output,session Internal parameters for {shiny}.
 #'
@@ -17,10 +17,10 @@ mod_age_group_of_confirmed_yellow_fever_cases_by_vaccination_status_ui <- functi
         hover = TRUE,
         f7Card(
           title = NULL,
-          splitLayout(h4("Chart 5: Age Group of Confirmed Yellow Fever Cases by Vaccination Status",align = "center"),
-                      f7DownloadButton(ns("download_ch5Data"),label = NULL),
+          splitLayout(h4("Chart 4: Age Group of Confirmed Yellow Fever Cases by Vaccination Status",align = "center"),
+                      f7DownloadButton(ns("download_chart_data"),label = NULL),
                       cellWidths = c("95%", "5%")),
-          withSpinner(plotlyOutput(ns("slide5")),type = 6, size = 0.3,hide.ui = F)
+          withSpinner(plotlyOutput(ns("plot")),type = 6, size = 0.3,hide.ui = F)
 
         ))
     )
@@ -29,23 +29,27 @@ mod_age_group_of_confirmed_yellow_fever_cases_by_vaccination_status_ui <- functi
 
 #' age_group_of_confirmed_yellow_fever_cases_by_vaccination_status Server Functions
 #'
+#' @param id,input,output,session Internal parameters for {shiny}.
+#' @param picker_year_var,picker_month_var,picker_state_var Selected parameters from the inputs
+#'
 #' @noRd
 mod_age_group_of_confirmed_yellow_fever_cases_by_vaccination_status_server <- function(id, picker_year_var,picker_month_var,picker_state_var){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
 
     # slide 5
-    slide5_data <- reactive({yf_by_age_group %>%
-      filter(Year == picker_year_var() &
-               State == picker_state_var()) %>%
+    chart_data <- reactive({yf_by_age_group %>%
+      filter(Year %in% picker_year_var() &
+               State %in% picker_state_var() &
+               Months %in% picker_month_var()) %>%
       group_by(`Age group`) %>%
       summarise(across(c(Vaccinated,Unvaccinated,Unknown), ~ sum(.x, na.rm = TRUE))) %>%
       ungroup()})
 
 
-    output$slide5 <- renderPlotly({
+    output$plot <- renderPlotly({
 
-      p5 <- plot_ly(slide5_data(),
+      p5 <- plot_ly(chart_data(),
                     x = ~`Age group`,
                     y = ~Unknown,
                     color =  I("#004e64"),
@@ -89,16 +93,16 @@ mod_age_group_of_confirmed_yellow_fever_cases_by_vaccination_status_server <- fu
                 hoverlabel = list(font = font2),
                 font = font)%>%
         config(modeBarButtons = list(list("toImage", "resetScale2d", "zoomIn2d", "zoomOut2d")),
-               displaylogo = FALSE, toImageButtonOptions = list(filename = "Chart 5- Age Group of Confirmed Yellow Fever Cases by Vaccination Status.png"))
+               displaylogo = FALSE, toImageButtonOptions = list(filename = "Chart 4- Age Group of Confirmed Yellow Fever Cases by Vaccination Status.png"))
 
 
       p5
     })
 
-    output$download_ch5Data <- downloadHandler(
-      filename = "Chart 5- Age Group of Confirmed Yellow Fever Cases by Vaccination Status.csv",
+    output$download_chart_data <- downloadHandler(
+      filename = "Chart 4- Age Group of Confirmed Yellow Fever Cases by Vaccination Status.csv",
       content = function(file) {
-        readr::write_csv(slide5_data(), file)
+        readr::write_csv(chart_data(), file)
       }
     )
 

@@ -3,6 +3,7 @@
 #' @param request Internal parameter for `{shiny}`.
 #'     DO NOT REMOVE.
 #' @import shiny
+#' @importFrom shinyMobile f7Page f7SingleLayout f7Row
 #' @noRd
 
 
@@ -23,7 +24,7 @@ app_ui <- function(request) {
 
        mod_dashboard_heading_ui("dashboard_heading_1"),
 
-      mod_inputs_ui("inputs_1"),
+      mod_inputs_ui("inputs_1", multiple_year = TRUE,  multiple_state = FALSE),
 
       f7Row(tags$i(style="color:#0e7290;font-size:10px","Hover over a chart to display the chart download button on the top right corner of that chart")),
 
@@ -47,7 +48,7 @@ app_ui <- function(request) {
       ),
 
       f7Row(
-        mod_inputs_ui("inputs_maps")
+        mod_inputs_ui("inputs_maps", multiple_year = FALSE,  multiple_state = TRUE)
       ),
 
       f7Row(

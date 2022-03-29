@@ -1,6 +1,6 @@
 #' measles_vaccine_stock_analysis_measles_coverage UI Function
 #'
-#' @description A shiny Module.
+#' @description A shiny Module slide 6
 #'
 #' @param id,input,output,session Internal parameters for {shiny}.
 #'
@@ -17,10 +17,10 @@ mod_measles_vaccine_stock_analysis_measles_coverage_ui <- function(id){
         hover = TRUE,
         f7Card(
           title = NULL,
-          splitLayout(h4("Chart 6: Measles Vaccine Stock Analysis & Measles Coverage",align = "center"),
-                      f7DownloadButton(ns("download_ch6Data"),label = NULL),
+          splitLayout(h4("Chart 5: Measles Vaccine Stock Analysis & Measles Coverage",align = "center"),
+                      f7DownloadButton(ns("download_chart_data"),label = NULL),
                       cellWidths = c("95%", "5%")),
-          withSpinner(plotlyOutput(ns("slide6")),type = 6, size = 0.3,hide.ui = F)
+          withSpinner(plotlyOutput(ns("plot")),type = 6, size = 0.3,hide.ui = F)
         ))
     )
 
@@ -37,15 +37,15 @@ mod_measles_vaccine_stock_analysis_measles_coverage_server <- function(id,  pick
 
     ns <- session$ns
 
-    # slide 6 -----
-    slide6_data_combined <- reactive({
+    #
+    chart_data <- reactive({
       s6_combined %>% dplyr::filter(Year == picker_year_var() & Month %in% picker_month_var() & State == picker_state_var())
       })
 
 
-    output$slide6 <- renderPlotly({
+    output$plot <- renderPlotly({
       # measles_OB_OU_Received_1_combined_by_Year
-      plotM <- plot_ly(data = slide6_data_combined() %>%
+      plotM <- plot_ly(data = chart_data() %>%
                          arrange(Months))
 
       plotM <- plotM %>% add_trace(x = ~Months, y = ~`Measles coverage`,
@@ -117,7 +117,8 @@ mod_measles_vaccine_stock_analysis_measles_coverage_server <- function(id,  pick
 
 
 
-                                yaxis = list(range = c(0, 100),side = 'right', title = 'Coverage (%)',showline = TRUE, showgrid = FALSE, zeroline = T, ticks = "outside",
+                                yaxis = list(#range = c(0, 100),
+                                             side = 'right', title = 'Coverage (%)',showline = TRUE, showgrid = FALSE, zeroline = T, ticks = "outside",
                                              title = font_axis_title, tickfont = font),
                                 yaxis2 = list(side = 'left', overlaying = "y", rangemode="tozero", title = 'Vaccine Stock (number in doses)',showgrid = FALSE,ticks = "outside",
                                               zeroline = FALSE,showline = TRUE, title = font_axis_title, tickfont = font),
@@ -129,15 +130,15 @@ mod_measles_vaccine_stock_analysis_measles_coverage_server <- function(id,  pick
                                 hoverlabel = list(font = font2),
                                 font = font)%>%
         config(modeBarButtons = list(list("toImage", "resetScale2d", "zoomIn2d", "zoomOut2d")),
-               displaylogo = FALSE, toImageButtonOptions = list(filename = "Chart 6- Measles Vaccine Stock Analysis & Measles Coverage.png"))
+               displaylogo = FALSE, toImageButtonOptions = list(filename = "Chart 5- Measles Vaccine Stock Analysis & Measles Coverage.png"))
       plotM
 
     })
 
-    output$download_ch6Data <- downloadHandler(
-      filename = "Chart 6- Measles Vaccine Stock Analysis & Measles Coverage.csv",
+    output$download_chart_data <- downloadHandler(
+      filename = "Chart 5- Measles Vaccine Stock Analysis & Measles Coverage.csv",
       content = function(file) {
-        readr::write_csv(slide6_data_combined(), file)
+        readr::write_csv(chart_data(), file)
       }
     )
 

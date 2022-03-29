@@ -1,6 +1,6 @@
 #' national_measles_coverage_different_sources UI Function
 #'
-#' @description A shiny Module.
+#' @description A shiny Module. slide 1
 #'
 #' @param id,input,output,session Internal parameters for {shiny}.
 #'
@@ -19,9 +19,9 @@ mod_national_measles_coverage_different_sources_ui <- function(id){
           f7Card(
             title = NULL,
             splitLayout(h4("Chart 1: National Measles Coverage (%) by different sources, Nigeria (National)", align = "center"),
-                        f7DownloadButton(ns("download_ch1Data"), label = NULL),
+                        f7DownloadButton(ns("download_chart_data"), label = NULL),
                         cellWidths = c("95%", "5%")),
-            withSpinner(plotlyOutput(ns("slide1")),type = 6, size = 0.3,hide.ui = F)
+            withSpinner(plotlyOutput(ns("plot")),type = 6, size = 0.3,hide.ui = F)
 
 
           )))
@@ -40,12 +40,11 @@ mod_national_measles_coverage_different_sources_server <- function(id){
     ns <- session$ns
 
     measles_coverage <- reactive({
-      slide1_data
-    })
+      slide1_data})
 
 
 
-    output$slide1 <- renderPlotly({
+    output$plot <- renderPlotly({
 
       fig <- plot_ly(measles_coverage())
 
@@ -174,7 +173,7 @@ mod_national_measles_coverage_different_sources_server <- function(id){
 
     })
 
-    output$download_ch1Data <- downloadHandler(
+    output$download_chart_data <- downloadHandler(
       filename = "Chart 1- National Measles Coverage (%) by different sources, Nigeria (National Wide).csv",
       content = function(file) {
         readr::write_csv(measles_coverage(), file)

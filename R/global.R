@@ -1,31 +1,14 @@
+
+#'@importFrom RMariaDB MariaDB
+#'@importFrom dplyr collect tbl mutate arrange filter across
+#'@importFrom readr read_csv
+#'@importFrom GADMTools gadm_sp_loadCountries
+#'@importFrom stringr str_c
+#'@importFrom magrittr %>%
+#'@import dplyr
+#'@importFrom tibble tibble
+#'
 global <- quote({
-
-  #library
-  # Core packages
-  library(shinyMobile)
-  library(tidyverse)
-  library(shiny)
-  library(shinyWidgets)
-  #library(shinyjs)
-  library(shinycssloaders)
-  library(htmlwidgets)
-  library(hrbrthemes)
-
-  # Interactive Visualizations
-  library(plotly)
-  library(ggtext)
-
-  library(DBI)
-  #library(RMySQL)
-  library(RMariaDB)
-  library(odbc)
-  library(leaflet)
-  library(pool)
-  #library(mapview)
-  library(sp)
-  library(leaflet.extras)
-  library(GADMTools)
-
 
   ##"sans-serif"
   font2 <- list(
@@ -54,7 +37,7 @@ global <- quote({
 
   dw <- config::get(file = "./inst/app/www/config.yml", "development_stream2")
 
-  stream2_pool <- dbPool(
+  stream2_pool <- pool::dbPool(
     drv = RMariaDB::MariaDB(),
     host     = dw$host,
     username = dw$user,
@@ -72,7 +55,7 @@ global <- quote({
   # })
 
 
-  states <- read_csv("./inst/app/www/states_edited.csv")
+  states <- readr::read_csv("./inst/app/www/states_edited.csv")
 
   national <- states$state_name[38]
 
@@ -81,104 +64,105 @@ global <- quote({
 
 # slide 1
 #slide1_data <- read_rds("www/data/rds/slide1_data.rds")
-slide1_data <- tbl(stream2_pool, "slide1_data")%>%collect() %>%
-  mutate(across(c(Year,State), as.factor))
+slide1_data <-  dplyr::tbl(stream2_pool, "slide1_data") %>%
+  dplyr::collect() %>%
+  dplyr::mutate(dplyr::across(.col = c(Year,State), as.factor))
 
 # slide 2
 #s2_combined <- read_rds("www/data/rds/s2_combined.rds")
-s2_combined <- tbl(stream2_pool, "s2_combined")%>%collect()%>%
-  mutate(across(c(Year,State ), as.factor))
+s2_combined <-  dplyr::tbl(stream2_pool, "s2_combined")%>%dplyr::collect()%>%
+  dplyr::mutate(dplyr::across(.col = c(Year,State ), as.factor))
 
 # slide 3
 #s3_combined <- read_rds("www/data/rds/s3_combined.rds")
-s3_combined <- tbl(stream2_pool, "s3_combined")%>%collect() %>%
-  mutate(Months = lubridate::month(as.Date(str_c(Year, Months, 01,sep = "-"), "%Y-%b-%d"), label = T),
-         across(c(Year,State ), as.factor)) %>%
-  tibble() %>% arrange(Months)
+s3_combined <-  dplyr::tbl(stream2_pool, "s3_combined")%>%dplyr::collect() %>%
+  dplyr::mutate(Months = lubridate::month(as.Date(stringr::str_c(Year, Months, 01,sep = "-"), "%Y-%b-%d"), label = T),
+         dplyr::across(.col = c(Year,State ), as.factor)) %>%
+  tibble::tibble() %>% dplyr::arrange(Months)
 
 # slide 4
 # mvc_by_age_group <-
 #   read_rds("www/data/rds/s4_combined.rds") %>%
-#   mutate(`Age group` = factor(`Age group`, labels = c("0-8 M", "9-23 M", "24-48 M", "5-9", "10-14", "15-19", "20-24", "25-29", "30-34", ">=35"),
+#   dplyr::mutate(`Age group` = factor(`Age group`, labels = c("0-8 M", "9-23 M", "24-48 M", "5-9", "10-14", "15-19", "20-24", "25-29", "30-34", ">=35"),
 #                               levels = c("0-8 M", "9-23 M", "24-48 M", "5-9", "10-14", "15-19", "20-24", "25-29", "30-34", ">=35")))
-mvc_by_age_group <- tbl(stream2_pool, "mvc_by_age_group")%>%collect()%>%
-  mutate(`Age group` = factor(`Age group`, labels = c("0-8 M", "9-23 M", "24-48 M", "5-9", "10-14", "15-19", "20-24", "25-29", "30-34", ">=35"),
+mvc_by_age_group <-  dplyr::tbl(stream2_pool, "mvc_by_age_group")%>%dplyr::collect()%>%
+  dplyr::mutate(`Age group` = factor(`Age group`, labels = c("0-8 M", "9-23 M", "24-48 M", "5-9", "10-14", "15-19", "20-24", "25-29", "30-34", ">=35"),
                               levels = c("0-8 M", "9-23 M", "24-48 M", "5-9", "10-14", "15-19", "20-24", "25-29", "30-34", ">=35")),
-         across(c(Year,State ), as.factor))
+         dplyr::across(.col = c(Year,State, Months ), as.factor))
 
 # slide 5
 # yf_by_age_group <-
 #   read_rds("www/data/rds/s5_combined.rds") %>%
-#   mutate(`Age group` = factor(`Age group`, labels = c("0-8 M", "9-23 M", "24-48 M", "5-9", "10-14",
+#   dplyr::mutate(`Age group` = factor(`Age group`, labels = c("0-8 M", "9-23 M", "24-48 M", "5-9", "10-14",
 #                                                       "15-19", "20-24", "25-29", "30-34", ">=35"),
 #                               levels = c("0-8 M", "9-23 M", "24-48 M", "5-9", "10-14", "15-19", "20-24", "25-29", "30-34", ">=35")))
-yf_by_age_group <- tbl(stream2_pool, "yf_by_age_group")%>%collect() %>%
-  mutate(`Age group` = factor(`Age group`, labels = c("0-8 M", "9-23 M", "24-48 M", "5-9", "10-14",
+yf_by_age_group <-  dplyr::tbl(stream2_pool, "yf_by_age_group")%>%dplyr::collect() %>%
+  dplyr::mutate(`Age group` = factor(`Age group`, labels = c("0-8 M", "9-23 M", "24-48 M", "5-9", "10-14",
                                                       "15-19", "20-24", "25-29", "30-34", ">=35"),
                               levels = c("0-8 M", "9-23 M", "24-48 M", "5-9", "10-14", "15-19", "20-24", "25-29", "30-34", ">=35")),
-         across(c(Year,State ), as.factor))
+         dplyr::across(.col = c(Year,State, Months ), as.factor))
 
 
 # slide 6
 # s6_combined <- read_rds("www/data/rds/s6_combined.rds")
-s6_combined <- tbl(stream2_pool, "s6_combined")%>%collect() %>%
-  mutate(`Measles coverage` = `Measles coverage`*100, Months = lubridate::month(as.Date(str_c(Year, Months, 01,sep = "-"), "%Y-%b-%d"),label = T),
-         across(c(Year,State ), as.factor)) %>%
-  tibble() %>% arrange(Months)
+s6_combined <-  dplyr::tbl(stream2_pool, "s6_combined")%>%dplyr::collect() %>%
+  dplyr::mutate(`Measles coverage` = `Measles coverage`*100, Months = lubridate::month(as.Date(stringr::str_c(Year, Months, 01,sep = "-"), "%Y-%b-%d"),label = T),
+         dplyr::across(.col = c(Year,State ), as.factor)) %>%
+  tibble::tibble() %>% dplyr::arrange(Months)
 
 # slide 7
 # s7_combined <- read_rds("www/data/rds/s7_combined.rds")
-s7_combined <- tbl(stream2_pool, "s7_combined")%>%collect() %>%
-  mutate(`Yellow Fever Coverage` = `Yellow Fever Coverage`*100, Months = lubridate::month(as.Date(str_c(Year, Months, 01,sep = "-"), "%Y-%b-%d"), label = T),
-         across(c(Year,State ), as.factor)) %>%
-  tibble() %>% arrange(Months)
+s7_combined <-  dplyr::tbl(stream2_pool, "s7_combined")%>%dplyr::collect() %>%
+  dplyr::mutate(`Yellow Fever Coverage` = `Yellow Fever Coverage`*100, Months = lubridate::month(as.Date(stringr::str_c(Year, Months, 01,sep = "-"), "%Y-%b-%d"), label = T),
+         dplyr::across(.col = c(Year,State ), as.factor)) %>%
+  tibble::tibble() %>% dplyr::arrange(Months)
 
 
 # slide 8
 # s8_combined <- read_rds("www/data/rds/s8_combined.rds")
-s8_combined <- tbl(stream2_pool, "s8_combined")%>%collect()%>%
-  mutate(Months = lubridate::month(as.Date(str_c(Year, Months, 01,sep = "-"), "%Y-%b-%d"), label = T),
-         across(c(Year,State ), as.factor)) %>% tibble() %>%
-  arrange(Months)
+s8_combined <-  dplyr::tbl(stream2_pool, "s8_combined")%>%dplyr::collect()%>%
+  dplyr::mutate(Months = lubridate::month(as.Date(stringr::str_c(Year, Months, 01,sep = "-"), "%Y-%b-%d"), label = T),
+         dplyr::across(.col = c(Year,State ), as.factor)) %>% tibble::tibble() %>%
+  dplyr::arrange(Months)
 
 # slide 9
 # s9_combined <- read_rds("www/data/rds/s9_combined.rds")
-s9_combined <- tbl(stream2_pool, "s9_combined")%>%collect()%>%
-  mutate(across(c(Year,State ), as.factor))
+s9_combined <-  dplyr::tbl(stream2_pool, "s9_combined")%>%dplyr::collect()%>%
+  dplyr::mutate(dplyr::across(.col = c(Year,State, Months ), as.factor))
 
 # slide 10
 # s10_combined <- read_rds("www/data/rds/s10_combined.rds")
-s10_combined <- tbl(stream2_pool, "s10_combined")%>%collect()%>%
-  mutate(across(c(Year,State ), as.factor))
+s10_combined <-  dplyr::tbl(stream2_pool, "s10_combined")%>%dplyr::collect()%>%
+  dplyr::mutate(dplyr::across(.col = c(Year,State, Months), as.factor))
 
   # Map 11 MVC
-  mvc_gadm_data <- tbl(stream2_pool, "measles_coverage_s11_states")%>%collect() %>%
-           mutate(across(c(Year,State,`Coverage %`), as.factor))
+  mvc_gadm_data <-  dplyr::tbl(stream2_pool, "measles_coverage_s11_states")%>%dplyr::collect() %>%
+           dplyr::mutate(dplyr::across(.col = c(Year,State,`Coverage %`), as.factor))
 
-  # mvc_gadm_data <- tbl(stream2_pool, "mvc_gadm_data")%>%collect()
+  # mvc_gadm_data <-  dplyr::tbl(stream2_pool, "mvc_gadm_data")%>%dplyr::collect()
   #mvc_gadm_data <- read_rds("www/data/rds/mvc_gadm_data.rds")
 
-  #sormas_measles_cases <- tbl(stream2_pool, "sormas_measles_cases")%>%collect()%>%
+  #sormas_measles_cases <-  dplyr::tbl(stream2_pool, "sormas_measles_cases")%>%dplyr::collect()%>%
 
-  sm_plus_lga_latlon_cleaned <- tbl(stream2_pool, "sormas_measles_geocodes")%>%collect() %>%
-    mutate(across(c(Year,State, LGA), as.factor))
+  sm_plus_lga_latlon_cleaned <-  dplyr::tbl(stream2_pool, "sormas_measles_geocodes")%>%dplyr::collect() %>%
+    dplyr::mutate(dplyr::across(.col = c(Year,State, LGA), as.factor))
   #sormas_measles_cases <- read_rds("www/data/rds/sormas_measles_cases.rds")
 
   #gadm_data_mvc <- read_rds("www/gadm36_NGA_1_sp.rds")
 
   # Map 12 YF
-  yfc_gadm_data <- tbl(stream2_pool, "yf_coverage_s12_states")%>% collect()%>%
-    mutate(across(c(Year,State,`Coverage %`), as.factor))
+  yfc_gadm_data <-  dplyr::tbl(stream2_pool, "yf_coverage_s12_states")%>% dplyr::collect()%>%
+    dplyr::mutate(dplyr::across(.col = c(Year,State,`Coverage %`), as.factor))
 
 
-  #yfc_gadm_data <- tbl(stream2_pool, "yfc_gadm_data")%>%collect()
+  #yfc_gadm_data <-  dplyr::tbl(stream2_pool, "yfc_gadm_data")%>%dplyr::collect()
   #yfc_gadm_data <- read_rds("./flexible-version/www/data/rds/yfc_gadm_data.rds")
 
 
   #sormas_yf_cases <- read_rds("www/data/rds/sormas_yf_cases.rds")
-  #sormas_yf_cases <- tbl(stream2_pool, "sormas_yf_cases")%>%collect()%>%
-  syf_plus_lga_latlon_cleaned <- tbl(stream2_pool, "sormas_yf_geocodes")%>%collect()%>%
-    mutate(across(c(Year,State, LGA), as.factor))
+  #sormas_yf_cases <-  dplyr::tbl(stream2_pool, "sormas_yf_cases")%>%dplyr::collect()%>%
+  syf_plus_lga_latlon_cleaned <-  dplyr::tbl(stream2_pool, "sormas_yf_geocodes")%>%
+    dplyr::collect()%>%dplyr::mutate(dplyr::across(.col = c(Year,State, LGA), as.factor))
 
   #gadm_data_yfc <- read_rds("www/gadm36_NGA_1_sp.rds")
 
@@ -190,8 +174,8 @@ s10_combined <- tbl(stream2_pool, "s10_combined")%>%collect()%>%
   borders <- c('red','yellow','#61ed61', '#424242',"#4ee0ed")
 
   # -----------------------------------------------------------------
-  gadm_data_mvc <- gadm_sp_loadCountries(c("NGA"), level=1, basefile = "./inst/app/www/")
-  gadm_data_yfc <- gadm_sp_loadCountries(c("NGA"), level=1, basefile = "./inst/app/www/")
+  gadm_data_mvc <- GADMTools::gadm_sp_loadCountries(c("NGA"), level=1, basefile = "./inst/app/www/")
+  gadm_data_yfc <- GADMTools::gadm_sp_loadCountries(c("NGA"), level=1, basefile = "./inst/app/www/")
 
 
   ## Creating  add_state_clusters function to create clusters at state level.
@@ -205,14 +189,14 @@ s10_combined <- tbl(stream2_pool, "s10_combined")%>%collect()%>%
     for(state in states){
 
       leaflet_map <- leaflet_map %>%
-        addMarkers(data = filter(data ,State == state),
+        leaflet:: addMarkers(data = dplyr::filter(data ,State == state),
                    lat = ~Lat,
                    lng = ~Long,
-                   clusterOptions = markerClusterOptions(maxClusterRadius = 200,
+                   clusterOptions = leaflet::markerClusterOptions(maxClusterRadius = 200,
                                                          showCoverageOnHover = FALSE,
                                                          singleMarkerMode = TRUE,
                                                          iconCreateFunction =
-                                                           JS("function(cluster) {
+                                                           htmlwidgets::JS("function(cluster) {
                                              return new L.DivIcon({
                                                html: '<div style=\"background-color:rgba(78, 224, 237, 0.7)\"><span>' + cluster.getChildCount() + '</div><span>',
                                                className: 'marker-cluster'
@@ -247,7 +231,7 @@ s10_combined <- tbl(stream2_pool, "s10_combined")%>%collect()%>%
 
   legend_labels_var <- make_labels(sizes, labels)
 
-  poolClose(stream2_pool)
+  pool::poolClose(stream2_pool)
 })
 
 

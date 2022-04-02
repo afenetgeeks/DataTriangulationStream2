@@ -8,27 +8,20 @@
 #'
 #' @importFrom shiny NS tagList
 #'
-#'@import shinyMobile
+#'@importFrom shinyMobile f7Col f7SmartSelect f7Button
 #'
-mod_inputs_ui <- function(id){
+mod_inputs_ui <- function(id, multiple_year = FALSE,  multiple_state = FALSE){
   ns <- NS(id)
 
   tagList(
 
-    f7Row(splitLayout(img(src = "flag.jpeg", height = 60, width = 110,align = "left"),
-                      h1("RI/VPDs triangulation dashboard", align = "center"),
-                      img(src = "nigeria-coat-of-arms.svg", height = 60, width = 110, align = "right"),
-                      cellWidths = c("20%","58%", "20%"),
-                      cellArgs = list(style = "padding: 20px"))),
-
-
-    f7Row( f7Col(),f7Col(f7SmartSelect(ns("picker_month"),label = "Months", choices = c("Jan", "Feb", "Mar", "Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec"),
-                                       selected = c("Jan", "Feb", "Mar", "Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec"),searchbar =F,multiple = T,openIn = "popover")),
-           f7Col(f7SmartSelect(ns("picker_year"),label = "Year",choices = c("2017", "2018", "2019", "2020", "2021"),selected = "2021",searchbar =F,multiple = F,openIn = "popover")),
-           f7Col(f7SmartSelect(ns("picker_state"),label = "State", choices = c(national,sort(states_vec)), selected = "Federal Government",searchbar =F,multiple = F,openIn = "popover")),
+    f7Row( f7Col(),f7Col(f7SmartSelect(ns("picker_month"),label = "Months", choices = months_vector_util(),
+                                       selected = months_vector_util(), searchbar =F,multiple = T,openIn = "popover")),
+           f7Col(f7SmartSelect(ns("picker_year"),label = "Year",choices = years_vector_util(), selected = "2021",searchbar = F,multiple =  multiple_year,openIn = "popover")),
+           f7Col(f7SmartSelect(ns("picker_state"),label = "State", choices = c(national_util(),sort(states_vector_util())), selected = national_util(), searchbar =F,multiple = multiple_state,openIn = "popover")),
            f7Col(tags$div(style = "margin: 34px 3px 5px 6px;",f7Button(inputId = ns("apply"), label = "Update",size = "large", fill = T,shadow = T)))
-    ),
-    f7Row( tags$i(style="color:#0e7290;font-size:10px","Hover over a chart to display the chart download button on the top right corner of that chart")),
+    )
+
 
   )
 }
@@ -54,18 +47,7 @@ mod_inputs_server <- function(id){
 
     return(dropdown_inputs)
 
-# return(
-#   list(
-#   picker_year_var <- eventReactive(input$apply >=0,{
-#     input$picker_year
-#   }),
-#
-#   picker_month_var <- eventReactive(input$apply >=0,
-#                                     {input$picker_month}),
-#
-#   picker_state_var <- eventReactive(input$apply >=0,{
-#     input$picker_state})
-# ))
+
 
   })
 }

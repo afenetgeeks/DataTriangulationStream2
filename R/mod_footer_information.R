@@ -7,11 +7,12 @@
 #' @noRd
 #'
 #' @importFrom shiny NS tagList
+#' @importFrom htmltools HTML
 mod_footer_information_ui <- function(id){
   ns <- NS(id)
   tagList(
-    f7Row(tags$i(style="color:#0e7290;font-size:10px",
-                 "*PMCCs – Post Measles Campaign Coverage Survey,
+    f7Row(tags$i(style="color: #0e7290; font-size: 10px",
+                 "*PMCCs - Post Measles Campaign Coverage Survey,
         *WUENIC - WHO and UNICEF Estimates of National Immunization Coverage,
         *MICS/ NICS - Multiple Indicator Cluster Survey/Nigeria Immunization Coverage Survey,
         *NDHS - National Demographic and Health Survey,

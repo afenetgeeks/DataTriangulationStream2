@@ -7,6 +7,7 @@
 #' @noRd
 #'
 #' @importFrom shiny NS tagList
+#' @importFrom leaflet leafletOutput
 mod_map_confirmed_yellow_fever_cases_yellow_fever_coverage_annual_data_ui <- function(id){
   ns <- NS(id)
   tagList(
@@ -17,7 +18,7 @@ mod_map_confirmed_yellow_fever_cases_yellow_fever_coverage_annual_data_ui <- fun
         f7Card(
           title = NULL,
           splitLayout(h4(textOutput(ns("yf_title"))),
-                      f7DownloadButton(ns("download_ch12Data"),label = NULL),
+                      f7DownloadButton(ns("download_chart_data"),label = NULL),
                       cellWidths = c("95%", "5%")),
           withSpinner(leafletOutput(ns("yfcMap"), height=440),type = 6, size = 0.4,hide.ui = F),
           #absolutePanel(top = 160, left = 23 ,downloadButton("dl2", label = NULL)),
@@ -33,38 +34,68 @@ mod_map_confirmed_yellow_fever_cases_yellow_fever_coverage_annual_data_ui <- fun
 }
 
 #' map_confirmed_yellow_fever_cases_yellow_fever_coverage_annual_data Server Functions
-#'
+#' @importFrom leaflet leaflet renderLeaflet colorFactor addProviderTiles setView addPolygons addMarkers labelOptions addLegend markerClusterOptions
+#' @importFrom stringr str_replace
 #' @noRd
-mod_map_confirmed_yellow_fever_cases_yellow_fever_coverage_annual_data_server <- function(id,picker_year_var,picker_month_var,picker_state_var){
+mod_map_confirmed_yellow_fever_cases_yellow_fever_coverage_annual_data_server <- function(id,
+                                                                                          picker_year_var,
+                                                                                          picker_month_var,
+                                                                                          picker_state_var
+
+                                                                                          ){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
 
     yf_text <- reactive({
-      paste("Chart 12: Confirmed Yellow Fever cases, Yellow Fever coverage (Annual data), ",picker_year_var())
+      paste("Chart 11: Confirmed Yellow Fever cases, Yellow Fever coverage (Annual data),",picker_year_var())
     })
 
     output$yf_title <- renderText({
       yf_text()
     })
 
-
     # slide 12
-    stream2_data<- reactiveValues()
+    stream2_data <- reactiveValues()
 
     observe({
-      if(picker_state_var()  == "Federal Government"){
-        stream2_data$slide12_data <- yfc_gadm_data %>%
-          filter(Year == picker_year_var())}
-      else{stream2_data$slide12_data <- yfc_gadm_data %>%
-        filter(Year == picker_year_var() &
-                 State == picker_state_var())}
+      if(sum(picker_state_var() == "Federal Government") == 1){
 
-      if(picker_state_var()  == "Federal Government"){
-        stream2_data$sormas_yfc <- syf_plus_lga_latlon_cleaned %>%
-          filter(Year == picker_year_var())}
-      else{stream2_data$sormas_yfc <- syf_plus_lga_latlon_cleaned %>%
-        filter(Year == picker_year_var() &
-                 `Responsible state` == picker_state_var())}
+        stream2_data$dhis2_data <- dplyr::tbl(stream2_pool, "yf_coverage_s12_states") %>%
+          filter(Year == !!picker_year_var())%>%
+          dplyr::collect()%>%
+          dplyr::mutate(dplyr::across(.col = c(Year,State,`Coverage %`), as.factor),
+                        State = str_replace(State,pattern = "Federal Capital Territory",replacement = "Fct"))
+
+        }
+      else{
+
+        stream2_data$dhis2_data <- dplyr::tbl(stream2_pool, "yf_coverage_s12_states") %>%
+          filter(Year == !!picker_year_var() &
+                   State %in% !!picker_state_var())%>%
+          dplyr::collect()%>%
+          dplyr::mutate(dplyr::across(.col = c(Year,State,`Coverage %`), as.factor),
+                        State = str_replace(State,pattern = "Federal Capital Territory",replacement = "Fct"))
+
+        }
+
+      if(sum(picker_state_var() == "Federal Government") == 1){
+
+        stream2_data$sormas_yfc <-  dplyr::tbl(stream2_pool, "sormas_yf_geocodes") %>%
+          filter(Year == !!picker_year_var())%>%
+          dplyr::collect()%>%
+          dplyr::mutate(dplyr::across(.col = c(Year,State, LGA), as.factor),
+                                           State = str_replace(State,pattern = "Federal Capital Territory",replacement = "Fct"))
+
+        }
+      else{
+
+        stream2_data$sormas_yfc <-  dplyr::tbl(stream2_pool, "sormas_yf_geocodes") %>%
+          filter(Year == !!picker_year_var() &
+                   State %in% !!picker_state_var())%>%
+          dplyr::collect()%>%dplyr::mutate(dplyr::across(.col = c(Year,State, LGA), as.factor),
+                                           State = str_replace(State,pattern = "Federal Capital Territory",replacement = "Fct"))
+      }
+
 
     })
 
@@ -75,64 +106,67 @@ mod_map_confirmed_yellow_fever_cases_yellow_fever_coverage_annual_data_server <-
                             levels = c("0 - 50%","50 - 85%","85 - 100%", "> 100%"),
                             na.color = 'red')
 
-      if(picker_state_var()  == "Federal Government"){
-        gadm_data_yfc$spdf@data <- gadm_data_yfc$spdf@data %>%
-          left_join(stream2_data$slide12_data,
+      if(sum(picker_state_var() == "Federal Government") == 1){
+        states_gadm_sp_data$spdf@data <- states_gadm_sp_data$spdf@data %>%
+          left_join(as.data.frame(stream2_data$dhis2_data),
                     by = c("NAME_1" = "State"))
 
         yfc_map <-  leaflet() %>%
           addProviderTiles("Stamen.Toner") %>%
           setView(lat =  9.077751,lng = 8.6774567, zoom = 6) %>%
-          addPolygons( data = gadm_data_yfc$spdf,
-                       fillColor = ~pal_yf(gadm_data_yfc$spdf@data$`Coverage %`),
+          addPolygons( data = states_gadm_sp_data$spdf,
+                       fillColor = ~pal_yf(states_gadm_sp_data$spdf@data$`Coverage %`),
                        stroke = TRUE,
                        color = "black",
                        weight = 2.5,
                        fillOpacity = 0.5,
                        fill = T,
-                       label = ~paste0("<h6>", gadm_data_yfc$spdf@data$NAME_1,"<h6>")%>%
+                       label = ~paste0("<h6>", states_gadm_sp_data$spdf@data$NAME_1,"<h6>")%>%
                          lapply(htmltools::HTML),
                        labelOptions = labelOptions(
-                         style = list("font-weight" = "normal",color ="black"),
-                         textsize = "13px",
+                         style = font_plot(),
+                         #textsize = "13px",
                          direction = "auto", noHide = T,textOnly = T
                        )
           ) %>%
-          addLegend(colors = legend_colors, labels = legend_labels,
+          addLegend(colors = make_shapes(colors = colors(), sizes = sizes() , borders = borders() , shapes = shapes()),
+                    labels = make_labels(sizes = sizes(), labels = labels()),
                     opacity =  0.6, title = "Coverage %", position = "bottomright")
 
-        yfc_map  <- add_state_clusters(leaflet_map =   yfc_map ,states = responsible_states_yf, data =  stream2_data$sormas_yfc)
+        yfc_map  <- add_state_clusters(leaflet_map =   yfc_map ,
+                                       states = str_replace(states_vector_util(),pattern = "Federal Capital Territory",replacement = "Fct"),
+                                       data =  stream2_data$sormas_yfc)
 
       }
       else{
-        gadm_data_yfc_state <- gadm_subset(gadm_data_yfc,
+        states_gadm_sp_data_state <- gadm_subset(states_gadm_sp_data,
                                            level = 1,
                                            regions = picker_state_var())
 
-        gadm_data_yfc_state$spdf@data <- gadm_data_yfc_state$spdf@data %>%
-          left_join(stream2_data$slide11_data,
+        states_gadm_sp_data_state$spdf@data <- states_gadm_sp_data_state$spdf@data %>%
+          left_join(as.data.frame(stream2_data$dhis2_data),
                     by = c("NAME_1" = "State"))
 
         yfc_map <-  leaflet() %>%
           addProviderTiles("Stamen.Toner") %>%
-          # setView(lat =  gadm_data_yfc_state$spdf@data$Lat,
-          #         lng = gadm_data_yfc_state$spdf@data$Long, zoom = 6) %>%
-          addPolygons( data = gadm_data_yfc_state$spdf,
-                       fillColor = ~pal_yf(gadm_data_yfc_state$spdf@data$`Coverage %`),
+          # setView(lat =  states_gadm_sp_data_state$spdf@data$Lat,
+          #         lng = states_gadm_sp_data_state$spdf@data$Long, zoom = 6) %>%
+          addPolygons( data = states_gadm_sp_data_state$spdf,
+                       fillColor = ~pal_yf(states_gadm_sp_data_state$spdf@data$`Coverage %`),
                        stroke = TRUE,
                        color = "black",
                        weight = 2.5,
                        fillOpacity = 0.5,
                        fill = T,
-                       label = ~paste0("<h6>", gadm_data_yfc_state$spdf@data$NAME_1,"<h6>"
+                       label = ~paste0("<h6>", states_gadm_sp_data_state$spdf@data$NAME_1,"<h6>"
                                        )%>%
                          lapply(htmltools::HTML),
                        labelOptions = labelOptions(
-                         style = list("font-weight" = "normal",color ="black"),
-                         textsize = "13px",
+                         style = font_plot(),
+                         #textsize = "13px",
                          direction = "auto", noHide = T,textOnly = T
                        )) %>%
-          addMarkers(data = stream2_data$sormas_yfc,
+          leaflet::addMarkers(data = stream2_data$sormas_yfc,
                      lat = ~Lat, lng = ~Long,
                      # layerId  = paste0("marker", 1:length(stream2_data$sormas_yfc$Lat)),
                      # clusterId = "clusterIdy",
@@ -141,13 +175,14 @@ mod_map_confirmed_yellow_fever_cases_yellow_fever_coverage_annual_data_server <-
                                                            showCoverageOnHover = FALSE,
                                                            singleMarkerMode = TRUE,
                                                            iconCreateFunction =
-                                                             JS("function(cluster) {
+                                                             htmlwidgets::JS("function(cluster) {
                                              return new L.DivIcon({
                                                html: '<div style=\"background-color:rgba(78, 224, 237, 0.7)\"><span>' + cluster.getChildCount() + '</div><span>',
                                                className: 'marker-cluster'
                                              });
                                            }"))) %>%
-          addLegend(colors = legend_colors, labels = legend_labels,
+          addLegend(colors = make_shapes(colors = colors(), sizes = sizes() , borders = borders() , shapes = shapes()),
+                    labels = make_labels(sizes = sizes(), labels = labels()),
                     opacity =  0.6, title = "Coverage %", position = "bottomright")
 
       }
@@ -176,11 +211,11 @@ mod_map_confirmed_yellow_fever_cases_yellow_fever_coverage_annual_data_server <-
     #   } # end of content() function
     # ) # end of downloadHandler() func)
     #
-    output$download_ch12Data <- downloadHandler(
+    output$download_chart_data <- downloadHandler(
       filename = 'yfc_csvs.zip',
       content = function(fname) {
 
-        write.csv(stream2_data$slide12_data, file = "yfc_admin.csv", sep =",")
+        write.csv(stream2_data$dhis2_data, file = "yfc_admin.csv", sep =",")
         write.csv(stream2_data$sormas_yfc, file = "yfc_sormas.csv", sep =",")
 
         zip(zipfile=fname, files=c("yfc_admin.csv","yfc_sormas.csv"))

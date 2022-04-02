@@ -1,12 +1,15 @@
 #' map_confirmed_measles_cases_mcv1_coverage_annual_data UI Function
 #'
-#' @description A shiny Module.
+#' @description A shiny Module. slide 11
 #'
 #' @param id,input,output,session Internal parameters for {shiny}.
 #'
 #' @noRd
 #'
 #' @importFrom shiny NS tagList
+#' @importFrom shinyMobile f7Shadow f7Col f7Card f7DownloadButton
+#' @importFrom leaflet leafletOutput
+#' @importFrom shinycssloaders withSpinner
 mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_ui <- function(id){
   ns <- NS(id)
   tagList(
@@ -18,7 +21,7 @@ mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_ui <- function(id){
         f7Card(
           title = NULL,
           splitLayout(h4( textOutput(ns("mvc_title"))),
-                      f7DownloadButton(ns("download_ch11Data"),label = NULL),
+                      f7DownloadButton(ns("download_chart_data"),label = NULL),
                       cellWidths = c("95%", "5%")),
           withSpinner(leafletOutput(ns("mvcMap"), height=440),type = 6, size = 0.4,hide.ui = F),
           #absolutePanel(top = 160, left = 23,downloadButton("dl1", label = NULL)),
@@ -35,62 +38,65 @@ mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_ui <- function(id){
 }
 
 #' map_confirmed_measles_cases_mcv1_coverage_annual_data Server Functions
-#'
+#' @importFrom leaflet leaflet renderLeaflet colorFactor addProviderTiles setView addPolygons addMarkers labelOptions addLegend markerClusterOptions
+#' @importFrom GADMTools gadm_subset
+#' @importFrom dplyr left_join
 #' @noRd
-mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_server <- function(id, picker_year_var,picker_month_var,picker_state_var){
+mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_server <- function(id,
+                                                                             picker_year_var,
+                                                                             picker_month_var,
+                                                                             picker_state_var
+                                                                            ){
   moduleServer( id, function(input, output, session){
 
     ns <- session$ns
 
+    # Map 11 MVC
+
     stream2_data<- reactiveValues()
-
-
 
     observe({
 
-      if(picker_state_var()  == "Federal Government"){
+      if(sum(picker_state_var() == "Federal Government") == 1){
 
-      stream2_data$slide11_data <- mvc_gadm_data %>%
-        filter(Year == picker_year_var())}
-    else{stream2_data$slide11_data <- mvc_gadm_data %>%
-      filter(Year == picker_year_var() &
-               State == picker_state_var())}
+      stream2_data$dhis2_data <- dplyr::tbl(stream2_pool, "measles_coverage_s11_states") %>%
+        filter(Year %in% !!picker_year_var())%>%dplyr::collect() %>%
+        dplyr::mutate(dplyr::across(.col = c(Year,State,`Coverage %`), as.factor),
+                      State = str_replace(State,pattern = "Federal Capital Territory",replacement = "Fct"))
 
-    if(picker_state_var()  == "Federal Government"){
-      stream2_data$sormas_mvc <- sm_plus_lga_latlon_cleaned %>%
-        filter(Year == picker_year_var())}
+      }
+    else{
+      stream2_data$dhis2_data <- dplyr::tbl(stream2_pool, "measles_coverage_s11_states") %>%
+      filter(Year %in% !!picker_year_var() &
+               State %in% !!picker_state_var())%>%dplyr::collect() %>%
+      dplyr::mutate(dplyr::across(.col = c(Year,State,`Coverage %`), as.factor),
+                    State = str_replace(State,pattern = "Federal Capital Territory",replacement = "Fct"))
+    }
 
-    else{stream2_data$sormas_mvc <- sm_plus_lga_latlon_cleaned %>%
-      filter(Year == picker_year_var()&
-               `Responsible state` == picker_state_var())}
+
+
+
+
+    if(sum(picker_state_var() == "Federal Government") == 1){
+      stream2_data$sormas_mvc <- dplyr::tbl(stream2_pool, "sormas_measles_geocodes") %>%
+        filter(Year %in% !!picker_year_var()) %>% dplyr::collect()%>%
+        dplyr::mutate(dplyr::across(.col = c(Year,State, LGA), as.factor),
+                      State = str_replace(State,pattern = "Federal Capital Territory",replacement = "Fct"))
+
+      }else{
+
+      stream2_data$sormas_mvc <- dplyr::tbl(stream2_pool, "sormas_measles_geocodes") %>%
+        filter(Year == !!picker_year_var()&
+                 State %in% !!picker_state_var()) %>% dplyr::collect()%>%
+        dplyr::mutate(dplyr::across(.col = c(Year,State, LGA), as.factor),
+                      State = str_replace(State,pattern = "Federal Capital Territory",replacement = "Fct"))
+
+      }
     })
 
 
-    # slide 11
-    # if(reactive({picker_state_var()})  == "Federal Government"){
-    #
-    #   slide11_data <- reactive({mvc_gadm_data %>%
-    #     filter(Year == picker_year_var())})
-    #
-    #   }
-    # else{slide11_data <- reactive({mvc_gadm_data %>%
-    #   filter(Year == picker_year_var() &
-    #            State == picker_state_var())})
-    # }
-    #
-    # if(reactive({picker_state_var()})  == "Federal Government"){
-    #   sormas_mvc <- reactive({sm_plus_lga_latlon_cleaned %>%
-    #     filter(Year == picker_year_var())})
-    #     }
-    #
-    # else{reactive({sormas_mvc}) <- reactive({sm_plus_lga_latlon_cleaned %>%
-    #   filter(Year == picker_year_var()&
-    #            `Responsible state` == picker_state_var())})
-    #   }
-
-
     mvc_text <- reactive({
-      paste("Chart 11: Confirmed Measles cases, MCV1 coverage (Annual data) ",picker_year_var())
+      paste("Chart 10: Confirmed Measles cases, MCV1 coverage (Annual data) ",picker_year_var())
     })
 
     output$mvc_title <- renderText({
@@ -105,65 +111,68 @@ mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_server <- function(id,
                              levels = c("0 - 50%","50 - 85%","85 - 100%", "> 100%"),
                              na.color = 'red')
 
-      if(picker_state_var()  == "Federal Government"){
+      if(sum(picker_state_var() == "Federal Government") == 1){
 
-        gadm_data_mvc$spdf@data <- gadm_data_mvc$spdf@data %>%
-          left_join(stream2_data$slide11_data, by = c("NAME_1" = "State"))
+        states_gadm_sp_data$spdf@data <- states_gadm_sp_data$spdf@data %>%
+          left_join(as.data.frame(stream2_data$dhis2_data), by = c("NAME_1" = "State"))
 
         mvc_map <-  leaflet() %>%
           addProviderTiles("Stamen.Toner") %>%
           setView(lat =  9.077751,lng = 8.6774567, zoom = 6)  %>%
-          addPolygons(data = gadm_data_mvc$spdf,
-                      fillColor = ~pal_mvc(gadm_data_mvc$spdf@data$`Coverage %`),
+          addPolygons(data = states_gadm_sp_data$spdf,
+                      fillColor = ~pal_mvc(states_gadm_sp_data$spdf@data$`Coverage %`),
                       stroke = TRUE,
                       color = "black",
                       weight = 2.5,
                       fillOpacity = 0.5,
                       fill = T,
                       label = ~paste0(
-                        "<h6>", gadm_data_mvc$spdf@data$NAME_1, "</h6>"
+                        "<h6>", states_gadm_sp_data$spdf@data$NAME_1, "</h6>"
                       )%>%
                         lapply(htmltools::HTML),
                       labelOptions = labelOptions(
-                        style = list("font-weight" = "normal", color = "black"),
+                        style = ,
                         textsize = "13px",
                         direction = "auto", noHide = T,textOnly = T
                       )) %>%
-          addLegend(colors = legend_colors, labels = legend_labels,
+          addLegend(colors = make_shapes(colors = colors(), sizes = sizes() , borders = borders() , shapes = shapes()),
+                    labels = make_labels(sizes = sizes(), labels = labels()),
                     opacity =  0.6, title = "Coverage %", position = "bottomright")
 
-        mvc_map <- add_state_clusters(leaflet_map =  mvc_map,states = responsible_states_measles, data =  stream2_data$sormas_mvc)
+        mvc_map <- add_state_clusters(leaflet_map =  mvc_map,
+                                      states = str_replace(states_vector_util(),pattern = "Federal Capital Territory",replacement = "Fct"),
+                                      data =  stream2_data$sormas_mvc)
 
       }
       else{
-        gadm_data_mvc_state <- gadm_subset(gadm_data_mvc,
+        states_gadm_sp_data_state <- gadm_subset(states_gadm_sp_data,
                                            level = 1,
                                            regions = picker_state_var())
 
-        gadm_data_mvc_state$spdf@data <- gadm_data_mvc_state$spdf@data %>%
-          left_join(stream2_data$slide11_data, by = c("NAME_1" = "State"))
+        states_gadm_sp_data_state$spdf@data <- states_gadm_sp_data_state$spdf@data %>%
+          left_join(as.data.frame(stream2_data$dhis2_data), by = c("NAME_1" = "State"))
 
         mvc_map <-  leaflet() %>%
           addProviderTiles("Stamen.Toner") %>%
-          # setView(lat =  gadm_data_mvc_state$spdf@data$Lat,
-          #         lng = gadm_data_mvc_state$spdf@data$Long, zoom = 6)  %>%
-          addPolygons(data = gadm_data_mvc_state$spdf,
-                      fillColor = ~pal_mvc(gadm_data_mvc_state$spdf@data$`Coverage %`),
+          # setView(lat =  states_gadm_sp_data_state$spdf@data$Lat,
+          #         lng = states_gadm_sp_data_state$spdf@data$Long, zoom = 6)  %>%
+          addPolygons(data = states_gadm_sp_data_state$spdf,
+                      fillColor = ~pal_mvc(states_gadm_sp_data_state$spdf@data$`Coverage %`),
                       stroke = TRUE,
                       color = "black",
                       weight = 2.5,
                       fillOpacity = 0.5,
                       fill = T,
                       label = ~paste0(
-                        "<h6>", gadm_data_mvc_state$spdf@data$NAME_1, "</h6>"
+                        "<h6>", states_gadm_sp_data_state$spdf@data$NAME_1, "</h6>"
                       )%>%
                         lapply(htmltools::HTML),
-                      labelOptions = labelOptions(
-                        style = list("font-weight" = "normal", color = "black"),
-                        textsize = "13px",
+                        labelOptions = labelOptions(
+                        style = font_plot(),
+                        #textsize = "13px",
                         direction = "auto", noHide = T,textOnly = T
                       ))%>%
-          addMarkers(data = stream2_data$sormas_mvc,
+          leaflet::addMarkers(data = stream2_data$sormas_mvc,
                      # layerId = paste0("marker", 1:length(sormas_mvc$Lat)),
                      # clusterId = "clusterIdm",
                      #clusterId = paste0("marker", 1:length(sormas_mvc$Lat)),
@@ -173,13 +182,14 @@ mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_server <- function(id,
                                                            singleMarkerMode = TRUE,
                                                            showCoverageOnHover = FALSE,
                                                            iconCreateFunction =
-                                                             JS("function(cluster) {
+                                                           htmlwidgets::JS("function(cluster) {
                                              return new L.DivIcon({
                                                html: '<div style=\"background-color:rgba(78, 224, 237, 0.7)\"><span>' + cluster.getChildCount() + '</div><span>',
                                                className: 'marker-cluster'
                                              });
                                            }"))) %>%
-          addLegend(colors = legend_colors, labels = legend_labels,
+          addLegend(colors = make_shapes(colors = colors(), sizes = sizes() , borders = borders() , shapes = shapes()),
+                    labels = make_labels(sizes = sizes(), labels = labels()),
                     opacity =  0.6, title = "Coverage %", position = "bottomright")
 
       }
@@ -191,11 +201,11 @@ mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_server <- function(id,
 
     output$mvcMap = renderLeaflet({mvc_map_leaflet()})
 
-    output$download_ch11Data <- downloadHandler(
+    output$download_chart_data <- downloadHandler(
       filename = 'mvc_csvs.zip',
       content = function(fname) {
 
-        write.csv(stream2_data$slide11_data, file = "mvc_admin.csv", sep =",")
+        write.csv(stream2_data$dhis2_data, file = "mvc_admin.csv", sep =",")
         write.csv(stream2_data$sormas_mvc, file = "mvc_sormas.csv", sep =",")
 
         zip(zipfile=fname, files=c("mvc_admin.csv","mvc_sormas.csv"))

@@ -1,14 +1,51 @@
 Package: DataTriangulationStream2
-Title: What the Package Does (One Line, Title Case)
-Version: 0.0.1
+Title: Nigeria RI/VPDs Data Triangulation Dashboard
+Version: 0.0.0.9000
 Authors@R: 
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"),
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
-License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
-    license
-Encoding: UTF-8
-Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.2
+    person("AFENET", "GEEKS", , "afenetgeeks@gmail.com", role = c("cre", "aut"))
+Description: The Nigeria Routine Immunization (RI) & Vaccine Preventable
+    Diseases Surveillance (VPDs) Data Triangulation Dashboard visualizes
+    selected indicators across RI & VPDs programme.  The dashboard
+    developed on R Shiny technology will be integrated with the country's
+    DHIS2 national instance, Surveillance Outbreak Response Management and
+    Analysis System (SORMAS), and the Multi-Source Data Analytics and
+    Triangulation (MSDAT) Platform The dashboard provides access to timely
+    information required for decision making at the national and
+    sub-national levels.
+License: MIT + file LICENSE
 URL: https://github.com/amanyiraho/DataTriangulationStream2
 BugReports: https://github.com/amanyiraho/DataTriangulationStream2/issues
+Depends: 
+    R (>= 2.10)
+Imports: 
+    config,
+    dbplyr,
+    dplyr (>= 1.0.8.9000),
+    forcats,
+    GADMTools,
+    golem,
+    htmltools,
+    htmlwidgets,
+    leaflet,
+    lubridate,
+    magrittr,
+    plotly,
+    pool,
+    readr,
+    RMariaDB,
+    scales,
+    shiny,
+    shinycssloaders,
+    shinyMobile,
+    stringr,
+    tibble
+Suggests: 
+    spelling,
+    testthat
+Remotes: 
+    tidyverse/dplyr
+Encoding: UTF-8
+Language: en-US
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.2

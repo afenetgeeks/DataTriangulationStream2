@@ -1,12 +1,15 @@
 #' national_measles_coverage_different_sources UI Function
 #'
-#' @description A shiny Module.
+#' @description A shiny Module. slide 1
 #'
 #' @param id,input,output,session Internal parameters for {shiny}.
 #'
 #' @noRd
 #'
 #' @importFrom shiny NS tagList
+#' @importFrom shinyMobile f7Shadow f7Col f7Card f7DownloadButton
+#' @importFrom plotly plotlyOutput
+#' @importFrom shinycssloaders withSpinner
 mod_national_measles_coverage_different_sources_ui <- function(id){
   ns <- NS(id)
   tagList(
@@ -19,9 +22,9 @@ mod_national_measles_coverage_different_sources_ui <- function(id){
           f7Card(
             title = NULL,
             splitLayout(h4("Chart 1: National Measles Coverage (%) by different sources, Nigeria (National)", align = "center"),
-                        f7DownloadButton(ns("download_ch1Data"), label = NULL),
+                        f7DownloadButton(ns("download_chart_data"), label = NULL),
                         cellWidths = c("95%", "5%")),
-            withSpinner(plotlyOutput(ns("slide1")),type = 6, size = 0.3,hide.ui = F)
+            withSpinner(plotlyOutput(ns("plot")),type = 6, size = 0.3,hide.ui = F)
 
 
           )))
@@ -31,21 +34,31 @@ mod_national_measles_coverage_different_sources_ui <- function(id){
 }
 
 #' national_measles_coverage_different_sources Server Functions
+#' @importFrom dplyr collect tbl mutate arrange filter across
+#' @importFrom plotly renderPlotly plot_ly  add_trace layout config add_annotations
 #'
 #' @noRd
-mod_national_measles_coverage_different_sources_server <- function(id){
+mod_national_measles_coverage_different_sources_server <- function(id,
+                                                                   picker_year_var,
+                                                                   picker_month_var,
+                                                                   picker_state_var
+                                                                   ){
 
 
-  moduleServer( id, function(input, output, session, picker_year_var, picker_month_var, picker_state_var){
+  moduleServer( id, function(input, output, session){
     ns <- session$ns
 
+    # slide 1
+
     measles_coverage <- reactive({
-      slide1_data
-    })
+        dplyr::tbl(stream2_pool, "slide1_data") %>%
+        dplyr::collect() %>%
+        dplyr::mutate(dplyr::across(.col = c(Year,State), as.factor))
+      })
 
 
 
-    output$slide1 <- renderPlotly({
+    output$plot <- renderPlotly({
 
       fig <- plot_ly(measles_coverage())
 
@@ -143,9 +156,9 @@ mod_national_measles_coverage_different_sources_server <- function(id){
       fig <- fig %>%
         layout(xaxis = list(tickvals=measles_coverage()$Year,
 
-                            tickfont = font,
+                            tickfont = font_plot(),
                             title = "Years",
-                            title= font_axis_title,
+                            title= font_axis_title(),
                             ticks = "outside",
                             #fixedrange = TRUE,
                             ticktext=measles_coverage()$Year),
@@ -153,8 +166,8 @@ mod_national_measles_coverage_different_sources_server <- function(id){
                             ticks = "outside",
                             showline = TRUE,
                             range = c(0,100),
-                            title = font_axis_title,
-                            tickfont = font),
+                            title = font_axis_title(),
+                            tickfont = font_plot()),
 
                shapes = list(hline(y=95, color = "green", dash= "dash"),
                              hline(y=85, color = "black", dash= "dot")),
@@ -166,15 +179,15 @@ mod_national_measles_coverage_different_sources_server <- function(id){
 
                plot_bgcolor = "rgba(0, 0, 0, 0)",
                paper_bgcolor = 'rgba(0, 0, 0, 0)',
-               hoverlabel = list(font = font2),
-               font = font)%>%
+               hoverlabel = list(font = font_hoverlabel),
+               font = font_plot())%>%
         config(modeBarButtons = list(list("toImage", "resetScale2d", "zoomIn2d", "zoomOut2d")),
                displaylogo = FALSE, toImageButtonOptions = list(filename = "Chart 1- National Measles Coverage (%) by different sources, Nigeria (National Wide).png"))
       fig
 
     })
 
-    output$download_ch1Data <- downloadHandler(
+    output$download_chart_data <- downloadHandler(
       filename = "Chart 1- National Measles Coverage (%) by different sources, Nigeria (National Wide).csv",
       content = function(file) {
         readr::write_csv(measles_coverage(), file)

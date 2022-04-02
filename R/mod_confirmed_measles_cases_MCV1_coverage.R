@@ -1,12 +1,15 @@
 #' confirmed_measles_cases_MCV1_coverage UI Function
 #'
-#' @description A shiny Module.
+#' @description A shiny Module for slide 3
 #'
 #' @param id,input,output,session Internal parameters for {shiny}.
 #'
 #' @noRd
 #'
 #' @importFrom shiny NS tagList
+#' @importFrom shinyMobile f7Shadow f7Col f7Card f7DownloadButton
+#' @importFrom plotly plotlyOutput
+#' @importFrom shinycssloaders withSpinner
 mod_confirmed_measles_cases_MCV1_coverage_ui <- function(id){
   ns <- NS(id)
   tagList(
@@ -16,10 +19,10 @@ mod_confirmed_measles_cases_MCV1_coverage_ui <- function(id){
         hover = TRUE,
         f7Card(
           title = NULL,
-          splitLayout(h4("Chart 3: Confirmed measles cases, MCV1 coverage",align = "center"),
-                      f7DownloadButton(ns("download_ch3Data"),label = NULL),
+          splitLayout(h4("Chart 2: Confirmed measles cases, MCV1 coverage",align = "center"),
+                      f7DownloadButton(ns("download_chart_data"),label = NULL),
                       cellWidths = c("95%", "5%")),
-          withSpinner(plotlyOutput(ns("slide3")),type = 6, size = 0.3,hide.ui = F)
+          withSpinner(plotlyOutput(ns("plot")),type = 6, size = 0.3,hide.ui = F)
         ))
     )
 
@@ -27,23 +30,34 @@ mod_confirmed_measles_cases_MCV1_coverage_ui <- function(id){
 }
 
 #' confirmed_measles_cases_MCV1_coverage Server Functions
-#'
+#' @importFrom plotly renderPlotly plot_ly  add_trace layout config
+#' @importFrom dplyr collect tbl mutate arrange filter across
 #' @noRd
-mod_confirmed_measles_cases_MCV1_coverage_server <- function(id, picker_year_var,picker_month_var,picker_state_var){
+mod_confirmed_measles_cases_MCV1_coverage_server <- function(id,
+                                                             picker_year_var,
+                                                             picker_month_var,
+                                                             picker_state_var
+                                                            ){
 
   moduleServer( id, function(input, output, session){
 
     ns <- session$ns
 
-    slide3_data_combined <- reactive({s3_combined %>%
-                      dplyr::filter(Year == picker_year_var() & Month %in% picker_month_var() & State == picker_state_var())
+    chart_data_combined <- reactive({
+
+      dplyr::tbl(stream2_pool, "s3_combined")%>%
+        dplyr::filter(Year %in% !!picker_year_var() & Month %in% !!picker_month_var() & State %in% !!picker_state_var())%>%
+        collect() %>%
+        mutate(Months = lubridate::month(as.Date(str_c(Year, Months, 01,sep = "-"), "%Y-%b-%d"), label = T),
+               across(c(Year,State ), as.factor))
+
       })
 
 
 
-    output$slide3 <- renderPlotly({
+    output$plot <- renderPlotly({
 
-      plotmcac <- plot_ly(data = slide3_data_combined() %>% arrange(Months))
+      plotmcac <- plot_ly(data = chart_data_combined() %>% arrange(Months))
 
       plotmcac <- plotmcac %>% add_trace(x = ~Months, y = ~`Measles Cases (CaseBased)`,
                                          type = 'bar',
@@ -78,10 +92,10 @@ mod_confirmed_measles_cases_MCV1_coverage_server <- function(id, picker_year_var
 
       plotmcac <- plotmcac %>% layout(title = paste(paste0("State: ", picker_month_var()),paste0("Year: ", picker_year_var()), sep = "     "),
                                       title= list(size=10),
-                                      xaxis = list(tickfont = font,
+                                      xaxis = list(tickfont = font_plot(),
                                                    title = "Month",
                                                    #fixedrange = TRUE,
-                                                   title= font_axis_title,
+                                                   title= font_axis_title(),
                                                    ticks = "outside",
                                                    tickvals = ~Month,
                                                    showline = TRUE
@@ -93,9 +107,11 @@ mod_confirmed_measles_cases_MCV1_coverage_server <- function(id, picker_year_var
                                       margin = list(r = 85),
 
                                       yaxis = list(side = 'left', title = 'Number of cases',showline = TRUE, rangemode="tozero", showgrid = FALSE, zeroline = T, ticks = "outside",
-                                                   title = font_axis_title, tickfont = font),
-                                      yaxis2 = list(range = c(0, 100),side = 'right', title = 'Coverage (%)', overlaying = "y", title = list(text = ""),showgrid = FALSE,ticks = "outside",
-                                                    zeroline = T,showline = TRUE, title = font_axis_title, tickfont = font),
+                                                   title = font_axis_title(), tickfont = font_plot()),
+                                      yaxis2 = list(#range = c(0, 100),
+                                                    rangemode="tozero",
+                                                    side = 'right', title = 'Coverage (%)', overlaying = "y", title = list(text = ""),showgrid = FALSE,ticks = "outside",
+                                                    zeroline = T,showline = TRUE, title = font_axis_title(), tickfont = font_plot()),
 
 
 
@@ -103,19 +119,19 @@ mod_confirmed_measles_cases_MCV1_coverage_server <- function(id, picker_year_var
                                                     xanchor = "center",  # use center of legend as anchor
                                                     x = 0.5,
                                                     y = -0.25),
-                                      hoverlabel = list(font = font2),
-                                      font = font)%>%
+                                      hoverlabel = list(font = font_hoverlabel()),
+                                      font = font_plot())%>%
         config(modeBarButtons = list(list("toImage", "resetScale2d", "zoomIn2d", "zoomOut2d")),
-               displaylogo = FALSE, toImageButtonOptions = list(filename = "Chart 3- Confirmed measles cases, MCV1 coverage.png"))
+               displaylogo = FALSE, toImageButtonOptions = list(filename = "Chart 2- Confirmed measles cases, MCV1 coverage.png"))
 
       plotmcac
 
     })
 
-    output$download_ch3Data <- downloadHandler(
-      filename = "Chart 3- Confirmed measles cases, MCV1 coverage.csv",
+    output$download_chart_data <- downloadHandler(
+      filename = "Chart 2- Confirmed measles cases, MCV1 coverage.csv",
       content = function(file) {
-        readr::write_csv(slide3_data_combined(), file)
+        readr::write_csv(chart_data_combined(), file)
       }
     )
 

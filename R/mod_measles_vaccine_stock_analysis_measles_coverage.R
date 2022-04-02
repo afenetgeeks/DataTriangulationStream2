@@ -7,6 +7,10 @@
 #' @noRd
 #'
 #' @importFrom shiny NS tagList
+#' @importFrom shinyMobile f7Shadow f7Col f7Card f7DownloadButton
+#' @importFrom plotly plotlyOutput
+#' @importFrom shinycssloaders withSpinner
+#'
 mod_measles_vaccine_stock_analysis_measles_coverage_ui <- function(id){
   ns <- NS(id)
   tagList(
@@ -29,9 +33,15 @@ mod_measles_vaccine_stock_analysis_measles_coverage_ui <- function(id){
 }
 
 #' measles_vaccine_stock_analysis_measles_coverage Server Functions
+#' @importFrom plotly renderPlotly plot_ly  add_trace layout config
+#' @importFrom dplyr collect tbl mutate arrange filter across
 #'
 #' @noRd
-mod_measles_vaccine_stock_analysis_measles_coverage_server <- function(id,  picker_year_var, picker_month_var, picker_state_var){
+mod_measles_vaccine_stock_analysis_measles_coverage_server <- function(id,
+                                                                       picker_year_var,
+                                                                       picker_month_var,
+                                                                       picker_state_var
+                                                                       ){
 
   moduleServer( id, function(input, output, session){
 
@@ -39,7 +49,18 @@ mod_measles_vaccine_stock_analysis_measles_coverage_server <- function(id,  pick
 
     #
     chart_data <- reactive({
-      s6_combined %>% dplyr::filter(Year == picker_year_var() & Month %in% picker_month_var() & State == picker_state_var())
+      # slide 6
+
+       dplyr::tbl(stream2_pool, "s6_combined")%>%
+        dplyr::filter(Year == !!picker_year_var() &
+                        Month %in% !!picker_month_var() &
+                        State == !!picker_state_var()) %>%
+        dplyr::collect() %>%
+        dplyr::mutate(`Measles coverage` = `Measles coverage`*100,
+                       Months = lubridate::month(as.Date(stringr::str_c(Year, Months, 01,sep = "-"), "%Y-%b-%d"),label = T),
+                      dplyr::across(.col = c(Year,State ), as.factor)) %>%
+        dplyr::arrange(Months)
+
       })
 
 
@@ -101,9 +122,9 @@ mod_measles_vaccine_stock_analysis_measles_coverage_server <- function(id,  pick
 
       plotM <- plotM %>% layout(title = paste(paste0("State: ", picker_state_var()),paste0("Year: ", picker_year_var()), sep = "     "),
                                 title= list(size=10),
-                                xaxis = list(tickfont = font,
+                                xaxis = list(tickfont = font_plot(),
                                              title = "Month",
-                                             title= font_axis_title,
+                                             title= font_axis_title(),
                                              #fixedrange = TRUE,
                                              ticks = "outside",
                                              showline = TRUE,
@@ -119,16 +140,16 @@ mod_measles_vaccine_stock_analysis_measles_coverage_server <- function(id,  pick
 
                                 yaxis = list(#range = c(0, 100),
                                              side = 'right', title = 'Coverage (%)',showline = TRUE, showgrid = FALSE, zeroline = T, ticks = "outside",
-                                             title = font_axis_title, tickfont = font),
+                                             title = font_axis_title(), tickfont = font_plot()),
                                 yaxis2 = list(side = 'left', overlaying = "y", rangemode="tozero", title = 'Vaccine Stock (number in doses)',showgrid = FALSE,ticks = "outside",
-                                              zeroline = FALSE,showline = TRUE, title = font_axis_title, tickfont = font),
+                                              zeroline = FALSE,showline = TRUE, title = font_axis_title(), tickfont = font_plot()),
 
                                 legend = list(orientation = "h",   # show entries horizontally
                                               xanchor = "center",  # use center of legend as anchor
                                               x = 0.5,
                                               y = -0.25),
-                                hoverlabel = list(font = font2),
-                                font = font)%>%
+                                hoverlabel = list(font = font_hoverlabel()),
+                                font = font_plot())%>%
         config(modeBarButtons = list(list("toImage", "resetScale2d", "zoomIn2d", "zoomOut2d")),
                displaylogo = FALSE, toImageButtonOptions = list(filename = "Chart 5- Measles Vaccine Stock Analysis & Measles Coverage.png"))
       plotM

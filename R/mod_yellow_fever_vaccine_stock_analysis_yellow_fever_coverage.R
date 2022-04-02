@@ -7,6 +7,9 @@
 #' @noRd
 #'
 #' @importFrom shiny NS tagList
+#' @importFrom shinyMobile f7Shadow f7Col f7Card f7DownloadButton
+#' @importFrom plotly plotlyOutput
+#' @importFrom shinycssloaders withSpinner
 mod_yellow_fever_vaccine_stock_analysis_yellow_fever_coverage_ui <- function(id){
   ns <- NS(id)
   tagList(
@@ -27,24 +30,35 @@ mod_yellow_fever_vaccine_stock_analysis_yellow_fever_coverage_ui <- function(id)
 }
 
 #' yellow_fever_vaccine_stock_analysis_yellow_fever_coverage Server Functions
-#'
+#' @importFrom plotly renderPlotly plot_ly  add_trace layout config
+#' @importFrom dplyr collect tbl mutate arrange filter across
 #' @noRd
-mod_yellow_fever_vaccine_stock_analysis_yellow_fever_coverage_server <- function(id, picker_year_var,picker_month_var,picker_state_var){
+mod_yellow_fever_vaccine_stock_analysis_yellow_fever_coverage_server <- function(id,
+                                                                                 picker_year_var,
+                                                                                 picker_month_var,
+                                                                                 picker_state_var
+                                                                                 ){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
 
 
 
-    chart_data <- reactive({s7_combined %>%
-      dplyr::filter(Year == picker_year_var() &
-                      Month %in% picker_month_var() &
-                      State == picker_state_var()) %>%
-      mutate(Months = lubridate::month(as.Date(str_c(Year, Months, 01,sep = "-"), "%Y-%b-%d"))) %>%
-      tibble() %>% arrange(Months)})
+    chart_data <- reactive({
+
+      dplyr::tbl(stream2_pool, "s7_combined")%>%
+        filter(Year == !!picker_year_var() &
+                 Month %in% !!picker_month_var() &
+                 State == !! picker_state_var()) %>%collect() %>%
+        mutate(`Yellow Fever Coverage` = `Yellow Fever Coverage`*100,
+               Months = lubridate::month(as.Date(str_c(Year, Months, 01,sep = "-"), "%Y-%b-%d"), label = T),
+               across(c(Year,State ), as.factor)) %>%
+        arrange(Months)
+
+      })
 
     output$plot <- renderPlotly({
 
-      plotYF <- plot_ly(data = chart_data())
+      plotYF <- plot_ly(data = chart_data() %>% arrange(Months))
 
       plotYF <- plotYF %>% add_trace(x = ~Months, y = ~`Yellow Fever Coverage`,
                                      type = 'bar',
@@ -90,10 +104,10 @@ mod_yellow_fever_vaccine_stock_analysis_yellow_fever_coverage_server <- function
 
       plotYF <- plotYF %>% layout( title = paste(paste0("State: ", picker_state_var()),paste0("Year: ", picker_year_var()), sep = "     "),
                                    title=list(size=10),
-                                   xaxis = list(tickfont = font,
+                                   xaxis = list(tickfont = font_plot(),
                                                 title = "Month",
                                                 #fixedrange = TRUE,
-                                                title= font_axis_title,
+                                                title= font_axis_title(),
                                                 ticks = "outside",
                                                 showline = TRUE,
                                                 ticktext = list("Jan", "Feb", "Mar", "Apr", "May", "Jun",
@@ -110,17 +124,17 @@ mod_yellow_fever_vaccine_stock_analysis_yellow_fever_coverage_server <- function
                                    yaxis = list(side = 'right',
                                                 #range = c(0, 100),
                                                 title = 'Coverage (%)',showline = TRUE, showgrid = FALSE, zeroline = T, ticks = "outside",
-                                                title = font_axis_title, tickfont = font),
+                                                title = font_axis_title(), tickfont = font_plot()),
                                    yaxis2 = list(side = 'left', rangemode="tozero", overlaying = "y", title = 'Number',showgrid = FALSE,ticks = "outside",
-                                                 zeroline = FALSE,showline = TRUE, title = font_axis_title, tickfont = font),
+                                                 zeroline = FALSE,showline = TRUE, title = font_axis_title(), tickfont = font_plot()),
 
                                    legend = list(orientation = "h",
                                                  xanchor = "center",
                                                  x = 0.5,
                                                  y = -0.25),
 
-                                   hoverlabel = list(font = font2),
-                                   font = font)%>%
+                                   hoverlabel = list(font = font_hoverlabel()),
+                                   font = font_plot())%>%
         config(modeBarButtons = list(list("toImage", "resetScale2d", "zoomIn2d", "zoomOut2d")),
                displaylogo = FALSE, toImageButtonOptions = list(filename = "Chart 6- Yellow Fever Vaccine Stock Analysis & Yellow Fever Coverage.png"))
 

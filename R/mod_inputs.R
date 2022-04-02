@@ -8,17 +8,17 @@
 #'
 #' @importFrom shiny NS tagList
 #'
-#'@import shinyMobile
+#'@importFrom shinyMobile f7Col f7SmartSelect f7Button
 #'
 mod_inputs_ui <- function(id, multiple_year = FALSE,  multiple_state = FALSE){
   ns <- NS(id)
 
   tagList(
 
-    f7Row( f7Col(),f7Col(f7SmartSelect(ns("picker_month"),label = "Months", choices = c("Jan", "Feb", "Mar", "Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec"),
-                                       selected = c("Jan", "Feb", "Mar", "Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec"),searchbar =F,multiple = T,openIn = "popover")),
-           f7Col(f7SmartSelect(ns("picker_year"),label = "Year",choices = c("2017", "2018", "2019", "2020", "2021", "2022"), selected = "2021",searchbar = F,multiple =  multiple_year,openIn = "popover")),
-           f7Col(f7SmartSelect(ns("picker_state"),label = "State", choices = c(national,sort(states_vec)), selected = "Federal Government",searchbar =F,multiple = multiple_state,openIn = "popover")),
+    f7Row( f7Col(),f7Col(f7SmartSelect(ns("picker_month"),label = "Months", choices = months_vector_util(),
+                                       selected = months_vector_util(), searchbar =F,multiple = T,openIn = "popover")),
+           f7Col(f7SmartSelect(ns("picker_year"),label = "Year",choices = years_vector_util(), selected = "2021",searchbar = F,multiple =  multiple_year,openIn = "popover")),
+           f7Col(f7SmartSelect(ns("picker_state"),label = "State", choices = c(national_util(),sort(states_vector_util())), selected = national_util(), searchbar =F,multiple = multiple_state,openIn = "popover")),
            f7Col(tags$div(style = "margin: 34px 3px 5px 6px;",f7Button(inputId = ns("apply"), label = "Update",size = "large", fill = T,shadow = T)))
     )
 
@@ -47,18 +47,7 @@ mod_inputs_server <- function(id){
 
     return(dropdown_inputs)
 
-# return(
-#   list(
-#   picker_year_var <- eventReactive(input$apply >=0,{
-#     input$picker_year
-#   }),
-#
-#   picker_month_var <- eventReactive(input$apply >=0,
-#                                     {input$picker_month}),
-#
-#   picker_state_var <- eventReactive(input$apply >=0,{
-#     input$picker_state})
-# ))
+
 
   })
 }

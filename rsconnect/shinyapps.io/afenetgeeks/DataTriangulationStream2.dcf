@@ -4,10 +4,10 @@ username:
 account: afenetgeeks
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
-appId: 5959560
-bundleId: 5739215
+appId: 5972631
+bundleId: 5748365
 url: https://afenetgeeks.shinyapps.io/DataTriangulationStream2/
-when: 1648542786.03394
-lastSyncTime: 1648542786.03397
+when: 1648706177.31789
+lastSyncTime: 1648706177.31791
 asMultiple: FALSE
 asStatic: FALSE

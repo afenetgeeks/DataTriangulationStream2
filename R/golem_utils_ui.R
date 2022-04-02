@@ -1,3 +1,68 @@
+#' Getting the national name a
+#'
+#' @param states a dataset from data
+#'
+#' @return a character vector
+#' @noRd
+#'
+#' @examples
+#'
+#' @importFrom shiny tags tagAppendAttributes tagList
+#'
+#'
+#'
+
+
+
+##"sans-serif"
+
+font_plot <-  function(){
+  list(
+    family = "Trebuchet MS, Helvetica, sans-serif",
+    color = "black",
+    size = 12)
+}
+
+font_axis_title <-  function(){
+  list(
+    family = "Trebuchet MS, Helvetica, sans-serif",
+    color = "black",
+    size = 15)
+}
+
+
+
+font_hoverlabel <- function(){
+      list(
+      family = "Trebuchet MS, Helvetica, sans-serif",
+      color = "white",
+      size = 12)
+  }
+
+
+
+
+national_util <- function(){
+  states$state_name[38]
+}
+
+
+states_vector_util <-  function(){
+  states$state_name[1:37]
+}
+
+months_vector_util <- function(){
+      c("Jan", "Feb", "Mar", "Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
+}
+
+
+years_vector_util <- function(){
+
+c("2017", "2018", "2019", "2020", "2021", "2022")
+}
+
+
+
 #' Turn an R list into an HTML list
 #'
 #' @param list An R list
@@ -10,7 +75,6 @@
 #' list_to_li(c("a","b"))
 #'
 #' @importFrom shiny tags tagAppendAttributes tagList
-#' @import plotly
 list_to_li <- function(list, class = NULL){
   if (is.null(class)){
     tagList(

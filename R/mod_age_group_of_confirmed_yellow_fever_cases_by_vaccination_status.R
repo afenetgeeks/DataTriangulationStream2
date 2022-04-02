@@ -7,6 +7,9 @@
 #' @noRd
 #'
 #' @importFrom shiny NS tagList
+#' @importFrom shinyMobile f7Shadow f7Col f7Card f7DownloadButton
+#' @importFrom plotly plotlyOutput
+#' @importFrom shinycssloaders withSpinner
 mod_age_group_of_confirmed_yellow_fever_cases_by_vaccination_status_ui <- function(id){
   ns <- NS(id)
   tagList(
@@ -33,18 +36,26 @@ mod_age_group_of_confirmed_yellow_fever_cases_by_vaccination_status_ui <- functi
 #' @param picker_year_var,picker_month_var,picker_state_var Selected parameters from the inputs
 #'
 #' @noRd
-mod_age_group_of_confirmed_yellow_fever_cases_by_vaccination_status_server <- function(id, picker_year_var,picker_month_var,picker_state_var){
+mod_age_group_of_confirmed_yellow_fever_cases_by_vaccination_status_server <- function(id,
+                                                                                       picker_year_var,
+                                                                                       picker_month_var,
+                                                                                       picker_state_var
+                                                                                       ){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
 
     # slide 5
-    chart_data <- reactive({yf_by_age_group %>%
-      filter(Year %in% picker_year_var() &
-               State %in% picker_state_var() &
-               Months %in% picker_month_var()) %>%
-      group_by(`Age group`) %>%
-      summarise(across(c(Vaccinated,Unvaccinated,Unknown), ~ sum(.x, na.rm = TRUE))) %>%
-      ungroup()})
+    chart_data <- reactive({
+
+      dplyr::tbl(stream2_pool, "yf_by_age_group")%>%
+        filter(Year %in% !!picker_year_var() &
+                 State %in% !!picker_state_var() &
+                 Months %in%  !!picker_month_var()) %>%group_by(`Age group`) %>%
+        summarise(across(c(Vaccinated,Unvaccinated,Unknown), ~ sum(.x, na.rm = TRUE))) %>%  ungroup() %>% dplyr::collect() %>%
+        dplyr::mutate(`Age group` = factor(`Age group`, labels = c("0-8 M", "9-23 M", "24-48 M", "5-9", "10-14", "15-19", "20-24", "25-29", "30-34", ">=35"),
+                                           levels = c("0-8 M", "9-23 M", "24-48 M", "5-9", "10-14", "15-19", "20-24", "25-29", "30-34", ">=35")))
+
+      })
 
 
     output$plot <- renderPlotly({
@@ -71,10 +82,10 @@ mod_age_group_of_confirmed_yellow_fever_cases_by_vaccination_status_server <- fu
         layout( title = paste(paste0("State: ", picker_state_var()),paste0("Year: ", picker_year_var()), sep = "     "),
                 title= list(size=10),
                 barmode = 'stack',
-                xaxis = list(tickfont = font,
+                xaxis = list(tickfont = font_plot(),
                              title = "Age group (M- months)",
                              #fixedrange = TRUE,
-                             title= font_axis_title,
+                             title= font_axis_title(),
                              ticks = "outside",
                              showline = TRUE),
                 #width = "auto",
@@ -83,15 +94,15 @@ mod_age_group_of_confirmed_yellow_fever_cases_by_vaccination_status_server <- fu
                 plot_bgcolor = "rgba(0, 0, 0, 0)",
                 paper_bgcolor = 'rgba(0, 0, 0, 0)',
                 yaxis = list(side = 'left', rangemode="tozero", title = 'Number of cases',showline = TRUE, showgrid = FALSE, zeroline = T, ticks = "outside",
-                             title = font_axis_title, tickfont = font),
+                             title = font_axis_title(), tickfont = font_plot()),
 
 
                 legend = list(orientation = "h",   # show entries horizontally
                               xanchor = "center",  # use center of legend as anchor
                               x = 0.5,
                               y = -0.25),
-                hoverlabel = list(font = font2),
-                font = font)%>%
+                hoverlabel = list(font = font_hoverlabel()),
+                font = font_plot())%>%
         config(modeBarButtons = list(list("toImage", "resetScale2d", "zoomIn2d", "zoomOut2d")),
                displaylogo = FALSE, toImageButtonOptions = list(filename = "Chart 4- Age Group of Confirmed Yellow Fever Cases by Vaccination Status.png"))
 

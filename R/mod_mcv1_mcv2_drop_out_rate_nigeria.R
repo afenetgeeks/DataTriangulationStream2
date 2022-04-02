@@ -32,22 +32,33 @@ mod_mcv1_mcv2_drop_out_rate_nigeria_ui <- function(id){
 
 #' mcv1_mcv2_drop_out_rate_nigeria Server Functions
 #' @importFrom plotly renderPlotly plot_ly  add_trace layout config
-#'
+#' @importFrom dplyr collect tbl mutate arrange filter across
 #' @noRd
-mod_mcv1_mcv2_drop_out_rate_nigeria_server <- function(id, picker_year_var,picker_month_var,picker_state_var){
+mod_mcv1_mcv2_drop_out_rate_nigeria_server <- function(id,
+                                                       picker_year_var,
+                                                       picker_month_var,
+                                                       picker_state_var
+                                                       ){
   moduleServer( id, function(input, output, session){
 
     ns <- session$ns
 
 
-    chart_data <- reactive({s8_combined %>%
-      dplyr::filter(Year == picker_year_var() &
-                      Month %in% picker_month_var())})
+    chart_data <- reactive({
+      # slide 8
+        dplyr::tbl(stream2_pool, "s8_combined") %>%
+        dplyr::filter(Year %in% !!picker_year_var() &
+                     Months %in%  !!picker_month_var()) %>% dplyr::collect() %>%
+        dplyr::mutate(Months = lubridate::month(as.Date(stringr::str_c(Year, Months, 01,sep = "-"), "%Y-%b-%d"), label = T),
+                      dplyr::across(.col = c(Year,State ), as.factor)) %>%
+        dplyr::arrange(Months)
+
+      })
 
 
     output$plot <- renderPlotly({
 
-      plotM12Dropout <- plot_ly(data = chart_data() %>% arrange(Months))
+      plotM12Dropout <- plot_ly(data = chart_data())
 
       plotM12Dropout <- plotM12Dropout %>% add_trace(x = ~Months, y = ~`Measles 1 given (administered)`,
                                                      type = 'bar',
@@ -74,12 +85,12 @@ mod_mcv1_mcv2_drop_out_rate_nigeria_server <- function(id, picker_year_var,picke
                                                      hovertemplate = paste('<b>Coverage %</b>: %{y:.1f}',
                                                                            '<br><b style="text-align:left;">Month </b>: %{x}<br>'))
 
-      plotM12Dropout <- plotM12Dropout %>% layout( title = paste(paste0("State: ", picker_state_var()),paste0("Year: ", picker_year_var()), sep = "     "),
+      plotM12Dropout <- plotM12Dropout %>% layout( title = paste(paste0("National Data only"),paste0("Year: ", picker_year_var()), sep = "   "),
                                                    title=list(size=10),
-                                                   xaxis = list(tickfont = font,
+                                                   xaxis = list(tickfont = font_plot(),
                                                                 title = "Month",
                                                                 #fixedrange = TRUE,
-                                                                title= font_axis_title,
+                                                                title= font_axis_title(),
                                                                 ticks = "outside",
                                                                 #type = 'date',
                                                                 showline = TRUE,
@@ -94,17 +105,17 @@ mod_mcv1_mcv2_drop_out_rate_nigeria_server <- function(id, picker_year_var,picke
                                                    paper_bgcolor = 'rgba(0, 0, 0, 0)',
 
                                                    yaxis = list(side = 'left', rangemode="tozero", title = 'Measles Doses',showline = TRUE, showgrid = FALSE, zeroline = T, ticks = "outside",
-                                                                title = font_axis_title, tickfont = font),
+                                                                title = font_axis_title(), tickfont = font_plot()),
                                                    yaxis2 = list(side = 'right',range = c(0, 100), overlaying = "y", title = 'Rate(%)',showgrid = FALSE,ticks = "outside",
-                                                                 zeroline = FALSE,showline = TRUE, title = font_axis_title, tickfont = font),
+                                                                 zeroline = FALSE,showline = TRUE, title = font_axis_title(), tickfont = font_plot()),
 
                                                    legend = list(orientation = "h",
                                                                  xanchor = "center",
                                                                  x = 0.5,
                                                                  y = -0.25),
 
-                                                   hoverlabel = list(font = font2),
-                                                   font = font)%>%
+                                                   hoverlabel = list(font = font_hoverlabel()),
+                                                   font = font_plot())%>%
         plotly::config(modeBarButtons = list(list("toImage", "resetScale2d", "zoomIn2d", "zoomOut2d")),
                displaylogo = FALSE, toImageButtonOptions = list(filename = "Chart 7- MCV1 & MCV2 Drop Out Rate, Nigeria.png"))
 

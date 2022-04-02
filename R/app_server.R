@@ -3,8 +3,24 @@
 #' @param input,output,session Internal parameters for {shiny}.
 #'     DO NOT REMOVE.
 #' @import shiny
+#' @importFrom RMariaDB MariaDB
+#' @importFrom dplyr collect tbl mutate arrange filter across
+#' @importFrom readr read_csv
+#' @importFrom GADMTools gadm_sp_loadCountries
+#' @importFrom stringr str_c
+#' @importFrom magrittr %>%
+#' @import dplyr
+#' @importFrom tibble tibble
+#'
 #' @noRd
 app_server <- function( input, output, session ) {
+
+  #stream2_pool_connection <- reactive({connect_sql_db()})
+
+  onStop(function() {
+    pool::poolClose(stream2_pool)
+  })
+
 
   # Your application server logic
 
@@ -15,52 +31,64 @@ app_server <- function( input, output, session ) {
   mod_confirmed_measles_cases_MCV1_coverage_server("confirmed_measles_cases_MCV1_coverage_1",
                                                    picker_year_var = reactive({dropdown_inputs$picker_year_var}),
                                                    picker_month_var = reactive({dropdown_inputs$picker_month_var}),
-                                                   picker_state_var = reactive({dropdown_inputs$picker_state_var}))
+                                                   picker_state_var = reactive({dropdown_inputs$picker_state_var})
+                                                  )
 
   mod_age_group_of_confirmed_measles_cases_by_vaccination_status_server("age_group_of_confirmed_measles_cases_by_vaccination_status_1",
                                                                         picker_year_var = reactive({dropdown_inputs$picker_year_var}),
                                                                         picker_month_var = reactive({dropdown_inputs$picker_month_var}),
-                                                                        picker_state_var = reactive({dropdown_inputs$picker_state_var}))
+                                                                        picker_state_var = reactive({dropdown_inputs$picker_state_var})
+                                                                        )
 
   mod_age_group_of_confirmed_yellow_fever_cases_by_vaccination_status_server("age_group_of_confirmed_yellow_fever_cases_by_vaccination_status_1",
                                                                              picker_year_var = reactive({dropdown_inputs$picker_year_var}),
                                                                              picker_month_var = reactive({dropdown_inputs$picker_month_var}),
-                                                                             picker_state_var = reactive({dropdown_inputs$picker_state_var}))
+                                                                             picker_state_var = reactive({dropdown_inputs$picker_state_var})
+                                                                            )
 
-  mod_yellow_fever_vaccine_stock_analysis_yellow_fever_coverage_server("yellow_fever_vaccine_stock_analysis_yellow_fever_coverage_1",
-                                                                       picker_year_var = reactive({dropdown_inputs$picker_year_var}),
-                                                                       picker_month_var = reactive({dropdown_inputs$picker_month_var}),
-                                                                       picker_state_var = reactive({dropdown_inputs$picker_state_var}))
 
   mod_measles_vaccine_stock_analysis_measles_coverage_server("measles_vaccine_stock_analysis_measles_coverage_1",
                                                              picker_year_var = reactive({dropdown_inputs$picker_year_var}),
                                                              picker_month_var = reactive({dropdown_inputs$picker_month_var}),
-                                                             picker_state_var = reactive({dropdown_inputs$picker_state_var}))
+                                                             picker_state_var = reactive({dropdown_inputs$picker_state_var})
+                                                             )
+
+
+  mod_yellow_fever_vaccine_stock_analysis_yellow_fever_coverage_server("yellow_fever_vaccine_stock_analysis_yellow_fever_coverage_1",
+                                                                       picker_year_var = reactive({dropdown_inputs$picker_year_var}),
+                                                                       picker_month_var = reactive({dropdown_inputs$picker_month_var}),
+                                                                       picker_state_var = reactive({dropdown_inputs$picker_state_var})
+                                                                       )
 
   mod_mcv1_mcv2_drop_out_rate_nigeria_server("mcv1_mcv2_drop_out_rate_nigeria_1",
                                              picker_year_var = reactive({dropdown_inputs$picker_year_var}),
                                              picker_month_var = reactive({dropdown_inputs$picker_month_var}),
-                                             picker_state_var = reactive({dropdown_inputs$picker_state_var}))
+                                             picker_state_var = reactive({dropdown_inputs$picker_state_var})
+                                             )
 
   mod_mcv1_mcv2_drop_out_rate_server("mcv1_mcv2_drop_out_rate_1",
                                      picker_year_var = reactive({dropdown_inputs$picker_year_var}),
                                      picker_month_var = reactive({dropdown_inputs$picker_month_var}),
-                                     picker_state_var = reactive({dropdown_inputs$picker_state_var}))
+                                     picker_state_var = reactive({dropdown_inputs$picker_state_var})
+                                     )
 
   mod_discrepancy_mcv1_yellow_fever_given_by_state_server("discrepancy_mcv1_yellow_fever_given_by_state_1",
                                                           picker_year_var = reactive({dropdown_inputs$picker_year_var}),
                                                           picker_month_var = reactive({dropdown_inputs$picker_month_var}),
-                                                          picker_state_var = reactive({dropdown_inputs$picker_state_var}))
+                                                          picker_state_var = reactive({dropdown_inputs$picker_state_var})
+                                                          )
 
   dropdown_inputs_maps <- mod_inputs_server("inputs_maps")
 
   mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_server("map_confirmed_measles_cases_mcv1_coverage_annual_data_1",
                                                                    picker_year_var = reactive({dropdown_inputs_maps$picker_year_var}),
                                                                    picker_month_var = reactive({dropdown_inputs_maps$picker_month_var}),
-                                                                   picker_state_var = reactive({dropdown_inputs_maps$picker_state_var}))
+                                                                   picker_state_var = reactive({dropdown_inputs_maps$picker_state_var})
+                                                                   )
 
   mod_map_confirmed_yellow_fever_cases_yellow_fever_coverage_annual_data_server("map_confirmed_yellow_fever_cases_yellow_fever_coverage_annual_data_1",
                                                                                 picker_year_var = reactive({dropdown_inputs_maps$picker_year_var}),
                                                                                 picker_month_var = reactive({dropdown_inputs_maps$picker_month_var}),
-                                                                                picker_state_var = reactive({dropdown_inputs_maps$picker_state_var}))
+                                                                                picker_state_var = reactive({dropdown_inputs_maps$picker_state_var})
+                                                                                )
 }

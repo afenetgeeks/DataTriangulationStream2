@@ -42,32 +42,56 @@ mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_ui <- function(id){
 #' @importFrom GADMTools gadm_subset
 #' @importFrom dplyr left_join
 #' @noRd
-mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_server <- function(id, picker_year_var,picker_month_var,picker_state_var){
+mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_server <- function(id,
+                                                                             picker_year_var,
+                                                                             picker_month_var,
+                                                                             picker_state_var
+                                                                            ){
   moduleServer( id, function(input, output, session){
 
     ns <- session$ns
 
+    # Map 11 MVC
+
     stream2_data<- reactiveValues()
-
-
 
     observe({
 
       if(sum(picker_state_var() == "Federal Government") == 1){
 
-      stream2_data$dhis2_data <- mvc_gadm_data %>%
-        filter(Year == picker_year_var())}
-    else{stream2_data$dhis2_data <- mvc_gadm_data %>%
-      filter(Year == picker_year_var() &
-               State %in% picker_state_var())}
+      stream2_data$dhis2_data <- dplyr::tbl(stream2_pool, "measles_coverage_s11_states") %>%
+        filter(Year %in% !!picker_year_var())%>%dplyr::collect() %>%
+        dplyr::mutate(dplyr::across(.col = c(Year,State,`Coverage %`), as.factor),
+                      State = str_replace(State,pattern = "Federal Capital Territory",replacement = "Fct"))
+
+      }
+    else{
+      stream2_data$dhis2_data <- dplyr::tbl(stream2_pool, "measles_coverage_s11_states") %>%
+      filter(Year %in% !!picker_year_var() &
+               State %in% !!picker_state_var())%>%dplyr::collect() %>%
+      dplyr::mutate(dplyr::across(.col = c(Year,State,`Coverage %`), as.factor),
+                    State = str_replace(State,pattern = "Federal Capital Territory",replacement = "Fct"))
+    }
+
+
+
+
 
     if(sum(picker_state_var() == "Federal Government") == 1){
-      stream2_data$sormas_mvc <- sm_plus_lga_latlon_cleaned %>%
-        filter(Year == picker_year_var())}
+      stream2_data$sormas_mvc <- dplyr::tbl(stream2_pool, "sormas_measles_geocodes") %>%
+        filter(Year %in% !!picker_year_var()) %>% dplyr::collect()%>%
+        dplyr::mutate(dplyr::across(.col = c(Year,State, LGA), as.factor),
+                      State = str_replace(State,pattern = "Federal Capital Territory",replacement = "Fct"))
 
-    else{stream2_data$sormas_mvc <- sm_plus_lga_latlon_cleaned %>%
-      filter(Year == picker_year_var()&
-               State %in% picker_state_var())}
+      }else{
+
+      stream2_data$sormas_mvc <- dplyr::tbl(stream2_pool, "sormas_measles_geocodes") %>%
+        filter(Year == !!picker_year_var()&
+                 State %in% !!picker_state_var()) %>% dplyr::collect()%>%
+        dplyr::mutate(dplyr::across(.col = c(Year,State, LGA), as.factor),
+                      State = str_replace(State,pattern = "Federal Capital Territory",replacement = "Fct"))
+
+      }
     })
 
 
@@ -89,60 +113,63 @@ mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_server <- function(id,
 
       if(sum(picker_state_var() == "Federal Government") == 1){
 
-        gadm_data_mvc$spdf@data <- gadm_data_mvc$spdf@data %>%
-          left_join(stream2_data$dhis2_data, by = c("NAME_1" = "State"))
+        states_gadm_sp_data$spdf@data <- states_gadm_sp_data$spdf@data %>%
+          left_join(as.data.frame(stream2_data$dhis2_data), by = c("NAME_1" = "State"))
 
         mvc_map <-  leaflet() %>%
           addProviderTiles("Stamen.Toner") %>%
           setView(lat =  9.077751,lng = 8.6774567, zoom = 6)  %>%
-          addPolygons(data = gadm_data_mvc$spdf,
-                      fillColor = ~pal_mvc(gadm_data_mvc$spdf@data$`Coverage %`),
+          addPolygons(data = states_gadm_sp_data$spdf,
+                      fillColor = ~pal_mvc(states_gadm_sp_data$spdf@data$`Coverage %`),
                       stroke = TRUE,
                       color = "black",
                       weight = 2.5,
                       fillOpacity = 0.5,
                       fill = T,
                       label = ~paste0(
-                        "<h6>", gadm_data_mvc$spdf@data$NAME_1, "</h6>"
+                        "<h6>", states_gadm_sp_data$spdf@data$NAME_1, "</h6>"
                       )%>%
                         lapply(htmltools::HTML),
                       labelOptions = labelOptions(
-                        style = list("font-weight" = "normal", color = "black"),
+                        style = ,
                         textsize = "13px",
                         direction = "auto", noHide = T,textOnly = T
                       )) %>%
-          addLegend(colors = legend_colors, labels = legend_labels,
+          addLegend(colors = make_shapes(colors = colors(), sizes = sizes() , borders = borders() , shapes = shapes()),
+                    labels = make_labels(sizes = sizes(), labels = labels()),
                     opacity =  0.6, title = "Coverage %", position = "bottomright")
 
-        mvc_map <- add_state_clusters(leaflet_map =  mvc_map,states = responsible_states_measles, data =  stream2_data$sormas_mvc)
+        mvc_map <- add_state_clusters(leaflet_map =  mvc_map,
+                                      states = str_replace(states_vector_util(),pattern = "Federal Capital Territory",replacement = "Fct"),
+                                      data =  stream2_data$sormas_mvc)
 
       }
       else{
-        gadm_data_mvc_state <- gadm_subset(gadm_data_mvc,
+        states_gadm_sp_data_state <- gadm_subset(states_gadm_sp_data,
                                            level = 1,
                                            regions = picker_state_var())
 
-        gadm_data_mvc_state$spdf@data <- gadm_data_mvc_state$spdf@data %>%
-          left_join(stream2_data$dhis2_data, by = c("NAME_1" = "State"))
+        states_gadm_sp_data_state$spdf@data <- states_gadm_sp_data_state$spdf@data %>%
+          left_join(as.data.frame(stream2_data$dhis2_data), by = c("NAME_1" = "State"))
 
         mvc_map <-  leaflet() %>%
           addProviderTiles("Stamen.Toner") %>%
-          # setView(lat =  gadm_data_mvc_state$spdf@data$Lat,
-          #         lng = gadm_data_mvc_state$spdf@data$Long, zoom = 6)  %>%
-          addPolygons(data = gadm_data_mvc_state$spdf,
-                      fillColor = ~pal_mvc(gadm_data_mvc_state$spdf@data$`Coverage %`),
+          # setView(lat =  states_gadm_sp_data_state$spdf@data$Lat,
+          #         lng = states_gadm_sp_data_state$spdf@data$Long, zoom = 6)  %>%
+          addPolygons(data = states_gadm_sp_data_state$spdf,
+                      fillColor = ~pal_mvc(states_gadm_sp_data_state$spdf@data$`Coverage %`),
                       stroke = TRUE,
                       color = "black",
                       weight = 2.5,
                       fillOpacity = 0.5,
                       fill = T,
                       label = ~paste0(
-                        "<h6>", gadm_data_mvc_state$spdf@data$NAME_1, "</h6>"
+                        "<h6>", states_gadm_sp_data_state$spdf@data$NAME_1, "</h6>"
                       )%>%
                         lapply(htmltools::HTML),
                         labelOptions = labelOptions(
-                        style = list("font-weight" = "normal", color = "black"),
-                        textsize = "13px",
+                        style = font_plot(),
+                        #textsize = "13px",
                         direction = "auto", noHide = T,textOnly = T
                       ))%>%
           leaflet::addMarkers(data = stream2_data$sormas_mvc,
@@ -161,7 +188,8 @@ mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_server <- function(id,
                                                className: 'marker-cluster'
                                              });
                                            }"))) %>%
-          addLegend(colors = legend_colors, labels = legend_labels,
+          addLegend(colors = make_shapes(colors = colors(), sizes = sizes() , borders = borders() , shapes = shapes()),
+                    labels = make_labels(sizes = sizes(), labels = labels()),
                     opacity =  0.6, title = "Coverage %", position = "bottomright")
 
       }

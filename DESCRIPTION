@@ -15,8 +15,11 @@ Description: The Nigeria Routine Immunization (RI) & Vaccine Preventable
 License: MIT + file LICENSE
 URL: https://github.com/amanyiraho/DataTriangulationStream2
 BugReports: https://github.com/amanyiraho/DataTriangulationStream2/issues
+Depends: 
+    R (>= 2.10)
 Imports: 
     config,
+    dbplyr,
     dplyr (>= 1.0.8.9000),
     forcats,
     GADMTools,
@@ -28,7 +31,6 @@ Imports:
     magrittr,
     plotly,
     pool,
-    purrr,
     readr,
     RMariaDB,
     scales,
@@ -44,5 +46,6 @@ Remotes:
     tidyverse/dplyr
 Encoding: UTF-8
 Language: en-US
+LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2

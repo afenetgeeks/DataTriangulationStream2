@@ -19,7 +19,7 @@ mod_age_group_of_confirmed_yellow_fever_cases_by_vaccination_status_ui <- functi
             img(class = "column-icon", src = "www/age-group-vaccination-icon.svg",  height = 40, width = 80, alt="nigeria coat of arms", role="img")),
 
         h6("Chart 4: Age Group of Confirmed Yellow Fever Cases by Vaccination Status", class = "column-title"),
-        data_chart_download_btns(id),
+        HTML('<a id="downloadData" class="btn btn-default shiny-download-link download-data-btn" href="" target="_blank" download>                       <i class="fa fa-download" aria-hidden="true"></i>                       <div class = tooltipdiv> <p class="tooltiptext">Download the data for this Chart</p> </div>                      </a>'),          HTML('<a id="downloadChart" class="btn btn-default shiny-download-link download-data-btn download-chart-btn" href="" target="_blank" download>                      <i class="fa fa-chart-bar"></i>                       <div class = tooltipdiv>                           <p class="tooltiptext">                               Download this Chart                           </p>                       </div>                      </a>'),
         withSpinner(plotlyOutput(ns("plot")),type = 6, size = 0.3,hide.ui = F)
 
     )

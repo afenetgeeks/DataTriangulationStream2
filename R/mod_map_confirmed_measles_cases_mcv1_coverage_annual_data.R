@@ -20,8 +20,29 @@ mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_ui <- function(id){
             img(class = "column-icon", src = "www/partially-vaccinated-today-icon.svg",  height = 40, width = 80, alt="nigeria coat of arms", role="img")),
 
         h6("Chart 10: Confirmed Measles cases, Measles 1 coverage (Annual data)", class = "column-title"),
-        mod_map_inputs_ui("map_inputs_1"),
-        data_chart_download_btns(id),
+
+
+        div(class = "map_charts_inputs",
+
+            pickerInput(inputId = ns("picker_year"), label =  NULL,
+                        choices = years_vector_util(), multiple = F, selected = "2021",
+                        options = list(title = "Years",`actions-box` = TRUE,size = 10,`selected-text-format` = "count > 2")),
+
+            pickerInput(ns("picker_state"),label = NULL,
+                        choices = c(national_util(),sort(states_vector_util())), multiple = T,selected = national_util(),
+                        options = list(title = "State",`actions-box` = TRUE,size = 10,`selected-text-format` = "count > 2")),
+
+        ),
+
+
+        HTML('<a id="downloadData" class="btn btn-default shiny-download-link download-data-btn" href="" target="_blank" download>
+             <i class="fa fa-download" aria-hidden="true"></i>
+             <div class = tooltipdiv> <p class="tooltiptext">Download the data for this Chart</p> </div>
+             </a>'),
+        HTML('<a id="downloadChart" class="btn btn-default shiny-download-link download-data-btn download-chart-btn" href="" target="_blank" download>
+             <i class="fa fa-chart-bar"></i>
+             <div class = tooltipdiv> <p class="tooltiptext">Download this Chart</p> </div>
+             </a>'),
         withSpinner(leafletOutput(ns("mvcMap"), height=440),type = 6, size = 0.4,hide.ui = F),
         p("Quick guide!!"),
         tags$i(style="color:#0e7290;font-size:10px", "The blue bubbles represent clusters of measles cases in a State. The numbers in each bubble are cases in that cluster"),
@@ -38,17 +59,21 @@ mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_ui <- function(id){
 #' @importFrom GADMTools gadm_subset
 #' @importFrom dplyr left_join
 #' @noRd
-mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_server <- function(id,
-                                                                             picker_year_var,
-                                                                             picker_state_var
-                                                                            ){
+mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_server <- function(id){
   moduleServer( id, function(input, output, session){
 
     ns <- session$ns
 
     # Map 11 MVC
 
+    picker_state_var <- reactive({input$picker_state})
+    picker_year_var <- reactive({ input$picker_year})
+
+
+
     stream2_data<- reactiveValues()
+
+
 
     observe({
 

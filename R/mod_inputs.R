@@ -72,10 +72,6 @@ mod_inputs_server <- function(id){
 
     })
 
-    observe({
-      print(input$update)
-    })
-
 
     return(dropdown_inputs)
 

@@ -22,11 +22,11 @@ app_server <- function( input, output, session ) {
 
   mod_national_measles_coverage_different_sources_server("national_measles_coverage_different_sources_1")
 
-  # mod_confirmed_measles_cases_MCV1_coverage_server("confirmed_measles_cases_MCV1_coverage_1",
-  #                                                  picker_year_var = reactive({dropdown_inputs$picker_year_var}),
-  #                                                  picker_month_var = reactive({dropdown_inputs$picker_month_var}),
-  #                                                  picker_state_var = reactive({dropdown_inputs$picker_state_var})
-  #                                                 )
+  mod_confirmed_measles_cases_MCV1_coverage_server("confirmed_measles_cases_MCV1_coverage_1",
+                                                   picker_year_var = reactive({dropdown_inputs$picker_year_var}),
+                                                   picker_month_var = reactive({dropdown_inputs$picker_month_var}),
+                                                   picker_state_var = reactive({dropdown_inputs$picker_state_var})
+                                                  )
   #
   # mod_age_group_of_confirmed_measles_cases_by_vaccination_status_server("age_group_of_confirmed_measles_cases_by_vaccination_status_1",
   #                                                                       picker_year_var = reactive({dropdown_inputs$picker_year_var}),

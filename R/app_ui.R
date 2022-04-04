@@ -13,7 +13,10 @@ app_ui <- function(request) {
     # Leave this function for adding external resources
     golem_add_external_resources(),
     # Your application UI logic
-    fluidPage(theme =  bslib::bs_theme(version = 5,
+    fluidPage(
+
+
+      theme =  bslib::bs_theme(version = 5,
                                heading_font = bslib::font_google("Ubuntu"),
                                base_font = bslib::font_google("Roboto")),
 

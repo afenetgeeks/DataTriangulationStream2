@@ -14,18 +14,14 @@ mod_age_group_of_confirmed_yellow_fever_cases_by_vaccination_status_ui <- functi
   ns <- NS(id)
   tagList(
 
-    f7Col(
-      f7Shadow(
-        intensity = 4,
-        hover = TRUE,
-        f7Card(
-          title = NULL,
-          splitLayout(h4("Chart 4: Age Group of Confirmed Yellow Fever Cases by Vaccination Status",align = "center"),
-                      f7DownloadButton(ns("download_chart_data"),label = NULL),
-                      cellWidths = c("95%", "5%")),
-          withSpinner(plotlyOutput(ns("plot")),type = 6, size = 0.3,hide.ui = F)
+    div(class = "col-6 col-6-t",
+        div(class ="column-icon-div",
+            img(class = "column-icon", src = "www/age-group-vaccination-icon.svg",  height = 40, width = 80, alt="nigeria coat of arms", role="img")),
 
-        ))
+        h6("Chart 4: Age Group of Confirmed Yellow Fever Cases by Vaccination Status", class = "column-title"),
+        data_chart_download_btns(id),
+        withSpinner(plotlyOutput(ns("plot")),type = 6, size = 0.3,hide.ui = F)
+
     )
   )
 }

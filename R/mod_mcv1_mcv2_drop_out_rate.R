@@ -14,17 +14,17 @@ mod_mcv1_mcv2_drop_out_rate_ui <- function(id){
   ns <- NS(id)
   tagList(
 
-    f7Col(
-      f7Shadow(
-        intensity = 4,
-        hover = TRUE,
-        f7Card(
-          title = NULL,
-          splitLayout(h4("Chart 8: MCV1 and MCV2 Drop Out Rate", align = "center"),
-                      f7DownloadButton(ns("download_chart_data"),label = NULL),
-                      cellWidths = c("95%", "5%")),
-          withSpinner(plotlyOutput(ns("plot")),type = 6, size = 0.3,hide.ui = F))
-      ))
+    div(class = "col-6 col-6-t",
+        div(class ="column-icon-div",
+            img(class = "column-icon", src = "www/total-registrations-icon.svg",  height = 40, width = 80, alt="nigeria coat of arms", role="img")),
+
+        h6("Chart 8: Measles 1 and Measles 2 Drop Out Rate", class = "column-title"),
+        data_chart_download_btns(id),
+        withSpinner(plotlyOutput(ns("plot")),type = 6, size = 0.3,hide.ui = F)
+
+    )
+
+
 
   )
 }
@@ -86,7 +86,7 @@ mod_mcv1_mcv2_drop_out_rate_server <- function(id,
           yaxis = list(range = c(0, 100),title = 'MCV 1 MCV 2 Droupout Rate(%)',showline = TRUE, showgrid = FALSE, zeroline = T, ticks = "outside",
                        title = font_axis_title(), tickfont = font_plot())) %>%
         config(modeBarButtons = list(list("toImage", "resetScale2d", "zoomIn2d", "zoomOut2d")),
-               displaylogo = FALSE, toImageButtonOptions = list(filename = "Chart 8- MCV1 and MCV2 Drop Out Rate.png"))
+               displaylogo = FALSE, toImageButtonOptions = list(filename = "Chart 8- Measles 1 and Measles 2 Drop Out Rate.png"))
 
       fig
 
@@ -95,7 +95,7 @@ mod_mcv1_mcv2_drop_out_rate_server <- function(id,
     })
 
     output$download_chart_data <- downloadHandler(
-      filename = "Chart 8- MCV1 and MCV2 Drop Out Rate.csv",
+      filename = "Chart 8- Measles 1 and Measles 2 Drop Out Rate.csv",
       content = function(file) {
         readr::write_csv(chart_data(), file)
       }

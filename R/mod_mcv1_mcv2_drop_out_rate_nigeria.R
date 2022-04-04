@@ -14,19 +14,15 @@ mod_mcv1_mcv2_drop_out_rate_nigeria_ui <- function(id){
   ns <- NS(id)
   tagList(
 
-    f7Col(
-      f7Shadow(
-        intensity = 4,
-        hover = TRUE,
-        f7Card(
-          title = NULL,
-          splitLayout(h4("Chart 7: MCV1 & MCV2 Drop Out Rate, Nigeria",align = "center"),
-                      f7DownloadButton(ns("download_chart_data"),label = NULL),
-                      cellWidths = c("95%", "5%")),
-          withSpinner(plotlyOutput(ns("plot")),type = 6, size = 0.3,hide.ui = F)
-        ))
-    )
+    div(class = "col-6 col-6-t",
+        div(class ="column-icon-div",
+            img(class = "column-icon", src = "www/total-registrations-icon.svg",  height = 40, width = 80, alt="nigeria coat of arms", role="img")),
 
+        h6("Chart 7: Measles 1 & Measles 2 Drop Out Rate, Nigeria", class = "column-title"),
+        data_chart_download_btns(id),
+        withSpinner(plotlyOutput(ns("plot")),type = 6, size = 0.3,hide.ui = F)
+
+    )
   )
 }
 
@@ -62,7 +58,7 @@ mod_mcv1_mcv2_drop_out_rate_nigeria_server <- function(id,
 
       plotM12Dropout <- plotM12Dropout %>% add_trace(x = ~Months, y = ~`Measles 1 given (administered)`,
                                                      type = 'bar',
-                                                     name = 'MCV1',
+                                                     name = 'Measles 1',
                                                      color = I("#005F73"),
                                                      hovertemplate = paste('<b>Number</b>: %{y:.0f}',
                                                                            '<br><b style="text-align:left;">Month </b>: %{x}<br>'))
@@ -70,7 +66,7 @@ mod_mcv1_mcv2_drop_out_rate_nigeria_server <- function(id,
       plotM12Dropout <- plotM12Dropout %>% add_trace(x = ~Months, y = ~`Measles 2 given (administered)`,
                                                      type = 'bar',
                                                      color = I("#00a5cf"),
-                                                     name = 'MCV2',
+                                                     name = 'Measles 2',
                                                      hovertemplate = paste('<b>Number</b>: %{y:.0f}',
                                                                            '<br><b style="text-align:left;">Month </b>: %{x}<br>'))
 
@@ -117,7 +113,7 @@ mod_mcv1_mcv2_drop_out_rate_nigeria_server <- function(id,
                                                    hoverlabel = list(font = font_hoverlabel()),
                                                    font = font_plot())%>%
         plotly::config(modeBarButtons = list(list("toImage", "resetScale2d", "zoomIn2d", "zoomOut2d")),
-               displaylogo = FALSE, toImageButtonOptions = list(filename = "Chart 7- MCV1 & MCV2 Drop Out Rate, Nigeria.png"))
+               displaylogo = FALSE, toImageButtonOptions = list(filename = "Chart 7- Measles 1 & Measles 2 Drop Out Rate, Nigeria.png"))
 
 
       plotM12Dropout
@@ -126,7 +122,7 @@ mod_mcv1_mcv2_drop_out_rate_nigeria_server <- function(id,
     })
 
     output$download_chart_data <- downloadHandler(
-      filename = "Chart 7- MCV1 & MCV2 Drop Out Rate, Nigeria.csv",
+      filename = "Chart 7- Measles 1 & Measles 2 Drop Out Rate, Nigeria.csv",
       content = function(file) {
         readr::write_csv(chart_data(), file)
       }

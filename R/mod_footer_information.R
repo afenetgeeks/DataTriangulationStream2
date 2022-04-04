@@ -11,20 +11,33 @@
 mod_footer_information_ui <- function(id){
   ns <- NS(id)
   tagList(
-    f7Row(tags$i(style="color: #0e7290; font-size: 10px",
-                 "*PMCCs - Post Measles Campaign Coverage Survey,
-        *WUENIC - WHO and UNICEF Estimates of National Immunization Coverage,
-        *MICS/ NICS - Multiple Indicator Cluster Survey/Nigeria Immunization Coverage Survey,
-        *NDHS - National Demographic and Health Survey,
-      *SMART survey - National Nutrition and Health Survey")),
-    f7Row(#textOutput("keepAlive"),
-      HTML(paste0(
-        "<script>",
-        "var today = new Date();",
-        "var yyyy = today.getFullYear();",
-        "</script>",
-        "<p style = 'text-align: center;'><small>&copy; <script>document.write(yyyy);</script></small> <a href='#' target='_blank'>Nigeria Data Triangulation Dashboard</a> </p>")
-      )
+    div(class="row-page abbreviations_last_updated_div",
+        div(class = "abbreviations_div",
+            p("*PMCCs – Post Measles Campaign Coverage Survey"),
+            p("*WUENIC - WHO and UNICEF Estimates of National Immunization Coverage"),
+            p("*MICS/ NICS - Multiple Indicator Cluster Survey/Nigeria Immunization Coverage Survey"),
+            p("*NDHS - National Demographic and Health Survey"),
+            p("*SMART survey - National Nutrition and Health Survey")),
+
+
+        div(class = "last_updated_div",
+            p("Last Updated:"),
+            p("-24/03/2022")
+        )
+    ),
+
+    div(class="footer",
+
+        HTML(paste0(
+          "<script>",
+          "var today = new Date();",
+          "var yyyy = today.getFullYear();",
+          "</script>",
+          "<p style = 'text-align: center;'><small>&copy; <script>document.write(yyyy);</script></small> <a href='https://nphcda.gov.ng/' target='_blank', style = 'color:#ffffff;'> All Rights Reserved |NPHCDA </a> </p>")
+        ),
+        img(class = "npchcda-img", src = "www/nphcda.svg", height = 35, width = 100, alt="nphcda logo", role="img"),
+        p("Terms of Service | Dashboard website")
+
     )
 
   )

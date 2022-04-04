@@ -14,26 +14,22 @@ mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_ui <- function(id){
   ns <- NS(id)
   tagList(
 
-    f7Col(
-      f7Shadow(
-        intensity = 4,
-        hover = TRUE,
-        f7Card(
-          title = NULL,
-          splitLayout(h4( textOutput(ns("mvc_title"))),
-                      f7DownloadButton(ns("download_chart_data"),label = NULL),
-                      cellWidths = c("95%", "5%")),
-          withSpinner(leafletOutput(ns("mvcMap"), height=440),type = 6, size = 0.4,hide.ui = F),
-          #absolutePanel(top = 160, left = 23,downloadButton("dl1", label = NULL)),
-          h6("Quick guide!!"),
-          tags$i(style="color:#0e7290;font-size:10px", "The blue bubbles represent clusters of measles cases in a State. The numbers in each bubble are cases in that cluster"),
-          br(),
-          tags$i(style="color:#0e7290;font-size:10px","Hover over a cluster bubble to see the states it covers. Click on a cluster bubble to zoom in a cluster")
-        )
 
-      ))
+    div(class = "col-6 col-6-t",
+        div(class ="column-icon-div",
+            img(class = "column-icon", src = "www/partially-vaccinated-today-icon.svg",  height = 40, width = 80, alt="nigeria coat of arms", role="img")),
+
+        h6("Chart 10: Confirmed Measles cases, Measles 1 coverage (Annual data)", class = "column-title"),
+        mod_map_inputs_ui("map_inputs_1"),
+        data_chart_download_btns(id),
+        withSpinner(leafletOutput(ns("mvcMap"), height=440),type = 6, size = 0.4,hide.ui = F),
+        p("Quick guide!!"),
+        tags$i(style="color:#0e7290;font-size:10px", "The blue bubbles represent clusters of measles cases in a State. The numbers in each bubble are cases in that cluster"),
+        br(),
+        tags$i(style="color:#0e7290;font-size:10px","Hover over a cluster bubble to see the states it covers. Click on a cluster bubble to zoom in a cluster")
 
 
+    )
   )
 }
 
@@ -44,7 +40,6 @@ mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_ui <- function(id){
 #' @noRd
 mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_server <- function(id,
                                                                              picker_year_var,
-                                                                             picker_month_var,
                                                                              picker_state_var
                                                                             ){
   moduleServer( id, function(input, output, session){
@@ -93,16 +88,6 @@ mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_server <- function(id,
 
       }
     })
-
-
-    mvc_text <- reactive({
-      paste("Chart 10: Confirmed Measles cases, MCV1 coverage (Annual data) ",picker_year_var())
-    })
-
-    output$mvc_title <- renderText({
-      mvc_text()
-    })
-
 
 
     mvc_map_leaflet <-  reactive({
@@ -199,7 +184,7 @@ mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_server <- function(id,
     })
 
 
-    output$mvcMap = renderLeaflet({mvc_map_leaflet()})
+    output$mvcMap <-  renderLeaflet({mvc_map_leaflet()})
 
     output$download_chart_data <- downloadHandler(
       filename = 'mvc_csvs.zip',

@@ -11,26 +11,26 @@
 mod_map_confirmed_yellow_fever_cases_yellow_fever_coverage_annual_data_ui <- function(id){
   ns <- NS(id)
   tagList(
-    f7Col(
-      f7Shadow(
-        intensity = 4,
-        hover = TRUE,
-        f7Card(
-          title = NULL,
-          splitLayout(h4(textOutput(ns("yf_title"))),
-                      f7DownloadButton(ns("download_chart_data"),label = NULL),
-                      cellWidths = c("95%", "5%")),
-          withSpinner(leafletOutput(ns("yfcMap"), height=440),type = 6, size = 0.4,hide.ui = F),
-          #absolutePanel(top = 160, left = 23 ,downloadButton("dl2", label = NULL)),
-          h6("Quick guide!!"),
-          tags$i(style="color:#0e7290;font-size:10px","The blue bubbles represent clusters of yellow fever cases in a State. The numbers in each bubble are cases in that cluster"),
-          br(),
-          tags$i(style="color:#0e7290;font-size:10px","Hover over a cluster bubble to see the states it covers. Click on a cluster bubble to zoom in a cluster")
-        )
 
-      )
-      )
+    div(class = "col-6 col-6-t",
+        div(class ="column-icon-div",
+            img(class = "column-icon", src = "www/fully-vaccinated-today-icon.svg",  height = 40, width = 80, alt="nigeria coat of arms", role="img")),
+
+        h6("Chart 11: Confirmed Yellow Fever cases, Yellow Fever coverage (Annual data)", class = "column-title"),
+        mod_map_inputs_ui("map_inputs_2"),
+        data_chart_download_btns(id),
+
+        withSpinner(leafletOutput(ns("yfcMap"), height=440),type = 6, size = 0.4,hide.ui = F),
+
+        h6("Quick guide!!"),
+        tags$i(style="color:#0e7290;font-size:10px", "The blue bubbles represent clusters of measles cases in a State. The numbers in each bubble are cases in that cluster"),
+        br(),
+        tags$i(style="color:#0e7290;font-size:10px","Hover over a cluster bubble to see the states it covers. Click on a cluster bubble to zoom in a cluster")
+
+
     )
+
+ )
 }
 
 #' map_confirmed_yellow_fever_cases_yellow_fever_coverage_annual_data Server Functions
@@ -45,14 +45,6 @@ mod_map_confirmed_yellow_fever_cases_yellow_fever_coverage_annual_data_server <-
                                                                                           ){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
-
-    yf_text <- reactive({
-      paste("Chart 11: Confirmed Yellow Fever cases, Yellow Fever coverage (Annual data),",picker_year_var())
-    })
-
-    output$yf_title <- renderText({
-      yf_text()
-    })
 
     # slide 12
     stream2_data <- reactiveValues()

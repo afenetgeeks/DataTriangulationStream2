@@ -15,19 +15,15 @@ mod_measles_vaccine_stock_analysis_measles_coverage_ui <- function(id){
   ns <- NS(id)
   tagList(
 
-    f7Col(
-      f7Shadow(
-        intensity = 4,
-        hover = TRUE,
-        f7Card(
-          title = NULL,
-          splitLayout(h4("Chart 5: Measles Vaccine Stock Analysis & Measles Coverage",align = "center"),
-                      f7DownloadButton(ns("download_chart_data"),label = NULL),
-                      cellWidths = c("95%", "5%")),
-          withSpinner(plotlyOutput(ns("plot")),type = 6, size = 0.3,hide.ui = F)
-        ))
-    )
+    div(class = "col-6 col-6-t",
+        div(class ="column-icon-div",
+            img(class = "column-icon", src = "www/vaccination-today-icon.svg",  height = 40, width = 80, alt="nigeria coat of arms", role="img")),
 
+        h6("Chart 5: Measles Vaccine Stock Analysis & Measles Coverage", class = "column-title"),
+        data_chart_download_btns(id),
+        withSpinner(plotlyOutput(ns("plot")),type = 6, size = 0.3,hide.ui = F)
+
+    )
 
   )
 }

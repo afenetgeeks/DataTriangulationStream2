@@ -14,17 +14,14 @@ mod_discrepancy_mcv1_yellow_fever_given_by_state_ui <- function(id){
   ns <- NS(id)
   tagList(
 
-    f7Col(
-      f7Shadow(
-        intensity = 4,
-        hover = TRUE,
-        f7Card(
-          title = NULL,
-          splitLayout(h4("Chart 9: Discrepancy (MCV1 & Yellow Fever given)  by State",align = "center"),
-                      f7DownloadButton(ns("download_chart_data"),label = NULL),
-                      cellWidths = c("95%", "5%")),
-          withSpinner(plotlyOutput(ns("plot")),type = 6, size = 0.3,hide.ui = F))
-      )
+    div(class = "col-6 col-6-t",
+        div(class ="column-icon-div",
+            img(class = "column-icon", src = "www/total-registrations-icon.svg",  height = 40, width = 80, alt="nigeria coat of arms", role="img")),
+
+        h6("Chart 9: Discrepancy (Measles 1 & Yellow Fever given)  by State", class = "column-title"),
+        data_chart_download_btns(id),
+        withSpinner(plotlyOutput(ns("plot")),type = 6, size = 0.3,hide.ui = F)
+
     )
 
   )
@@ -65,7 +62,7 @@ mod_discrepancy_mcv1_yellow_fever_given_by_state_server <- function(id,
                                    type = 'bar',
                                    color = I("#005F73"),
 
-                                   name = 'MCV1',
+                                   name = 'Measles 1',
                                    hovertemplate = paste('<b>Number</b>: %{y:.0f}',
                                                          '<br><b style="text-align:left;">State </b>: %{x}<br>'))
 
@@ -117,7 +114,7 @@ mod_discrepancy_mcv1_yellow_fever_given_by_state_server <- function(id,
                                 hoverlabel = list(font = font_hoverlabel()),
                                 font = font_plot())%>%
         config(modeBarButtons = list(list("toImage", "resetScale2d", "zoomIn2d", "zoomOut2d")),
-               displaylogo = FALSE, toImageButtonOptions = list(filename = "Chart 9- Discrepancy (MCV1 & Yellow Fever given)  by State.png"))
+               displaylogo = FALSE, toImageButtonOptions = list(filename = "Chart 9- Discrepancy (Measles 1 & Yellow Fever given)  by State.png"))
 
       plotM
 
@@ -125,7 +122,7 @@ mod_discrepancy_mcv1_yellow_fever_given_by_state_server <- function(id,
 
 
     output$download_chart_data <- downloadHandler(
-      filename = "Chart 9- Discrepancy (MCV1 & Yellow Fever given)  by State.csv",
+      filename = "Chart 9- Discrepancy (Measles 1 & Yellow Fever given)  by State.csv",
       content = function(file) {
         readr::write_csv(chart_data(), file)
       }

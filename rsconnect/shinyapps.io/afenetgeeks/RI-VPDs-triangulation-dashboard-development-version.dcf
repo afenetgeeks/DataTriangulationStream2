@@ -1,0 +1,13 @@
+name: RI-VPDs-triangulation-dashboard-development-version
+title: RI-VPDs-triangulation-dashboard-development-version
+username:
+account: afenetgeeks
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 5950001
+bundleId: 5761387
+url: https://afenetgeeks.shinyapps.io/RI-VPDs-triangulation-dashboard-development-version/
+when: 1649054924.11079
+lastSyncTime: 1649054924.1108
+asMultiple: FALSE
+asStatic: FALSE

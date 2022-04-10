@@ -16,31 +16,64 @@
 
 ##"sans-serif"
 
+
+font_plot_title <- function(){
+  list(
+    family = "Roboto, sans-serif",
+    color = "black",
+    size = 11)
+}
+
 font_plot <-  function(){
   list(
-    family = "Trebuchet MS, Helvetica, sans-serif",
+    family = "Roboto, sans-serif",
     color = "black",
-    size = 12)
+    size = 10)
 }
 
 font_axis_title <-  function(){
   list(
-    family = "Trebuchet MS, Helvetica, sans-serif",
+    family = "Roboto, sans-serif",
     color = "black",
-    size = 15)
+    size = 10)
 }
 
 
 
 font_hoverlabel <- function(){
       list(
-      family = "Trebuchet MS, Helvetica, sans-serif",
+      family = "Roboto, sans-serif",
       color = "white",
-      size = 12)
-  }
+      size = 10)
+}
 
 
+measles_plot_bgcolor  <- function(){
+  "rgba(0, 0, 0, 0)"
 
+}
+
+measles_paper_bgcolor <- function(){
+  "rgba(0, 0, 0, 0)"
+}
+
+
+yf_plot_bgcolor <-  function(){
+  "rgba(0, 0, 0, 0)"
+}
+
+
+yf_paper_bgcolor <-  function(){
+  "rgba(0, 0, 0, 0)"
+}
+
+plot_margin <- function(){
+  list(r = 83, l = 81)
+}
+
+plot_margin_one_side <- function(){
+  list(r = 81, l = 81)
+}
 
 national_util <- function(){
   states$state_name[38]

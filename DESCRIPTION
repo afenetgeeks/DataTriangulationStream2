@@ -28,6 +28,7 @@ Imports:
     htmltools,
     htmlwidgets,
     leaflet,
+    leaflet.extras,
     lubridate,
     magrittr,
     plotly,
@@ -40,7 +41,7 @@ Imports:
     shinyMobile,
     shinyWidgets,
     stringr,
-    tibble
+    webshot
 Suggests: 
     spelling,
     testthat

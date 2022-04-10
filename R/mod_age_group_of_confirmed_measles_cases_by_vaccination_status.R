@@ -14,19 +14,27 @@ mod_age_group_of_confirmed_measles_cases_by_vaccination_status_ui <- function(id
   ns <- NS(id)
   tagList(
 
-
-
-    div(class = "col-6 col-6-t",
-        div(class ="column-icon-div",
+    div(class = "col-6 col-6-t measles-col",
+        div(class ="column-icon-div measles-column-icon-div",
             img(class = "column-icon", src = "www/age-group-vaccination-icon.svg",  height = 40, width = 80, alt="nigeria coat of arms", role="img")),
 
-        h6("Chart 3: Age Group of Confirmed Measles Cases by Vaccination Status", class = "column-title"),
-        HTML('<a id="downloadData" class="btn btn-default shiny-download-link download-data-btn" href="" target="_blank" download>
-             <i class="fa fa-download" aria-hidden="true"></i>
-             <div class = tooltipdiv> <p class="tooltiptext">Download the data for this Chart</p> </div>
-             </a>'),
-        HTML('<a id="downloadChart" class="btn btn-default shiny-download-link download-data-btn download-chart-btn" href="" target="_blank" download>                      <i class="fa fa-chart-bar"></i>                       <div class = tooltipdiv>                           <p class="tooltiptext">                               Download this Chart                           </p>                       </div>                      </a>'),
-        withSpinner(plotlyOutput(ns("plot")),type = 6, size = 0.3,hide.ui = F)
+        HTML("<h6 class = 'column-title'> Chart 3: Age Group of Confirmed <span class = 'measles-span'>Measles</span> Cases by Vaccination Status</h6>"),
+
+       #  h6("Chart 3: Age Group of Confirmed Measles Cases by Vaccination Status", class = "column-title"),
+       HTML(paste0('<a id="', ns("downloadData"), '" class="btn btn-default shiny-download-link download-data-btn" href="" target="_blank" download>
+                      <i class="fa fa-download" aria-hidden="true"></i>
+                      <div class = tooltipdiv> <p class="tooltiptext">Download the data for this Chart</p> </div>
+                     </a>')),
+
+       HTML(paste0('<a id="', ns("downloadChart"), '" class="btn btn-default shiny-download-link download-data-btn download-chart-btn" href="" target="_blank" download>
+                     <i class="fa fa-chart-bar"></i>
+                      <div class = tooltipdiv>
+                          <p class="tooltiptext">
+                              Download this Chart
+                          </p>
+                      </div>
+                     </a>')),
+       withSpinner(plotlyOutput(ns("plot")),type = 6, size = 0.3,hide.ui = F)
 
     )
 
@@ -35,7 +43,7 @@ mod_age_group_of_confirmed_measles_cases_by_vaccination_status_ui <- function(id
 
 #' age_group_of_confirmed_measles_cases_by_vaccination_status Server Functions
 #' @importFrom plotly renderPlotly plot_ly  add_trace layout config
-#' @importFrom dplyr collect tbl mutate arrange filter across
+#' @importFrom dplyr collect tbl mutate arrange filter across group_by summarise ungroup
 #'
 #' @noRd
 mod_age_group_of_confirmed_measles_cases_by_vaccination_status_server <-  function(id,
@@ -59,7 +67,8 @@ mod_age_group_of_confirmed_measles_cases_by_vaccination_status_server <-  functi
 
       })
 
-    output$plot <- renderPlotly({
+
+    indicator_plot <- reactive({
       p4 <- plot_ly(chart_data(),
                     x = ~`Age group`,
                     y = ~Unknown,
@@ -80,12 +89,12 @@ mod_age_group_of_confirmed_measles_cases_by_vaccination_status_server <-  functi
 
                   color = I("#edb952"),
                   name = "Vaccinated") %>%
-        layout(title = paste(paste0("State: ", picker_state_var()),paste0("Year: ", picker_year_var()), sep = "     "),
-               title= list(size=10),
+        layout(title = list(text = paste(paste0("State: ", picker_state_var()),paste0("Year: ", picker_year_var()), sep = "     "),
+                            font = font_plot_title()),
                barmode = 'stack',
                xaxis = list(tickfont = font_plot(),
                             title = "Age group (M- months)",
-                            #fixedrange = TRUE,
+                            fixedrange = TRUE,
                             title= font_axis_title(),
                             ticks = "outside",
                             showline = TRUE
@@ -94,11 +103,21 @@ mod_age_group_of_confirmed_measles_cases_by_vaccination_status_server <-  functi
                #width = "auto",
                # autosize = F,
 
-               plot_bgcolor = "rgba(0, 0, 0, 0)",
-               paper_bgcolor = 'rgba(0, 0, 0, 0)',
+               plot_bgcolor = measles_plot_bgcolor(),
+               paper_bgcolor = measles_paper_bgcolor(),
 
-               yaxis = list(side = 'left', rangemode="tozero", title = 'Number of cases',showline = TRUE, showgrid = FALSE, zeroline = T, ticks = "outside",
-                            title = font_axis_title(), tickfont = font_plot()),
+               margin = plot_margin_one_side(),
+
+               yaxis = list(side = 'left',
+                            rangemode="tozero",
+                            title = 'Number of cases',
+                            showline = TRUE,
+                            showgrid = FALSE,
+                            fixedrange = TRUE,
+                            zeroline = T,
+                            ticks = "outside",
+                            title = font_axis_title(),
+                            tickfont = font_plot()),
 
                legend = list(orientation = "h",   # show entries horizontally
                              xanchor = "center",  # use center of legend as anchor
@@ -106,19 +125,44 @@ mod_age_group_of_confirmed_measles_cases_by_vaccination_status_server <-  functi
                              y = -0.25),
                hoverlabel = list(font = font_hoverlabel()),
                font = font_plot())%>%
-        config(modeBarButtons = list(list("toImage", "resetScale2d", "zoomIn2d", "zoomOut2d")),
-                                     displaylogo = FALSE, toImageButtonOptions = list(filename = "Chart 3- Age Group of Confirmed Measles Cases by Vaccination Status.png"))
+        config(displayModeBar = FALSE)
+      # config(modeBarButtons = list(list("toImage", "resetScale2d", "zoomIn2d", "zoomOut2d")),
+      #                              displaylogo = FALSE, toImageButtonOptions = list(filename = "Chart 3- Age Group of Confirmed Measles Cases by Vaccination Status.png"))
 
       p4
 
     })
 
-    output$download_chart_data <- downloadHandler(
-      filename = "Chart 3- Age Group of Confirmed Measles Cases by Vaccination Status.csv",
+
+
+
+    output$plot <- renderPlotly({indicator_plot()})
+
+
+    output$downloadData <- downloadHandler(
+
+      filename = function() {
+        paste0("Chart 3-", picker_state_var(), picker_year_var(), picker_month_var()[1] ," - ", picker_month_var()[length(picker_month_var())] ,".csv")
+      },
       content = function(file) {
         readr::write_csv(chart_data(), file)
       }
     )
+
+
+    output$downloadChart <- downloadHandler(
+      filename = function() {
+        paste0("Chart 3-", picker_state_var(), picker_year_var(),  picker_month_var()[1] ," - ", picker_month_var()[length(picker_month_var())] ,".png")
+      },
+      content = function(file) {
+        owd <- setwd(tempdir())
+        on.exit(setwd(owd))
+        saveWidget(indicator_plot(), "temp.html", selfcontained = FALSE)
+        webshot("temp.html", file = file, cliprect = "viewport")
+        #export(indicator_plot(), file=file)
+      }
+    )
+
 
 
   })

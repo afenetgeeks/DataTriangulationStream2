@@ -206,6 +206,12 @@ body {
        box-shadow: 0 1px 30px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 rgba(0, 0, 0, 0.19);
 }
 
+
+.map_col {
+  height: 700px;
+  padding: 5px;
+}
+
 .column-title{
   text-align: center;
   width: 88%;
@@ -469,6 +475,14 @@ div.Quick-Tip{
     margin: auto;
 }
 
+.measles-column-icon-div{
+  background-color: #eec487;
+}
+
+.yf-column-icon-div{
+   background-color: #69e8e1;
+}
+
 .column-icon{
     width: 29px;
     height: 33px;
@@ -476,9 +490,21 @@ div.Quick-Tip{
     margin: auto;
 }
 
+.measles-span{
+  color: #ff8600;
+}
 
+.measles-col{
+  background-color: #fff5ccb0;
+}
 
+.yf-span{
+ color: #0D8C96;
+}
 
+.yf-col{
+  background-color: #dcfdf5;
+}
 
 /* Make text visible on inputs
 .shiny-input-container {

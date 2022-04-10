@@ -4,15 +4,16 @@
 #'     DO NOT REMOVE.
 #' @import shiny
 #' @importFrom RMariaDB MariaDB
-#' @importFrom dplyr collect tbl mutate arrange filter across
+#' @importFrom dplyr collect tbl mutate arrange filter across ungroup
 #' @importFrom readr read_csv
 #' @importFrom GADMTools gadm_sp_loadCountries
 #' @importFrom stringr str_c
 #' @importFrom magrittr %>%
-#' @import dplyr
-#' @importFrom tibble tibble
 #'
 #' @noRd
+#'
+webshot::install_phantomjs(version = "2.1.1")
+
 app_server <- function( input, output, session ) {
 
   #stream2_pool_connection <- reactive({connect_sql_db()})

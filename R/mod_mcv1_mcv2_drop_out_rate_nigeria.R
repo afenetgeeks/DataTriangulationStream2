@@ -14,12 +14,28 @@ mod_mcv1_mcv2_drop_out_rate_nigeria_ui <- function(id){
   ns <- NS(id)
   tagList(
 
-    div(class = "col-6 col-6-t",
-        div(class ="column-icon-div",
+    div(class = "col-6 col-6-t measles-col",
+        div(class ="column-icon-div measles-column-icon-div",
             img(class = "column-icon", src = "www/total-registrations-icon.svg",  height = 40, width = 80, alt="nigeria coat of arms", role="img")),
 
-        h6("Chart 7: Measles 1 & Measles 2 Drop Out Rate, Nigeria", class = "column-title"),
-        HTML('<a id="downloadData" class="btn btn-default shiny-download-link download-data-btn" href="" target="_blank" download>                       <i class="fa fa-download" aria-hidden="true"></i>                       <div class = tooltipdiv> <p class="tooltiptext">Download the data for this Chart</p> </div>                      </a>'),          HTML('<a id="downloadChart" class="btn btn-default shiny-download-link download-data-btn download-chart-btn" href="" target="_blank" download>                      <i class="fa fa-chart-bar"></i>                       <div class = tooltipdiv>                           <p class="tooltiptext">                               Download this Chart                           </p>                       </div>                      </a>'),
+        #h6("Chart 7: Measles 1 & Measles 2 Drop Out Rate, Nigeria", class = "column-title"),
+
+
+        HTML("<h6 class = 'column-title'>Chart 7: <span class = 'measles-span'>Measles 1</span> & <span class = 'measles-span'>Measles 2</span> Drop Out Rate, Nigeria </h6>"),
+
+        HTML(paste0('<a id="', ns("downloadData"), '" class="btn btn-default shiny-download-link download-data-btn" href="" target="_blank" download>
+                      <i class="fa fa-download" aria-hidden="true"></i>
+                      <div class = tooltipdiv> <p class="tooltiptext">Download the data for this Chart</p> </div>
+                     </a>')),
+
+        HTML(paste0('<a id="', ns("downloadChart"), '" class="btn btn-default shiny-download-link download-data-btn download-chart-btn" href="" target="_blank" download>
+                     <i class="fa fa-chart-bar"></i>
+                      <div class = tooltipdiv>
+                          <p class="tooltiptext">
+                              Download this Chart
+                          </p>
+                      </div>
+                     </a>')),
         withSpinner(plotlyOutput(ns("plot")),type = 6, size = 0.3,hide.ui = F)
 
     )
@@ -51,8 +67,8 @@ mod_mcv1_mcv2_drop_out_rate_nigeria_server <- function(id,
 
       })
 
+    indicator_plot <- reactive({
 
-    output$plot <- renderPlotly({
 
       plotM12Dropout <- plot_ly(data = chart_data())
 
@@ -75,35 +91,52 @@ mod_mcv1_mcv2_drop_out_rate_nigeria_server <- function(id,
                                                      type = 'scatter', mode = 'lines+markers',
                                                      line = list(shape = 'spline', linetype = I("solid")),
                                                      marker = list(symbol = I("circle")),
-                                                     name = 'MCV 1 MCV 2 Droupout',
+                                                     name = 'Measles 1 Measles 2 Droupout',
                                                      yaxis = 'y2',
                                                      color = I("#edb952"),
                                                      hovertemplate = paste('<b>Coverage %</b>: %{y:.1f}',
                                                                            '<br><b style="text-align:left;">Month </b>: %{x}<br>'))
 
-      plotM12Dropout <- plotM12Dropout %>% layout( title = paste(paste0("National Data only"),paste0("Year: ", picker_year_var()), sep = "   "),
-                                                   title=list(size=10),
+      plotM12Dropout <- plotM12Dropout %>% layout( title = list(text = paste(paste0("National Data only: "),paste0("Year: ", picker_year_var()), sep = " "),
+                                                                font = font_plot_title()),
                                                    xaxis = list(tickfont = font_plot(),
                                                                 title = "Month",
-                                                                #fixedrange = TRUE,
+                                                                fixedrange = TRUE,
                                                                 title= font_axis_title(),
                                                                 ticks = "outside",
                                                                 #type = 'date',
                                                                 showline = TRUE,
                                                                 tickvals = ~Months
                                                    ),
-                                                   margin = list(r = 85),
+
 
                                                    #width = "auto",
                                                    # autosize = F,
 
-                                                   plot_bgcolor = "rgba(0, 0, 0, 0)",
-                                                   paper_bgcolor = 'rgba(0, 0, 0, 0)',
+                                                   plot_bgcolor = measles_plot_bgcolor(),
+                                                   paper_bgcolor = measles_paper_bgcolor(),
 
-                                                   yaxis = list(side = 'left', rangemode="tozero", title = 'Measles Doses',showline = TRUE, showgrid = FALSE, zeroline = T, ticks = "outside",
+
+                                                   margin = plot_margin(),
+
+                                                   yaxis = list(side = 'left',
+                                                                rangemode="tozero",
+                                                                title = 'Measles Doses',
+                                                                showline = TRUE,
+                                                                showgrid = FALSE,
+                                                                fixedrange = TRUE,
+                                                                zeroline = T,
+                                                                ticks = "outside",
                                                                 title = font_axis_title(), tickfont = font_plot()),
-                                                   yaxis2 = list(side = 'right',range = c(0, 100), overlaying = "y", title = 'Rate(%)',showgrid = FALSE,ticks = "outside",
-                                                                 zeroline = FALSE,showline = TRUE, title = font_axis_title(), tickfont = font_plot()),
+                                                   yaxis2 = list(side = 'right',
+                                                                 range = c(0, 100),
+                                                                 overlaying = "y",
+                                                                 fixedrange = TRUE,
+                                                                 title = 'Rate(%)',
+                                                                 showgrid = FALSE,
+                                                                 ticks = "outside",
+                                                                 zeroline = FALSE,
+                                                                 showline = TRUE, title = font_axis_title(), tickfont = font_plot()),
 
                                                    legend = list(orientation = "h",
                                                                  xanchor = "center",
@@ -112,8 +145,9 @@ mod_mcv1_mcv2_drop_out_rate_nigeria_server <- function(id,
 
                                                    hoverlabel = list(font = font_hoverlabel()),
                                                    font = font_plot())%>%
-        plotly::config(modeBarButtons = list(list("toImage", "resetScale2d", "zoomIn2d", "zoomOut2d")),
-               displaylogo = FALSE, toImageButtonOptions = list(filename = "Chart 7- Measles 1 & Measles 2 Drop Out Rate, Nigeria.png"))
+        config(displayModeBar = FALSE)
+      # plotly::config(modeBarButtons = list(list("toImage", "resetScale2d", "zoomIn2d", "zoomOut2d")),
+      #        displaylogo = FALSE, toImageButtonOptions = list(filename = "Chart 7- Measles 1 & Measles 2 Drop Out Rate, Nigeria.png"))
 
 
       plotM12Dropout
@@ -121,12 +155,37 @@ mod_mcv1_mcv2_drop_out_rate_nigeria_server <- function(id,
 
     })
 
-    output$download_chart_data <- downloadHandler(
-      filename = "Chart 7- Measles 1 & Measles 2 Drop Out Rate, Nigeria.csv",
+
+
+    output$plot <- renderPlotly({indicator_plot()})
+
+
+
+    output$downloadData <- downloadHandler(
+
+      filename = function() {
+        paste0("Chart 7-",  picker_year_var(), picker_month_var()[1] ," - ", picker_month_var()[length(picker_month_var())] ,".csv")
+      },
       content = function(file) {
         readr::write_csv(chart_data(), file)
       }
     )
+
+
+    output$downloadChart <- downloadHandler(
+      filename = function() {
+        paste0("Chart 7-",  picker_year_var(),  picker_month_var()[1] ," - ", picker_month_var()[length(picker_month_var())] ,".png")
+      },
+      content = function(file) {
+        owd <- setwd(tempdir())
+        on.exit(setwd(owd))
+        saveWidget(indicator_plot(), "temp.html", selfcontained = FALSE)
+        webshot("temp.html", file = file, cliprect = "viewport")
+        #export(indicator_plot(), file=file)
+      }
+    )
+
+
 
   })
 }

@@ -42,9 +42,12 @@ mod_confirmed_measles_cases_MCV1_coverage_ui <- function(id){
     )
 }
 
+
 #' confirmed_measles_cases_MCV1_coverage Server Functions
 #' @importFrom plotly renderPlotly plot_ly  add_trace layout config
 #' @importFrom dplyr collect tbl mutate arrange filter across
+#' @import future
+#' @import promises
 #' @noRd
 mod_confirmed_measles_cases_MCV1_coverage_server <- function(id,
                                                              picker_year_var,
@@ -64,7 +67,7 @@ mod_confirmed_measles_cases_MCV1_coverage_server <- function(id,
         mutate(Months = lubridate::month(as.Date(str_c(Year, Months, 01,sep = "-"), "%Y-%b-%d"), label = T),
                across(c(Year,State ), as.factor))
 
-      })
+    })
 
 
 
@@ -163,13 +166,14 @@ mod_confirmed_measles_cases_MCV1_coverage_server <- function(id,
     output$plot <- renderPlotly({indicator_plot()})
 
 
+
     output$downloadData <- downloadHandler(
 
       filename = function() {
         paste0("Chart 2-", picker_state_var(), picker_year_var(), picker_month_var()[1] ," - ", picker_month_var()[length(picker_month_var())] ,".csv")
       },
       content = function(file) {
-        readr::write_csv(chart_data(), file)
+        readr::write_csv(rv$chart_data, file)
       }
     )
 

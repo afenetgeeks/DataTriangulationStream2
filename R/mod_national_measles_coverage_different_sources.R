@@ -74,8 +74,6 @@ mod_national_measles_coverage_different_sources_server <- function(id,
 
 indicator_plot <- reactive({
 
-      plotly::plot_ly(mtcars, x = ~mpg)
-
       fig <- plot_ly(chart_data())
 
       fig <- fig %>% add_trace(
@@ -210,10 +208,6 @@ indicator_plot <- reactive({
       fig
 
      })
-
-
-
-
 
   output$plot <- renderPlotly({indicator_plot()})
 

@@ -185,9 +185,10 @@
 
 /* For mobile phones: */
 
+
 body {
-  background-color: #DCDCDC;
-  color: #191919; /* text color */
+  background-color: #f7f9f9; /* #DCDCDC */
+  color: #191919;
   font: 900 12px/20px "Roboto";
   letter-spacing: normal;
   height: auto;
@@ -495,7 +496,7 @@ div.Quick-Tip{
 }
 
 .measles-col{
-  background-color: #fff5ccb0;
+  background-color: #eff3f4; /* #fff5ccb0 */
 }
 
 .yf-span{
@@ -503,7 +504,7 @@ div.Quick-Tip{
 }
 
 .yf-col{
-  background-color: #dcfdf5;
+  background-color: #eff3f4;  /* #dcfdf5*/
 }
 
 /* Make text visible on inputs

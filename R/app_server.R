@@ -12,12 +12,18 @@
 #'
 #' @noRd
 #'
-webshot::install_phantomjs(version = "2.1.1")
+webshot::install_phantomjs(version = "2.1.1", force = FALSE)
 
 app_server <- function( input, output, session ) {
 
   #stream2_pool_connection <- reactive({connect_sql_db()})
   # Your application server logic
+
+
+  shiny::onStop(function() {
+    pool::poolClose(stream2_pool)
+  })
+
 
   dropdown_inputs <- mod_inputs_server("inputs_1")
 

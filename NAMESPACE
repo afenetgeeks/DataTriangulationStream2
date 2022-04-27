@@ -3,6 +3,8 @@
 export("%>%")
 export(run_app)
 import(dbplyr)
+import(future)
+import(promises)
 import(shiny)
 importFrom(GADMTools,gadm_sp_loadCountries)
 importFrom(GADMTools,gadm_subset)

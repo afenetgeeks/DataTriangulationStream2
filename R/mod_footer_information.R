@@ -35,7 +35,7 @@ mod_footer_information_ui <- function(id){
           "</script>",
           "<p style = 'text-align: center;'><small>&copy; <script>document.write(yyyy);</script></small> <a href='https://nphcda.gov.ng/' target='_blank', style = 'color:#ffffff;'> All Rights Reserved |NPHCDA </a> </p>")
         ),
-        img(class = "npchcda-img", src = "www/nphcda.svg", height = 35, width = 100, alt="nphcda logo", role="img"),
+        img(class = "npchcda-img", src = "www/nphcda-logo.svg", height = 35, width = 100, alt="nphcda logo", role="img"),
         p("Terms of Service | Dashboard website")
 
     )

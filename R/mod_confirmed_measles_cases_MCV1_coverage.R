@@ -13,25 +13,41 @@
 mod_confirmed_measles_cases_MCV1_coverage_ui <- function(id){
   ns <- NS(id)
   tagList(
-    f7Col(
-      f7Shadow(
-        intensity = 4,
-        hover = TRUE,
-        f7Card(
-          title = NULL,
-          splitLayout(h4("Chart 2: Confirmed measles cases, MCV1 coverage",align = "center"),
-                      f7DownloadButton(ns("download_chart_data"),label = NULL),
-                      cellWidths = c("95%", "5%")),
-          withSpinner(plotlyOutput(ns("plot")),type = 6, size = 0.3,hide.ui = F)
-        ))
-    )
 
-  )
+    div(class = "col-6 col-6-t measles-col",
+        div(class ="column-icon-div measles-column-icon-div",
+            img(class = "column-icon", src = "www/partially-vaccinated-today-icon.svg",  height = 40, width = 80, alt="nigeria coat of arms", role="img")),
+
+       # h6("Chart 2: Confirmed measles cases, Measles 1 coverage", class = "column-title"),
+
+        HTML("<h6 class = 'column-title'>Chart 2: Confirmed <span class = 'measles-span'>Measles</span> cases, <span class = 'measles-span'>Measles 1</span> coverage </h6>"),
+
+       HTML(paste0('<a id="', ns("downloadData"), '" class="btn btn-default shiny-download-link download-data-btn" href="" target="_blank" download>
+                      <i class="fa fa-download" aria-hidden="true"></i>
+                      <div class = tooltipdiv> <p class="tooltiptext">Download the data for this Chart</p> </div>
+                     </a>')),
+
+       HTML(paste0('<a id="', ns("downloadChart"), '" class="btn btn-default shiny-download-link download-data-btn download-chart-btn" href="" target="_blank" download>
+                     <i class="fa fa-chart-bar"></i>
+                      <div class = tooltipdiv>
+                          <p class="tooltiptext">
+                              Download this Chart
+                          </p>
+                      </div>
+                     </a>')),
+
+        withSpinner(plotlyOutput(ns("plot")),type = 6, size = 0.3,hide.ui = F)
+
+        )
+    )
 }
+
 
 #' confirmed_measles_cases_MCV1_coverage Server Functions
 #' @importFrom plotly renderPlotly plot_ly  add_trace layout config
 #' @importFrom dplyr collect tbl mutate arrange filter across
+#' @import future
+#' @import promises
 #' @noRd
 mod_confirmed_measles_cases_MCV1_coverage_server <- function(id,
                                                              picker_year_var,
@@ -43,7 +59,7 @@ mod_confirmed_measles_cases_MCV1_coverage_server <- function(id,
 
     ns <- session$ns
 
-    chart_data_combined <- reactive({
+    chart_data <- reactive({
 
       dplyr::tbl(stream2_pool, "s3_combined")%>%
         dplyr::filter(Year %in% !!picker_year_var() & Month %in% !!picker_month_var() & State %in% !!picker_state_var())%>%
@@ -51,13 +67,13 @@ mod_confirmed_measles_cases_MCV1_coverage_server <- function(id,
         mutate(Months = lubridate::month(as.Date(str_c(Year, Months, 01,sep = "-"), "%Y-%b-%d"), label = T),
                across(c(Year,State ), as.factor))
 
-      })
+    })
 
 
 
-    output$plot <- renderPlotly({
+    indicator_plot <- reactive({
 
-      plotmcac <- plot_ly(data = chart_data_combined() %>% arrange(Months))
+      plotmcac <- plot_ly(data = chart_data() %>% arrange(Months))
 
       plotmcac <- plotmcac %>% add_trace(x = ~Months, y = ~`Measles Cases (CaseBased)`,
                                          type = 'bar',
@@ -90,28 +106,44 @@ mod_confirmed_measles_cases_MCV1_coverage_server <- function(id,
                                          name = 'Measles Coverage (Alt Denominator) (Dhis2)',
                                          yaxis = 'y2')
 
-      plotmcac <- plotmcac %>% layout(title = paste(paste0("State: ", picker_month_var()),paste0("Year: ", picker_year_var()), sep = "     "),
-                                      title= list(size=10),
+      plotmcac <- plotmcac %>% layout(title = list(text = paste(paste0("State: ", picker_state_var()),paste0("Year: ", picker_year_var()), sep = "     "),
+                                                   font = font_plot_title()),
                                       xaxis = list(tickfont = font_plot(),
                                                    title = "Month",
-                                                   #fixedrange = TRUE,
+                                                   fixedrange = TRUE,
                                                    title= font_axis_title(),
                                                    ticks = "outside",
                                                    tickvals = ~Month,
                                                    showline = TRUE
                                       ),
 
-                                      plot_bgcolor = "rgba(0, 0, 0, 0)",
-                                      paper_bgcolor = 'rgba(0, 0, 0, 0)',
+                                      plot_bgcolor = measles_plot_bgcolor(),
+                                      paper_bgcolor = measles_paper_bgcolor(),
 
-                                      margin = list(r = 85),
+                                      margin = plot_margin(),
 
-                                      yaxis = list(side = 'left', title = 'Number of cases',showline = TRUE, rangemode="tozero", showgrid = FALSE, zeroline = T, ticks = "outside",
+                                      yaxis = list(side = 'left',
+                                                   title = 'Number of cases',
+                                                   showline = TRUE,
+                                                   rangemode="tozero",
+                                                   fixedrange = TRUE,
+                                                   showgrid = FALSE,
+                                                   zeroline = T,
+                                                   ticks = "outside",
                                                    title = font_axis_title(), tickfont = font_plot()),
                                       yaxis2 = list(#range = c(0, 100),
-                                                    rangemode="tozero",
-                                                    side = 'right', title = 'Coverage (%)', overlaying = "y", title = list(text = ""),showgrid = FALSE,ticks = "outside",
-                                                    zeroline = T,showline = TRUE, title = font_axis_title(), tickfont = font_plot()),
+                                        rangemode="tozero",
+                                        fixedrange = TRUE,
+                                        side = 'right',
+                                        title = 'Coverage (%)',
+                                        overlaying = "y",
+                                        title = list(text = ""),
+                                        showgrid = FALSE,
+                                        ticks = "outside",
+                                        zeroline = T,
+                                        showline = TRUE,
+                                        title = font_axis_title(),
+                                        tickfont = font_plot()),
 
 
 
@@ -121,19 +153,44 @@ mod_confirmed_measles_cases_MCV1_coverage_server <- function(id,
                                                     y = -0.25),
                                       hoverlabel = list(font = font_hoverlabel()),
                                       font = font_plot())%>%
-        config(modeBarButtons = list(list("toImage", "resetScale2d", "zoomIn2d", "zoomOut2d")),
-               displaylogo = FALSE, toImageButtonOptions = list(filename = "Chart 2- Confirmed measles cases, MCV1 coverage.png"))
+        config(displayModeBar = FALSE)
+      # config(modeBarButtons = list(list("toImage", "resetScale2d", "zoomIn2d", "zoomOut2d")),
+      #        displaylogo = FALSE, toImageButtonOptions = list(filename = "Chart 2- Confirmed measles cases, Measles 1 coverage.png"))
 
       plotmcac
 
     })
 
-    output$download_chart_data <- downloadHandler(
-      filename = "Chart 2- Confirmed measles cases, MCV1 coverage.csv",
+
+
+    output$plot <- renderPlotly({indicator_plot()})
+
+
+
+    output$downloadData <- downloadHandler(
+
+      filename = function() {
+        paste0("Chart 2-", picker_state_var(), picker_year_var(), picker_month_var()[1] ," - ", picker_month_var()[length(picker_month_var())] ,".csv")
+      },
       content = function(file) {
-        readr::write_csv(chart_data_combined(), file)
+        readr::write_csv(rv$chart_data, file)
       }
     )
+
+
+    output$downloadChart <- downloadHandler(
+      filename = function() {
+        paste0("Chart 2-", picker_state_var(), picker_year_var(),  picker_month_var()[1] ," - ", picker_month_var()[length(picker_month_var())] ,".png")
+      },
+      content = function(file) {
+        owd <- setwd(tempdir())
+        on.exit(setwd(owd))
+        saveWidget(indicator_plot(), "temp.html", selfcontained = FALSE)
+        webshot("temp.html", file = file, cliprect = "viewport")
+        #export(indicator_plot(), file=file)
+      }
+    )
+
 
   })
 }

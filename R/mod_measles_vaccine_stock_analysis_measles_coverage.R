@@ -15,19 +15,29 @@ mod_measles_vaccine_stock_analysis_measles_coverage_ui <- function(id){
   ns <- NS(id)
   tagList(
 
-    f7Col(
-      f7Shadow(
-        intensity = 4,
-        hover = TRUE,
-        f7Card(
-          title = NULL,
-          splitLayout(h4("Chart 5: Measles Vaccine Stock Analysis & Measles Coverage",align = "center"),
-                      f7DownloadButton(ns("download_chart_data"),label = NULL),
-                      cellWidths = c("95%", "5%")),
-          withSpinner(plotlyOutput(ns("plot")),type = 6, size = 0.3,hide.ui = F)
-        ))
-    )
+    div(class = "col-6 col-6-t measles-col",
+        div(class ="column-icon-div measles-column-icon-div",
+            img(class = "column-icon", src = "www/vaccination-today-icon.svg",  height = 40, width = 80, alt="nigeria coat of arms", role="img")),
 
+       # h6("Chart 5: Measles Vaccine Stock Analysis & Measles Coverage", class = "column-title"),
+        HTML("<h6 class = 'column-title'>Chart 5: <span class = 'measles-span'>Measles</span> Vaccine Stock Analysis & <span class = 'measles-span'>Measles</span> Coverage</h6>"),
+
+       HTML(paste0('<a id="', ns("downloadData"), '" class="btn btn-default shiny-download-link download-data-btn" href="" target="_blank" download>
+                      <i class="fa fa-download" aria-hidden="true"></i>
+                      <div class = tooltipdiv> <p class="tooltiptext">Download the data for this Chart</p> </div>
+                     </a>')),
+
+       HTML(paste0('<a id="', ns("downloadChart"), '" class="btn btn-default shiny-download-link download-data-btn download-chart-btn" href="" target="_blank" download>
+                     <i class="fa fa-chart-bar"></i>
+                      <div class = tooltipdiv>
+                          <p class="tooltiptext">
+                              Download this Chart
+                          </p>
+                      </div>
+                     </a>')),
+        withSpinner(plotlyOutput(ns("plot")),type = 6, size = 0.3,hide.ui = F)
+
+    )
 
   )
 }
@@ -63,8 +73,7 @@ mod_measles_vaccine_stock_analysis_measles_coverage_server <- function(id,
 
       })
 
-
-    output$plot <- renderPlotly({
+    indicator_plot <- reactive({
       # measles_OB_OU_Received_1_combined_by_Year
       plotM <- plot_ly(data = chart_data() %>%
                          arrange(Months))
@@ -101,7 +110,7 @@ mod_measles_vaccine_stock_analysis_measles_coverage_server <- function(id,
                                    mode = 'lines+markers',
                                    line = list(shape = 'spline', linetype = I("solid")),
                                    marker = list(symbol = I("circle")),
-                                   name = 'MCV1 (administered)',
+                                   name = 'Measles 1 (administered)',
                                    yaxis = 'y2',
                                    hovertemplate = paste('<b>Number</b>: %{y:.1f}',
                                                          '<br><b style="text-align:left;">Month </b>: %{x}<br>')
@@ -120,46 +129,83 @@ mod_measles_vaccine_stock_analysis_measles_coverage_server <- function(id,
                                    hovertemplate = paste('<b>Number</b>: %{y:.0f}',
                                                          '<br><b style="text-align:left;">Month </b>: %{x}<br>'))
 
-      plotM <- plotM %>% layout(title = paste(paste0("State: ", picker_state_var()),paste0("Year: ", picker_year_var()), sep = "     "),
-                                title= list(size=10),
-                                xaxis = list(tickfont = font_plot(),
-                                             title = "Month",
-                                             title= font_axis_title(),
-                                             #fixedrange = TRUE,
-                                             ticks = "outside",
-                                             showline = TRUE,
-                                             tickvals = ~Months),
+      plotM <- plotM %>% layout( title = list(text = paste(paste0("State: ", picker_state_var()),paste0("Year: ", picker_year_var()), sep = "     "),
+                                              font = font_plot_title()),
+                                 xaxis = list(tickfont = font_plot(),
+                                              title = "Month",
+                                              title= font_axis_title(),
+                                              fixedrange = TRUE,
+                                              ticks = "outside",
+                                              showline = TRUE,
+                                              tickvals = ~Months),
 
-                                #width = "auto",
-                                # autosize = F,
+                                 #width = "auto",
+                                 # autosize = F,
 
-                                plot_bgcolor = "rgba(0, 0, 0, 0)",
-                                paper_bgcolor = 'rgba(0, 0, 0, 0)',
+                                 plot_bgcolor = measles_plot_bgcolor(),
+                                 paper_bgcolor = measles_paper_bgcolor(),
+
+                                 margin = plot_margin(),
 
 
+                                 yaxis = list(#range = c(0, 100),
+                                   side = 'right',
+                                   title = 'Coverage (%)',
+                                   showline = TRUE,
+                                   showgrid = FALSE,
+                                   fixedrange = TRUE,
+                                   zeroline = T,
+                                   ticks = "outside",
+                                   title = font_axis_title(), tickfont = font_plot()),
+                                 yaxis2 = list(side = 'left',
+                                               overlaying = "y",
+                                               rangemode="tozero",
+                                               title = 'Vaccine Stock (number in doses)',
+                                               showgrid = FALSE,
+                                               ticks = "outside",
+                                               zeroline = FALSE,
+                                               fixedrange = TRUE,
+                                               showline = TRUE,
+                                               title = font_axis_title(), tickfont = font_plot()),
 
-                                yaxis = list(#range = c(0, 100),
-                                             side = 'right', title = 'Coverage (%)',showline = TRUE, showgrid = FALSE, zeroline = T, ticks = "outside",
-                                             title = font_axis_title(), tickfont = font_plot()),
-                                yaxis2 = list(side = 'left', overlaying = "y", rangemode="tozero", title = 'Vaccine Stock (number in doses)',showgrid = FALSE,ticks = "outside",
-                                              zeroline = FALSE,showline = TRUE, title = font_axis_title(), tickfont = font_plot()),
+                                 legend = list(orientation = "h",   # show entries horizontally
+                                               xanchor = "center",  # use center of legend as anchor
+                                               x = 0.5,
+                                               y = -0.25),
+                                 hoverlabel = list(font = font_hoverlabel()),
+                                 font = font_plot())%>%
+        config(displayModeBar = FALSE)
 
-                                legend = list(orientation = "h",   # show entries horizontally
-                                              xanchor = "center",  # use center of legend as anchor
-                                              x = 0.5,
-                                              y = -0.25),
-                                hoverlabel = list(font = font_hoverlabel()),
-                                font = font_plot())%>%
-        config(modeBarButtons = list(list("toImage", "resetScale2d", "zoomIn2d", "zoomOut2d")),
-               displaylogo = FALSE, toImageButtonOptions = list(filename = "Chart 5- Measles Vaccine Stock Analysis & Measles Coverage.png"))
+      # config(modeBarButtons = list(list("toImage", "resetScale2d", "zoomIn2d", "zoomOut2d")),
+      #        displaylogo = FALSE, toImageButtonOptions = list(filename = "Chart 5- Measles Vaccine Stock Analysis & Measles Coverage.png"))
       plotM
 
     })
 
-    output$download_chart_data <- downloadHandler(
-      filename = "Chart 5- Measles Vaccine Stock Analysis & Measles Coverage.csv",
+
+    output$plot <- renderPlotly({indicator_plot()})
+
+    output$downloadData <- downloadHandler(
+
+      filename = function() {
+        paste0("Chart 5-", picker_state_var(), picker_year_var(), picker_month_var()[1] ," - ", picker_month_var()[length(picker_month_var())] ,".csv")
+      },
       content = function(file) {
         readr::write_csv(chart_data(), file)
+      }
+    )
+
+
+    output$downloadChart <- downloadHandler(
+      filename = function() {
+        paste0("Chart 5-", picker_state_var(), picker_year_var(),  picker_month_var()[1] ," - ", picker_month_var()[length(picker_month_var())] ,".png")
+      },
+      content = function(file) {
+        owd <- setwd(tempdir())
+        on.exit(setwd(owd))
+        saveWidget(indicator_plot(), "temp.html", selfcontained = FALSE)
+        webshot("temp.html", file = file, cliprect = "viewport")
+        #export(indicator_plot(), file=file)
       }
     )
 

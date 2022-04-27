@@ -11,48 +11,67 @@
 mod_map_confirmed_yellow_fever_cases_yellow_fever_coverage_annual_data_ui <- function(id){
   ns <- NS(id)
   tagList(
-    f7Col(
-      f7Shadow(
-        intensity = 4,
-        hover = TRUE,
-        f7Card(
-          title = NULL,
-          splitLayout(h4(textOutput(ns("yf_title"))),
-                      f7DownloadButton(ns("download_chart_data"),label = NULL),
-                      cellWidths = c("95%", "5%")),
-          withSpinner(leafletOutput(ns("yfcMap"), height=440),type = 6, size = 0.4,hide.ui = F),
-          #absolutePanel(top = 160, left = 23 ,downloadButton("dl2", label = NULL)),
-          h6("Quick guide!!"),
-          tags$i(style="color:#0e7290;font-size:10px","The blue bubbles represent clusters of yellow fever cases in a State. The numbers in each bubble are cases in that cluster"),
-          br(),
-          tags$i(style="color:#0e7290;font-size:10px","Hover over a cluster bubble to see the states it covers. Click on a cluster bubble to zoom in a cluster")
-        )
 
-      )
-      )
+    div(class = "col-6 col-6-t yf-col map_col",
+        div(class ="column-icon-div yf-column-icon-div",
+            img(class = "column-icon", src = "www/fully-vaccinated-today-icon.svg",  height = 40, width = 80, alt="nigeria coat of arms", role="img")),
+
+       # h6("Chart 11: Confirmed Yellow Fever cases, Yellow Fever coverage (Annual data)", class = "column-title"),
+        HTML("<h6 class = 'column-title'>Chart 11: Confirmed <span class = 'yf-span'>Yellow Fever</span> cases, <span class = 'yf-span'>Yellow Fever</span> coverage (Annual data)</h6>"),
+
+
+        div(class = "map_charts_inputs",
+
+            pickerInput(inputId = ns("picker_year"), label =  NULL,
+                        choices = years_vector_util(), multiple = F, selected = "2021",
+                        options = list(title = "Years",`actions-box` = TRUE,size = 10,`selected-text-format` = "count > 2")),
+
+            pickerInput(ns("picker_state"),label = NULL,
+                        choices = c(national_util(),sort(states_vector_util())), multiple = T,selected = national_util(),
+                        options = list(title = "State",`actions-box` = TRUE,size = 10,`selected-text-format` = "count > 2")),
+
+        ),
+
+
+
+       HTML(paste0('<a id="', ns("downloadData"), '" class="btn btn-default shiny-download-link download-data-btn" href="" target="_blank" download>
+                      <i class="fa fa-download" aria-hidden="true"></i>
+                      <div class = tooltipdiv> <p class="tooltiptext">Download the data for this Chart</p> </div>
+                     </a>')),
+
+       HTML(paste0('<a id="', ns("downloadChart"), '" class="btn btn-default shiny-download-link download-data-btn download-chart-btn" href="" target="_blank" download>
+                     <i class="fa fa-chart-bar"></i>
+                      <div class = tooltipdiv>
+                          <p class="tooltiptext">
+                              Download this Chart
+                          </p>
+                      </div>
+                     </a>')),
+        withSpinner(leafletOutput(ns("yfcMap"), height=440),type = 6, size = 0.4,hide.ui = F),
+
+        p("Quick guide!!"),
+        tags$i(style="color:#0e7290;font-size:10px", "The blue bubbles represent clusters of measles cases in a State. The numbers in each bubble are cases in that cluster"),
+        br(),
+        tags$i(style="color:#0e7290;font-size:10px","Click on a cluster bubble to zoom into that cluster")
     )
+
+ )
 }
 
 #' map_confirmed_yellow_fever_cases_yellow_fever_coverage_annual_data Server Functions
 #' @importFrom leaflet leaflet renderLeaflet colorFactor addProviderTiles setView addPolygons addMarkers labelOptions addLegend markerClusterOptions
 #' @importFrom stringr str_replace
+#' @importFrom leaflet.extras addResetMapButton
 #' @noRd
-mod_map_confirmed_yellow_fever_cases_yellow_fever_coverage_annual_data_server <- function(id,
-                                                                                          picker_year_var,
-                                                                                          picker_month_var,
-                                                                                          picker_state_var
+mod_map_confirmed_yellow_fever_cases_yellow_fever_coverage_annual_data_server <- function(id ){
 
-                                                                                          ){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
 
-    yf_text <- reactive({
-      paste("Chart 11: Confirmed Yellow Fever cases, Yellow Fever coverage (Annual data),",picker_year_var())
-    })
 
-    output$yf_title <- renderText({
-      yf_text()
-    })
+    picker_state_var <- reactive({input$picker_state})
+    picker_year_var <- reactive({ input$picker_year})
+
 
     # slide 12
     stream2_data <- reactiveValues()
@@ -121,17 +140,17 @@ mod_map_confirmed_yellow_fever_cases_yellow_fever_coverage_annual_data_server <-
                        weight = 2.5,
                        fillOpacity = 0.5,
                        fill = T,
-                       label = ~paste0("<h6>", states_gadm_sp_data$spdf@data$NAME_1,"<h6>")%>%
+                       label = ~paste0("<span>", states_gadm_sp_data$spdf@data$NAME_1,"</span>")%>%
                          lapply(htmltools::HTML),
                        labelOptions = labelOptions(
-                         style = font_plot(),
-                         #textsize = "13px",
+                         textsize = "10px",
                          direction = "auto", noHide = T,textOnly = T
                        )
           ) %>%
           addLegend(colors = make_shapes(colors = colors(), sizes = sizes() , borders = borders() , shapes = shapes()),
                     labels = make_labels(sizes = sizes(), labels = labels()),
-                    opacity =  0.6, title = "Coverage %", position = "bottomright")
+                    opacity =  0.6, title = "Coverage %", position = "bottomright")%>%
+          addResetMapButton()
 
         yfc_map  <- add_state_clusters(leaflet_map =   yfc_map ,
                                        states = str_replace(states_vector_util(),pattern = "Federal Capital Territory",replacement = "Fct"),
@@ -158,19 +177,16 @@ mod_map_confirmed_yellow_fever_cases_yellow_fever_coverage_annual_data_server <-
                        weight = 2.5,
                        fillOpacity = 0.5,
                        fill = T,
-                       label = ~paste0("<h6>", states_gadm_sp_data_state$spdf@data$NAME_1,"<h6>"
+                       label = ~paste0("<span>", states_gadm_sp_data_state$spdf@data$NAME_1,"</span>"
                                        )%>%
                          lapply(htmltools::HTML),
-                       labelOptions = labelOptions(
-                         style = font_plot(),
-                         #textsize = "13px",
+                         labelOptions = labelOptions(
+                         textsize = "10px",
                          direction = "auto", noHide = T,textOnly = T
                        )) %>%
           leaflet::addMarkers(data = stream2_data$sormas_yfc,
                      lat = ~Lat, lng = ~Long,
-                     # layerId  = paste0("marker", 1:length(stream2_data$sormas_yfc$Lat)),
-                     # clusterId = "clusterIdy",
-                     #clusterId = paste0("marker", 1:length(stream2_data$sormas_yfc$Lat)),
+
                      clusterOptions = markerClusterOptions(maxClusterRadius = 40,
                                                            showCoverageOnHover = FALSE,
                                                            singleMarkerMode = TRUE,
@@ -183,7 +199,8 @@ mod_map_confirmed_yellow_fever_cases_yellow_fever_coverage_annual_data_server <-
                                            }"))) %>%
           addLegend(colors = make_shapes(colors = colors(), sizes = sizes() , borders = borders() , shapes = shapes()),
                     labels = make_labels(sizes = sizes(), labels = labels()),
-                    opacity =  0.6, title = "Coverage %", position = "bottomright")
+                    opacity =  0.6, title = "Coverage %", position = "bottomright")%>%
+          addResetMapButton()
 
       }
 
@@ -194,6 +211,37 @@ mod_map_confirmed_yellow_fever_cases_yellow_fever_coverage_annual_data_server <-
 
 
     output$yfcMap = renderLeaflet({yfc_map_leaflef()})
+
+    output$downloadData <- downloadHandler(
+
+      filename = function() {
+        paste0("Chart 11-", picker_state_var(), picker_year_var() ,".zip")
+      },
+      content = function(fname) {
+
+        write.csv(stream2_data$dhis2_data, file = "yellow fever coverage.csv", sep =",")
+        write.csv(stream2_data$sormas_yfc, file = "sormas yellow fever cases.csv", sep =",")
+
+        zip(zipfile=fname, files=c("yellow fever coverage.csv","sormas yellow fever cases.csv"))
+      },
+      contentType = "application/zip"
+    )
+
+
+    output$downloadChart <- downloadHandler(
+      filename = function() {
+        paste0("Chart 11-", picker_state_var(), picker_year_var() ,".png")
+      },
+      content = function(file) {
+        owd <- setwd(tempdir())
+        on.exit(setwd(owd))
+        saveWidget(yfc_map_leaflef(), "temp.html", selfcontained = FALSE)
+        webshot("temp.html", file = file, cliprect = "viewport")
+        #export(indicator_plot(), file=file)
+      }
+    )
+
+
 
 
     # output$dl2 <- downloadHandler(
@@ -211,19 +259,19 @@ mod_map_confirmed_yellow_fever_cases_yellow_fever_coverage_annual_data_server <-
     #   } # end of content() function
     # ) # end of downloadHandler() func)
     #
-    output$download_chart_data <- downloadHandler(
-      filename = 'yfc_csvs.zip',
-      content = function(fname) {
-
-        write.csv(stream2_data$dhis2_data, file = "yfc_admin.csv", sep =",")
-        write.csv(stream2_data$sormas_yfc, file = "yfc_sormas.csv", sep =",")
-
-        zip(zipfile=fname, files=c("yfc_admin.csv","yfc_sormas.csv"))
-      },
-      contentType = "application/zip"
-    )
-
-
+    # output$download_chart_data <- downloadHandler(
+    #   filename = 'yfc_csvs.zip',
+    #   content = function(fname) {
+    #
+    #     write.csv(stream2_data$dhis2_data, file = "yfc_admin.csv", sep =",")
+    #     write.csv(stream2_data$sormas_yfc, file = "yfc_sormas.csv", sep =",")
+    #
+    #     zip(zipfile=fname, files=c("yfc_admin.csv","yfc_sormas.csv"))
+    #   },
+    #   contentType = "application/zip"
+    # )
+    #
+    #
 
 
 

@@ -13,54 +13,59 @@ app_ui <- function(request) {
     # Leave this function for adding external resources
     golem_add_external_resources(),
     # Your application UI logic
-    f7Page(
+    fluidPage(
 
-      preloader = T,
-      loading_duration = 5,
-      options = list( dark = F, filled = T, color ="#13a7b4", iosTranslucentBars = T, navbar = list(iosCenterTitle = TRUE,hideOnPageScroll = F)),
-      title = "Nigeria RI/VPDs Data Triangulation Dashboard",
 
-      f7SingleLayout(
-        navbar = NULL,
+      theme =  bslib::bs_theme(version = 5,
+                               heading_font = bslib::font_google("Ubuntu"),
+                               base_font = bslib::font_google("Roboto")),
 
-       mod_dashboard_heading_ui("dashboard_heading_1"),
+        HTML(
+          "<html>
+      <head>
+      <!-- Place your kit's code here -->
 
-      mod_inputs_ui("inputs_1", multiple_year = F,  multiple_state = FALSE),
+      <script src='https://kit.fontawesome.com/e8ca843dba.js' crossorigin='anonymous'></script>
 
-      f7Row(tags$i(style="color:#0e7290;font-size:10px","Hover over a chart to display the chart download button on the top right corner of that chart")),
+      <meta name='viewport' content='width=device-width, initial-scale=1.0'>
 
-      mod_national_measles_coverage_different_sources_ui("national_measles_coverage_different_sources_1"),
+      </head>
+    </html>"
+        ),
 
-      f7Row(
+      mod_dashboard_heading_ui("dashboard_heading_1"),
+
+      mod_inputs_ui("inputs_1"),
+
+      div(class = "row-page",
+          mod_national_measles_coverage_different_sources_ui("national_measles_coverage_different_sources_1")),
+
+      div(class = "row-page",
       mod_confirmed_measles_cases_MCV1_coverage_ui("confirmed_measles_cases_MCV1_coverage_1"),
       mod_age_group_of_confirmed_measles_cases_by_vaccination_status_ui("age_group_of_confirmed_measles_cases_by_vaccination_status_1")
       ),
-      f7Row(
+      div(class = "row-page",
         mod_age_group_of_confirmed_yellow_fever_cases_by_vaccination_status_ui("age_group_of_confirmed_yellow_fever_cases_by_vaccination_status_1"),
         mod_measles_vaccine_stock_analysis_measles_coverage_ui("measles_vaccine_stock_analysis_measles_coverage_1")
       ),
-      f7Row(
+      div(class = "row-page",
         mod_yellow_fever_vaccine_stock_analysis_yellow_fever_coverage_ui("yellow_fever_vaccine_stock_analysis_yellow_fever_coverage_1"),
         mod_mcv1_mcv2_drop_out_rate_nigeria_ui("mcv1_mcv2_drop_out_rate_nigeria_1")
       ),
-      f7Row(
+      div(class = "row-page",
         mod_mcv1_mcv2_drop_out_rate_ui("mcv1_mcv2_drop_out_rate_1"),
         mod_discrepancy_mcv1_yellow_fever_given_by_state_ui("discrepancy_mcv1_yellow_fever_given_by_state_1")
       ),
 
-      f7Row(
-        mod_inputs_ui("inputs_maps", multiple_year = FALSE,  multiple_state = TRUE)
-      ),
-
-      f7Row(
+      div(class = "row-page",
         mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_ui("map_confirmed_measles_cases_mcv1_coverage_annual_data_1"),
         mod_map_confirmed_yellow_fever_cases_yellow_fever_coverage_annual_data_ui("map_confirmed_yellow_fever_cases_yellow_fever_coverage_annual_data_1")
       ),
       mod_footer_information_ui("footer_information_1")
 
       )
-    )
   )
+
 }
 
 #' Add external Resources to the Application

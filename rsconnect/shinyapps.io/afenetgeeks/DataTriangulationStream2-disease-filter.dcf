@@ -1,0 +1,13 @@
+name: DataTriangulationStream2-disease-filter
+title: DataTriangulationStream2-disease-filter
+username:
+account: afenetgeeks
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 6252597
+bundleId: 5882852
+url: https://afenetgeeks.shinyapps.io/DataTriangulationStream2-disease-filter/
+when: 1651987174.27623
+lastSyncTime: 1651987174.27624
+asMultiple: FALSE
+asStatic: FALSE

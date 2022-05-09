@@ -7,7 +7,6 @@
 #' @noRd
 #'
 #' @importFrom shiny NS tagList
-#' @importFrom shinyMobile f7Shadow f7Col f7Card f7DownloadButton
 #' @importFrom plotly plotlyOutput
 #' @importFrom shinycssloaders withSpinner
 #' @importFrom htmlwidgets saveWidget
@@ -36,7 +35,6 @@ mod_national_measles_coverage_different_sources_ui <- function(id){
                       </div>
                      </a>')),
 
-
         withSpinner(plotlyOutput(ns("plot")),
                     type = 6, size = 0.3,hide.ui = F)
 
@@ -44,6 +42,10 @@ mod_national_measles_coverage_different_sources_ui <- function(id){
 
   )
 }
+
+#' The application server-side
+#'
+
 
 #' national_measles_coverage_different_sources Server Functions
 #' @importFrom dplyr collect tbl mutate arrange filter across group_by summarise ungroup
@@ -59,6 +61,7 @@ mod_national_measles_coverage_different_sources_server <- function(id,
 
 
   moduleServer( id, function(input, output, session){
+
     ns <- session$ns
 
     # slide 1
@@ -68,9 +71,6 @@ mod_national_measles_coverage_different_sources_server <- function(id,
         dplyr::collect() %>%
         dplyr::mutate(dplyr::across(.col = c(Year,State), as.factor))
       })
-
-
-
 
 indicator_plot <- reactive({
 

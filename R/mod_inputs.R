@@ -15,29 +15,44 @@ mod_inputs_ui <- function(id){
   tagList(
 
     div(class = "row-page inputs-div",
+
         div(class = "input-3 input-2-t",
-        pickerInput(inputId = ns("picker_month"), label = span(class = "info-icon-container", "Months",
-                                                             tags$a(class = "info-icon-link", href="#",
-                                                                 img(class = "info-icon", src = "www/info_icon.svg", alt="info-icon"),
-                                                                 span(class="info-tooltiptext", "Month information"))),
-                        choices =  months_vector_util(), multiple = T, selected = months_vector_util(),
-                        options = list(title = "Months",`actions-box` = TRUE,size = 10,`selected-text-format` = "count > 2"))),
+
+            span(class = "info-icon-container", "Disease" ,tags$a(class = "info-icon-link", href="#",
+                                                                                                img(class = "info-icon", src = "www/info_icon.svg", alt="info-icon"),
+                                                                                                span(class="info-tooltiptext", "Disease information"))),
+            nav_links),
+
+        div(class = "input-3 input-2-t",pickerInput( ns("picker_state"),label =  span(class = "info-icon-container", "States",
+                                                                                      tags$a(class = "info-icon-link", href="#",
+                                                                                             img(class = "info-icon", src = "www/info_icon.svg", alt="info-icon"),
+                                                                                             span(class="info-tooltiptext", "State information"))),
+                                                     choices = c(national_util(),sort(states_vector_util())), multiple = F,selected = national_util(),
+                                                     options = list(title = "State",`actions-box` = TRUE,size = 10,`selected-text-format` = "count > 2"))),
+
+        div(class = "input-3 input-2-t",pickerInput(inputId = ns("picker_lga"), label = span(class = "info-icon-container", "LGA",
+                                                                                               tags$a(class = "info-icon-link", href="#",
+                                                                                                      img(class = "info-icon", src = "www/info_icon.svg", alt="info-icon"),
+                                                                                                      span(class="info-tooltiptext", "LGA information"))),
+                                                    choices =  months_vector_util(), multiple = T, selected = months_vector_util(),
+                                                    options = list(title = "Months",`actions-box` = TRUE,size = 10,`selected-text-format` = "count > 2"))),
 
 
         div(class = "input-3 input-2-t", pickerInput(ns("picker_year"), label =  span(class = "info-icon-container", "Years",
-                                                                           tags$a(class = "info-icon-link", href="#",
-                                                                                  img(class = "info-icon", src = "www/info_icon.svg", alt="info-icon"),
-                                                                                  span(class="info-tooltiptext", "Years information"))),
+                                                                                      tags$a(class = "info-icon-link", href="#",
+                                                                                             img(class = "info-icon", src = "www/info_icon.svg", alt="info-icon"),
+                                                                                             span(class="info-tooltiptext", "Years information"))),
                                                      choices = years_vector_util(), multiple = F, selected = "2021",
                                                      options = list(title = "Years",`actions-box` = TRUE,size = 10,`selected-text-format` = "count > 2"))),
 
 
-        div(class = "input-3 input-2-t",pickerInput( ns("picker_state"),label =  span(class = "info-icon-container", "States",
-                                                                          tags$a(class = "info-icon-link", href="#",
-                                                                                 img(class = "info-icon", src = "www/info_icon.svg", alt="info-icon"),
-                                                                                 span(class="info-tooltiptext", "State information"))),
-                                                    choices = c(national_util(),sort(states_vector_util())), multiple = F,selected = national_util(),
-                                                    options = list(title = "State",`actions-box` = TRUE,size = 10,`selected-text-format` = "count > 2"))),
+        div(class = "input-3 input-2-t",pickerInput(inputId = ns("picker_month"), label = span(class = "info-icon-container", "Months",
+                                                                                             tags$a(class = "info-icon-link", href="#",
+                                                                                                 img(class = "info-icon", src = "www/info_icon.svg", alt="info-icon"),
+                                                                                                 span(class="info-tooltiptext", "Month information"))),
+                                                        choices =  months_vector_util(), multiple = T, selected = months_vector_util(),
+                                                        options = list(title = "Months",`actions-box` = TRUE,size = 10,`selected-text-format` = "count > 2"))),
+
         div(class = "input-2 input-2-t", actionButton(inputId =  ns("update"),class = "update-btn", label = "Update"))
     )
 

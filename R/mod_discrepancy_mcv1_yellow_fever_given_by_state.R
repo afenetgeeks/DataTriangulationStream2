@@ -14,13 +14,15 @@ mod_discrepancy_mcv1_yellow_fever_given_by_state_ui <- function(id){
   ns <- NS(id)
   tagList(
 
+
+
     div(class = "col-6 col-6-t measles-col",
         div(class ="column-icon-div measles-column-icon-div",
             img(class = "column-icon", src = "www/total-registrations-icon.svg",  height = 40, width = 80, alt="nigeria coat of arms", role="img")),
 
-      # h6("Chart 9: Discrepancy (Measles 1 & Yellow Fever given)  by State", class = "column-title"),
+      # h6("Chart 9: Discrepancy (MCV 1 & Yellow Fever given)  by State", class = "column-title"),
 
-        HTML("<h6 class = 'column-title'>Chart 9: Discrepancy (<span class = 'measles-span'>Measles 1</span> & <span class = 'yf-span'>Yellow Fever</span> given )  by State </h6>"),
+        HTML("<h6 class = 'column-title'>Chart 9: Discrepancy (<span class = 'measles-span'>MCV 1</span> & <span class = 'yf-span'>Yellow Fever</span> given )  by State </h6>"),
 
       HTML(paste0('<a id="', ns("downloadData"), '" class="btn btn-default shiny-download-link download-data-btn" href="" target="_blank" download>
                       <i class="fa fa-download" aria-hidden="true"></i>
@@ -77,7 +79,7 @@ mod_discrepancy_mcv1_yellow_fever_given_by_state_server <- function(id,
                                    type = 'bar',
                                    color = I("#005F73"),
 
-                                   name = 'Measles 1',
+                                   name = 'MCV 1',
                                    hovertemplate = paste('<b>Number</b>: %{y:.0f}',
                                                          '<br><b style="text-align:left;">State </b>: %{x}<br>'))
 
@@ -143,7 +145,7 @@ mod_discrepancy_mcv1_yellow_fever_given_by_state_server <- function(id,
         config(displayModeBar = FALSE)
 
       # config(modeBarButtons = list(list("toImage", "resetScale2d", "zoomIn2d", "zoomOut2d")),
-      #        displaylogo = FALSE, toImageButtonOptions = list(filename = "Chart 9- Discrepancy (Measles 1 & Yellow Fever given)  by State.png"))
+      #        displaylogo = FALSE, toImageButtonOptions = list(filename = "Chart 9- Discrepancy (MCV 1 & Yellow Fever given)  by State.png"))
 
       plotM
 

@@ -13,14 +13,15 @@
 mod_mcv1_mcv2_drop_out_rate_ui <- function(id){
   ns <- NS(id)
   tagList(
+    div(class = "col-12 col-12-t measles-col",
 
-    div(class = "col-6 col-6-t measles-col",
+ #   div(class = "col-6 col-6-t measles-col",
         div(class ="column-icon-div measles-column-icon-div",
             img(class = "column-icon", src = "www/total-registrations-icon.svg",  height = 40, width = 80, alt="nigeria coat of arms", role="img")),
 
-      #  h6("Chart 8: Measles 1 and Measles 2 Drop Out Rate", class = "column-title"),
+      #  h6("Chart 8: MCV 1 and MCV 2 Drop Out Rate", class = "column-title"),
 
-        HTML("<h6 class = 'column-title'>Chart 8: <span class = 'measles-span'>Measles 1</span> & <span class = 'measles-span'>Measles 2</span> Drop Out Rate</h6>"),
+        HTML("<h6 class = 'column-title'>Chart 8: <span class = 'measles-span'>MCV 1</span> & <span class = 'measles-span'>MCV 2</span> Drop Out Rate</h6>"),
 
       HTML(paste0('<a id="', ns("downloadData"), '" class="btn btn-default shiny-download-link download-data-btn" href="" target="_blank" download>
                       <i class="fa fa-download" aria-hidden="true"></i>
@@ -100,7 +101,7 @@ mod_mcv1_mcv2_drop_out_rate_server <- function(id,
                        tickangle=-45
           ),
           yaxis = list(range = c(0, 100),
-                       title = 'Measles 1 Measles 2 Droupout Rate(%)',
+                       title = 'MCV 1 MCV 2 Droupout Rate(%)',
                        showline = TRUE,
                        showgrid = FALSE,
                        fixedrange = TRUE,
@@ -109,7 +110,7 @@ mod_mcv1_mcv2_drop_out_rate_server <- function(id,
                        title = font_axis_title(), tickfont = font_plot())) %>%
         config(displayModeBar = FALSE)
       # config(modeBarButtons = list(list("toImage", "resetScale2d", "zoomIn2d", "zoomOut2d")),
-      #        displaylogo = FALSE, toImageButtonOptions = list(filename = "Chart 8- Measles 1 and Measles 2 Drop Out Rate.png"))
+      #        displaylogo = FALSE, toImageButtonOptions = list(filename = "Chart 8- MCV 1 and MCV 2 Drop Out Rate.png"))
 
       fig
     })

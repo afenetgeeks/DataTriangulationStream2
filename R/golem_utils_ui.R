@@ -12,9 +12,51 @@
 #'
 #'
 
-
-
 ##"sans-serif"
+
+
+nav_links <-  tags$ul(id="nav",
+
+                      tags$li( tags$a(href = "#", "Disease"),
+
+                               tags$ul(
+
+                                 tags$li(
+                                   tags$a(href = "/DataTriangulationStream2-disease-filter/", "Measles"),
+                                 ),
+                                 tags$li(
+                                   tags$a(href = "/DataTriangulationStream2-disease-filter/yellow_fever_page", "Yellow Fever"),
+                                 ),
+                                 tags$li(
+                                   tags$a(href = "/DataTriangulationStream2-disease-filter/meningitis_page", "Meningitis"),
+                                 )
+                               )
+                      )
+)
+
+
+
+# nav_links <-  tags$ul(id="nav",
+#
+#                       tags$li( tags$a(href = "#", "Disease"),
+#
+#                                tags$ul(
+#
+#                                  tags$li(
+#                                    tags$a(href = "/", "Measles"),
+#                                  ),
+#                                  tags$li(
+#                                    tags$a(href = "/yellow_fever_page", "Yellow Fever"),
+#                                  ),
+#                                  tags$li(
+#                                    tags$a(href = "/meningitis_page", "Meningitis"),
+#                                  )
+#                                )
+#                       )
+# )
+
+
+
 
 
 font_plot_title <- function(){
@@ -73,6 +115,12 @@ plot_margin <- function(){
 
 plot_margin_one_side <- function(){
   list(r = 81, l = 81)
+}
+
+
+
+disease_vector_util <-  function(){
+  c("Measles", "Yellow fever", "Meningitis")
 }
 
 national_util <- function(){

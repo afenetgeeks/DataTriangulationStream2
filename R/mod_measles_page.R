@@ -57,11 +57,11 @@ measles_page <- function(id = "measles_page", href = "/") {
 
 
         div(class = "row-page",
-            mod_mcv1_mcv2_drop_out_rate_ui("mcv1_mcv2_drop_out_rate_1"),
-            mod_discrepancy_mcv1_yellow_fever_given_by_state_ui("discrepancy_mcv1_yellow_fever_given_by_state_1")
+            mod_mcv1_mcv2_drop_out_rate_ui("mcv1_mcv2_drop_out_rate_1")
         ),
 
         div(class = "row-page",
+            mod_discrepancy_mcv1_yellow_fever_given_by_state_ui("discrepancy_mcv1_yellow_fever_given_by_state_1"),
             mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_ui("map_confirmed_measles_cases_mcv1_coverage_annual_data_1")
         ),
 

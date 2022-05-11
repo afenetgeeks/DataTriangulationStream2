@@ -18,9 +18,9 @@ mod_confirmed_measles_cases_MCV1_coverage_ui <- function(id){
         div(class ="column-icon-div measles-column-icon-div",
             img(class = "column-icon", src = "www/partially-vaccinated-today-icon.svg",  height = 40, width = 80, alt="nigeria coat of arms", role="img")),
 
-       # h6("Chart 2: Confirmed measles cases, Measles 1 coverage", class = "column-title"),
+       # h6("Chart 2: Confirmed measles cases, MCV 1 coverage", class = "column-title"),
 
-        HTML("<h6 class = 'column-title'>Chart 2: Confirmed <span class = 'measles-span'>Measles</span> cases, <span class = 'measles-span'>Measles 1</span> coverage </h6>"),
+        HTML("<h6 class = 'column-title'>Chart 2: Confirmed <span class = 'measles-span'>Measles</span> cases, <span class = 'measles-span'>MCV 1</span> coverage </h6>"),
 
        HTML(paste0('<a id="', ns("downloadData"), '" class="btn btn-default shiny-download-link download-data-btn" href="" target="_blank" download>
                       <i class="fa fa-download" aria-hidden="true"></i>
@@ -155,7 +155,7 @@ mod_confirmed_measles_cases_MCV1_coverage_server <- function(id,
                                       font = font_plot())%>%
         config(displayModeBar = FALSE)
       # config(modeBarButtons = list(list("toImage", "resetScale2d", "zoomIn2d", "zoomOut2d")),
-      #        displaylogo = FALSE, toImageButtonOptions = list(filename = "Chart 2- Confirmed measles cases, Measles 1 coverage.png"))
+      #        displaylogo = FALSE, toImageButtonOptions = list(filename = "Chart 2- Confirmed measles cases, MCV 1 coverage.png"))
 
       plotmcac
 

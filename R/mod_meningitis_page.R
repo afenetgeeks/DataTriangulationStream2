@@ -23,20 +23,19 @@ meningitis_page <- function(id = "meningitis_page", href = "/meningitis_page") {
               </html>"
             ),
 
-        mod_dashboard_heading_ui("mod_dashboard_heading_3"),
+        mod_dashboard_heading_ui("dashboard_heading_3"),
 
-        mod_inputs_ui("mod_input_3"),
+        mod_inputs_ui("inputs_3"),
 
         div(class = "row-page",
-            mod_age_group_of_confirmed_yellow_fever_cases_by_vaccination_status_ui("mod_age_group_of_confirmed_yellow_fever_cases_by_vaccination_status_2"),
-            mod_yellow_fever_vaccine_stock_analysis_yellow_fever_coverage_ui("mod_yellow_fever_vaccine_stock_analysis_yellow_fever_coverage_2")
-
+            mod_confirmed_meningitis_cases_coverage_ui("confirmed_meningitis_cases_coverage_1")
         ),
 
         div(class = "row-page",
-            mod_discrepancy_mcv1_yellow_fever_given_by_state_ui("mod_discrepancy_mcv1_yellow_fever_given_by_state_3"),
-            mod_map_confirmed_yellow_fever_cases_yellow_fever_coverage_annual_data_ui("mod_map_confirmed_yellow_fever_cases_yellow_fever_coverage_annual_data_2")
-        ),
+            mod_age_group_of_confirmed_meningitis_cases_by_vaccination_status_ui("age_group_of_confirmed_meningitis_cases_by_vaccination_status_1"),
+            mod_map_confirmed_meningitis_cases_coverage_annual_data_ui("map_confirmed_meningitis_cases_coverage_annual_data_1")
+
+                    ),
 
         mod_footer_information_ui("mod_footer_information_3")
         # mod_home_ui(id = id),
@@ -46,8 +45,22 @@ meningitis_page <- function(id = "meningitis_page", href = "/meningitis_page") {
 
     server = function(input, output, session) {
 
+      dropdown_inputs <- mod_inputs_server("inputs_3")
 
-     # mod_meningitis_page_server(id = id)
+      mod_confirmed_meningitis_cases_coverage_server("confirmed_meningitis_cases_coverage_1",
+                                                     picker_year_var = reactive({dropdown_inputs$picker_year_var}),
+                                                     picker_month_var = reactive({dropdown_inputs$picker_month_var}),
+                                                     picker_state_var = reactive({dropdown_inputs$picker_state_var})
+                                                     )
+
+       mod_age_group_of_confirmed_meningitis_cases_by_vaccination_status_server("age_group_of_confirmed_meningitis_cases_by_vaccination_status_1",
+                                                                                picker_year_var = reactive({dropdown_inputs$picker_year_var}),
+                                                                                picker_month_var = reactive({dropdown_inputs$picker_month_var}),
+                                                                                picker_state_var = reactive({dropdown_inputs$picker_state_var}))
+
+
+     mod_map_confirmed_meningitis_cases_coverage_annual_data_server("map_confirmed_meningitis_cases_coverage_annual_data_1")
+
     }
   )
 }

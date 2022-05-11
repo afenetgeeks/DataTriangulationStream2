@@ -1,16 +1,13 @@
-#' map_confirmed_measles_cases_mcv1_coverage_annual_data UI Function
+#' map_confirmed_meningitis_cases_coverage_annual_data UI Function
 #'
-#' @description A shiny Module. slide 11
+#' @description A shiny Module.
 #'
 #' @param id,input,output,session Internal parameters for {shiny}.
 #'
 #' @noRd
 #'
 #' @importFrom shiny NS tagList
-#' @importFrom shinyMobile f7Shadow f7Col f7Card f7DownloadButton
-#' @importFrom leaflet leafletOutput
-#' @importFrom shinycssloaders withSpinner
-mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_ui <- function(id){
+mod_map_confirmed_meningitis_cases_coverage_annual_data_ui <- function(id){
   ns <- NS(id)
   tagList(
 
@@ -19,8 +16,8 @@ mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_ui <- function(id){
         div(class ="column-icon-div measles-column-icon-div",
             img(class = "column-icon", src = "www/partially-vaccinated-today-icon.svg",  height = 40, width = 80, alt="nigeria coat of arms", role="img")),
 
-       # h6("Chart 10: Confirmed Measles cases, MCV 1 coverage (Annual data)", class = "column-title"),
-        HTML("<h6 class = 'column-title'>Chart 10: Confirmed <span class = 'measles-span'>Measles</span> cases, <span class = 'measles-span'>MCV 1</span> coverage (Annual data)</h6>"),
+        # h6("Chart 10: Confirmed meningitis cases, meningitis 1 coverage (Annual data)", class = "column-title"),
+        HTML("<h6 class = 'column-title'>Chart 10: Confirmed <span class = 'measles-span'>Meningitis</span> cases, <span class = 'measles-span'>Meningitis</span> coverage (Annual data)</h6>"),
 
 
         div(class = "map_charts_inputs",
@@ -36,12 +33,12 @@ mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_ui <- function(id){
         ),
 
 
-       HTML(paste0('<a id="', ns("downloadData"), '" class="btn btn-default shiny-download-link download-data-btn" href="" target="_blank" download>
+        HTML(paste0('<a id="', ns("downloadData"), '" class="btn btn-default shiny-download-link download-data-btn" href="" target="_blank" download>
                       <i class="fa fa-download" aria-hidden="true"></i>
                       <div class = tooltipdiv> <p class="tooltiptext">Download the data for this Chart</p> </div>
                      </a>')),
 
-       HTML(paste0('<a id="', ns("downloadChart"), '" class="btn btn-default shiny-download-link download-data-btn download-chart-btn" href="" target="_blank" download>
+        HTML(paste0('<a id="', ns("downloadChart"), '" class="btn btn-default shiny-download-link download-data-btn download-chart-btn" href="" target="_blank" download>
                      <i class="fa fa-chart-bar"></i>
                       <div class = tooltipdiv>
                           <p class="tooltiptext">
@@ -52,7 +49,7 @@ mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_ui <- function(id){
 
         withSpinner(leafletOutput(ns("mvcMap"), height=440),type = 6, size = 0.4,hide.ui = F),
         p("Quick guide!!"),
-        tags$i(style="color:#0e7290;font-size:10px", "The blue bubbles represent clusters of measles cases in a State. The numbers in each bubble are cases in that cluster"),
+        tags$i(style="color:#0e7290;font-size:10px", "The blue bubbles represent clusters of meningitis cases in a State. The numbers in each bubble are cases in that cluster"),
         br(),
         tags$i(style="color:#0e7290;font-size:10px","Click on a cluster bubble to zoom in a cluster")
 
@@ -61,13 +58,10 @@ mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_ui <- function(id){
   )
 }
 
-#' map_confirmed_measles_cases_mcv1_coverage_annual_data Server Functions
-#' @importFrom leaflet leaflet renderLeaflet colorFactor addProviderTiles setView addPolygons addMarkers labelOptions addLegend markerClusterOptions
-#' @importFrom GADMTools gadm_subset
-#' @importFrom dplyr left_join
-#' @importFrom leaflet.extras addResetMapButton
+#' map_confirmed_meningitis_cases_coverage_annual_data Server Functions
+#'
 #' @noRd
-mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_server <- function(id){
+mod_map_confirmed_meningitis_cases_coverage_annual_data_server <- function(id){
   moduleServer( id, function(input, output, session){
 
     ns <- session$ns
@@ -78,46 +72,43 @@ mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_server <- function(id)
     picker_year_var <- reactive({ input$picker_year})
 
 
-
     stream2_data<- reactiveValues()
-
-
 
     observe({
 
       if(sum(picker_state_var() == "Federal Government") == 1){
 
-      stream2_data$dhis2_data <- dplyr::tbl(stream2_pool, "measles_coverage_s11_states") %>%
-        filter(Year %in% !!picker_year_var())%>%dplyr::collect() %>%
-        dplyr::mutate(dplyr::across(.col = c(Year,State,`Coverage %`), as.factor),
-                      State = str_replace(State,pattern = "Federal Capital Territory",replacement = "Fct"))
+        stream2_data$dhis2_data <- dplyr::tbl(stream2_pool, "meningitis_covarage_annaully_states") %>%
+          filter(Year %in% !!picker_year_var())%>%dplyr::collect() %>%
+          dplyr::mutate(dplyr::across(.col = c(Year,State,`Coverage %`), as.factor),
+                        State = str_replace(State,pattern = "Federal Capital Territory",replacement = "Fct"))
 
       }
-    else{
-      stream2_data$dhis2_data <- dplyr::tbl(stream2_pool, "measles_coverage_s11_states") %>%
-      filter(Year %in% !!picker_year_var() &
-               State %in% !!picker_state_var())%>%dplyr::collect() %>%
-      dplyr::mutate(dplyr::across(.col = c(Year,State,`Coverage %`), as.factor),
-                    State = str_replace(State,pattern = "Federal Capital Territory",replacement = "Fct"))
-    }
+      else{
+        stream2_data$dhis2_data <- dplyr::tbl(stream2_pool, "meningitis_covarage_annaully_states") %>%
+          filter(Year %in% !!picker_year_var() &
+                   State %in% !!picker_state_var())%>%dplyr::collect() %>%
+          dplyr::mutate(dplyr::across(.col = c(Year,State,`Coverage %`), as.factor),
+                        State = str_replace(State,pattern = "Federal Capital Territory",replacement = "Fct"))
+      }
 
 
 
 
 
-    if(sum(picker_state_var() == "Federal Government") == 1){
-      stream2_data$sormas_mvc <- dplyr::tbl(stream2_pool, "sormas_measles_geocodes") %>%
-        filter(Year %in% !!picker_year_var()) %>% dplyr::collect()%>%
-        dplyr::mutate(dplyr::across(.col = c(Year,State, LGA), as.factor),
-                      State = str_replace(State,pattern = "Federal Capital Territory",replacement = "Fct"))
+      if(sum(picker_state_var() == "Federal Government") == 1){
+        stream2_data$sormas_mvc <- dplyr::tbl(stream2_pool, "meningitis_plus_lga_latlon_cleaned_final") %>%
+          filter(Year %in% !!picker_year_var()) %>% dplyr::collect()%>%
+          dplyr::mutate(dplyr::across(.col = c(Year,State, LGA), as.factor),
+                        State = str_replace(State,pattern = "Federal Capital Territory",replacement = "Fct"))
 
       }else{
 
-      stream2_data$sormas_mvc <- dplyr::tbl(stream2_pool, "sormas_measles_geocodes") %>%
-        filter(Year == !!picker_year_var()&
-                 State %in% !!picker_state_var()) %>% dplyr::collect()%>%
-        dplyr::mutate(dplyr::across(.col = c(Year,State, LGA), as.factor),
-                      State = str_replace(State,pattern = "Federal Capital Territory",replacement = "Fct"))
+        stream2_data$sormas_mvc <- dplyr::tbl(stream2_pool, "meningitis_plus_lga_latlon_cleaned_final") %>%
+          filter(Year == !!picker_year_var()&
+                   State %in% !!picker_state_var()) %>% dplyr::collect()%>%
+          dplyr::mutate(dplyr::across(.col = c(Year,State, LGA), as.factor),
+                        State = str_replace(State,pattern = "Federal Capital Territory",replacement = "Fct"))
 
       }
     })
@@ -148,7 +139,7 @@ mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_server <- function(id)
                         "<span>", states_gadm_sp_data$spdf@data$NAME_1, "</span>"
                       )%>%
                         lapply(htmltools::HTML),
-                        labelOptions = labelOptions(
+                      labelOptions = labelOptions(
                         textsize = "10px",
                         direction = "auto", noHide = T,textOnly = T
                       )) %>%
@@ -164,8 +155,8 @@ mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_server <- function(id)
       }
       else{
         states_gadm_sp_data_state <- gadm_subset(states_gadm_sp_data,
-                                           level = 1,
-                                           regions = picker_state_var())
+                                                 level = 1,
+                                                 regions = picker_state_var())
 
         states_gadm_sp_data_state$spdf@data <- states_gadm_sp_data_state$spdf@data %>%
           left_join(as.data.frame(stream2_data$dhis2_data), by = c("NAME_1" = "State"))
@@ -190,13 +181,13 @@ mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_server <- function(id)
                       )) %>%
           leaflet::addMarkers(data = stream2_data$sormas_mvc,
 
-                     lat = ~Lat,
-                     lng = ~Long,
-                     clusterOptions = markerClusterOptions(maxClusterRadius = 40,
-                                                           singleMarkerMode = TRUE,
-                                                           showCoverageOnHover = FALSE,
-                                                           iconCreateFunction =
-                                                           htmlwidgets::JS("function(cluster) {
+                              lat = ~Lat,
+                              lng = ~Long,
+                              clusterOptions = markerClusterOptions(maxClusterRadius = 40,
+                                                                    singleMarkerMode = TRUE,
+                                                                    showCoverageOnHover = FALSE,
+                                                                    iconCreateFunction =
+                                                                      htmlwidgets::JS("function(cluster) {
                                              return new L.DivIcon({
                                                html: '<div style=\"background-color:rgba(78, 224, 237, 0.7)\"><span>' + cluster.getChildCount() + '</div><span>',
                                                className: 'marker-cluster'
@@ -222,12 +213,12 @@ mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_server <- function(id)
       filename = function() {
         paste0("Chart 10-", picker_state_var(), picker_year_var() ,".zip")
       },
-     content = function(fname) {
+      content = function(fname) {
 
-        write.csv(stream2_data$dhis2_data, file = "measles coverage.csv", sep =",")
-        write.csv(stream2_data$sormas_mvc, file = "sormas measles cases.csv", sep =",")
+        write.csv(stream2_data$dhis2_data, file = "meningitis coverage.csv", sep =",")
+        write.csv(stream2_data$sormas_mvc, file = "sormas meningitis cases.csv", sep =",")
 
-        zip(zipfile=fname, files=c("measles coverage.csv","sormas measles cases.csv"))
+        zip(zipfile=fname, files=c("meningitis coverage.csv","sormas meningitis cases.csv"))
       },
       contentType = "application/zip"
     )
@@ -264,7 +255,7 @@ mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_server <- function(id)
 }
 
 ## To be copied in the UI
-# mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_ui("map_confirmed_measles_cases_mcv1_coverage_annual_data_1")
+# mod_map_confirmed_meningitis_cases_coverage_annual_data_ui("map_confirmed_meningitis_cases_coverage_annual_data_1")
 
 ## To be copied in the server
-# mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_server("map_confirmed_measles_cases_mcv1_coverage_annual_data_1")
+# mod_map_confirmed_meningitis_cases_coverage_annual_data_server("map_confirmed_meningitis_cases_coverage_annual_data_1")

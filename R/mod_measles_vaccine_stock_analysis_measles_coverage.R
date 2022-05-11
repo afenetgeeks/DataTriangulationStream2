@@ -110,7 +110,7 @@ mod_measles_vaccine_stock_analysis_measles_coverage_server <- function(id,
                                    mode = 'lines+markers',
                                    line = list(shape = 'spline', linetype = I("solid")),
                                    marker = list(symbol = I("circle")),
-                                   name = 'Measles 1 (administered)',
+                                   name = 'MCV 1 (administered)',
                                    yaxis = 'y2',
                                    hovertemplate = paste('<b>Number</b>: %{y:.1f}',
                                                          '<br><b style="text-align:left;">Month </b>: %{x}<br>')

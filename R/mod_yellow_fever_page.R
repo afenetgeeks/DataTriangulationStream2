@@ -85,10 +85,6 @@ yellow_fever_page <- function(id = "yellow_fever_page", href = "/yellow_fever_pa
 
 
       mod_map_confirmed_yellow_fever_cases_yellow_fever_coverage_annual_data_server("map_confirmed_yellow_fever_cases_yellow_fever_coverage_annual_data_1")
-
-
-
-      #mod_yellow_fever_page_server(id = id)
     }
   )
 }

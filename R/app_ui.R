@@ -7,7 +7,7 @@
 #' @importFrom shinyMobile f7Page f7SingleLayout f7Row
 #' @noRd
 
-webshot::install_phantomjs(version = "2.1.1", force = FALSE)
+#webshot::install_phantomjs(version = "2.1.1", force = FALSE)
 
 
 #' Add external Resources to the Application

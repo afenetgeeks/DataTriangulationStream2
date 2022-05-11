@@ -46,6 +46,8 @@ Imports:
     stringr,
     webshot
 Suggests: 
+    knitr,
+    rmarkdown,
     spelling,
     testthat
 Remotes: 
@@ -56,3 +58,4 @@ Language: en-US
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
+VignetteBuilder: knitr

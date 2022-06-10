@@ -20,7 +20,7 @@ mod_yellow_fever_vaccine_stock_analysis_yellow_fever_coverage_ui <- function(id)
 
        # h6("Chart 6: Yellow Fever Vaccine Stock Analysis & Yellow Fever Coverage", class = "column-title"),
 
-        HTML("<h6 class = 'column-title'>Chart 6: <span class = 'yf-span'>Yellow Fever</span> Vaccine Stock Analysis & <span class = 'yf-span'>Yellow Fever</span> Coverage (Annual data)</h6>"),
+        HTML("<h6 class = 'column-title'>Chart 2: <span class = 'yf-span'>Yellow Fever</span> Vaccine Stock Analysis & <span class = 'yf-span'>Yellow Fever</span> Coverage (Annual data)</h6>"),
 
        HTML(paste0('<a id="', ns("downloadData"), '" class="btn btn-default shiny-download-link download-data-btn" href="" target="_blank" download>
                       <i class="fa fa-download" aria-hidden="true"></i>
@@ -49,7 +49,8 @@ mod_yellow_fever_vaccine_stock_analysis_yellow_fever_coverage_ui <- function(id)
 mod_yellow_fever_vaccine_stock_analysis_yellow_fever_coverage_server <- function(id,
                                                                                  picker_year_var,
                                                                                  picker_month_var,
-                                                                                 picker_state_var
+                                                                                 picker_state_var,
+                                                                                 picker_lga_var
                                                                                  ){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
@@ -59,12 +60,17 @@ mod_yellow_fever_vaccine_stock_analysis_yellow_fever_coverage_server <- function
     chart_data <- reactive({
 
       dplyr::tbl(stream2_pool, "s7_combined")%>%
-        filter(Year == !!picker_year_var() &
+        filter(Year %in% !!picker_year_var() &
                  Month %in% !!picker_month_var() &
-                 State == !! picker_state_var()) %>%collect() %>%
-        mutate(`Yellow Fever Coverage` = `Yellow Fever Coverage`*100,
-               Months = lubridate::month(as.Date(str_c(Year, Months, 01,sep = "-"), "%Y-%b-%d"), label = T),
-               across(c(Year,State ), as.factor)) %>%
+                 State %in%  !! picker_state_var()  &
+                 LGA %in% !!picker_lga_var()) %>%collect() %>%
+        mutate(
+               Months = as.Date(str_c(Year, Months, 01,sep = "-"), "%Y-%b-%d"),
+               across(c(Year,State ), as.factor),
+               `Yellow Fever Doses Wastage Rate` =
+                 ((`Yellow Fever Vaccine - Doses Opened (used)` - `Yellow Fever given (administered)`)/
+                    `Yellow Fever Vaccine - Doses Opened (used)`)*100
+               ) %>%
         arrange(Months)
 
       })
@@ -74,13 +80,31 @@ mod_yellow_fever_vaccine_stock_analysis_yellow_fever_coverage_server <- function
 
       plotYF <- plot_ly(data = chart_data() %>% arrange(Months))
 
-      plotYF <- plotYF %>% add_trace(x = ~Months, y = ~`Yellow Fever Coverage`,
+      plotYF <- plotYF %>% add_trace(x = ~Months,
+                                     y = ~`Yellow Fever Coverage`,
                                      type = 'bar',
+
                                      color = I("#005F73"),
                                      name = 'Yellow Fever Coverage',
                                      #marker = list(color = '#ffa500'),
                                      hovertemplate = paste('<b>Coverage %</b>: %{y:.1f}',
                                                            '<br><b style="text-align:left;">Month </b>: %{x}<br>'))
+
+      plotYF <- plotYF %>% add_trace(x = ~Months,
+                                     y = ~`Yellow Fever Doses Wastage Rate`,
+
+                                   type = 'scatter', mode = 'lines+markers',
+                                   line = list(shape = 'spline', linetype = I("solid")),
+                                   marker = list(symbol = I("circle")),
+                                   color = I("#B37064"),
+                                   hovertemplate = paste('<b>Yellow Fever Doses Wastage Rate %</b>: %{y:.1f}',
+                                                         '<br><b style="text-align:left;">Month </b>: %{x}<br>'),
+
+                                   name = 'Yellow Fever Doses Wastage Rate',
+                                   #marker = list(color = '#ffa500'),
+                                   hoverinfo = "text",
+                                   text = ~scales::number(`Yellow Fever Doses Wastage Rate`,big.mark = ","))
+
 
       plotYF <- plotYF %>% add_trace(x = ~ Months,
                                      y = ~`Yellow Fever Vaccine - Doses Opened (used)`,
@@ -99,8 +123,9 @@ mod_yellow_fever_vaccine_stock_analysis_yellow_fever_coverage_server <- function
                                      line = list(shape = 'spline', linetype = I("solid")),
                                      marker = list(symbol = I("circle")),
                                      color = I("#94D2BD"),
-                                     name = 'Yellow Fever given (administered)',
                                      yaxis = 'y2',
+                                     name = 'Yellow Fever given (administered)',
+
                                      hovertemplate = paste('<b>Number</b>: %{y:.0f}',
                                                            '<br><b style="text-align:left;">Month </b>: %{x}<br>'))
 
@@ -109,24 +134,26 @@ mod_yellow_fever_vaccine_stock_analysis_yellow_fever_coverage_server <- function
                                      type = 'scatter',
                                      color = I("#edb952"),
                                      mode = 'lines+markers',
+                                     yaxis = 'y2',
                                      line = list(shape = 'spline', linetype = I("solid")),
                                      marker = list(symbol = I("circle")),
                                      name = 'Yellow Fever Doses Available (Opening Balance+Received)',
-                                     yaxis = 'y2',
+
                                      hovertemplate = paste('<b>Number</b>: %{y:.0f}',
                                                            '<br><b style="text-align:left;">Month </b>: %{x}<br>'))
 
-      plotYF <- plotYF %>% layout( title = list(text = paste(paste0("State: ", picker_state_var()),paste0("Year: ", picker_year_var()), sep = "     "),
-                                                font = font_plot_title()),
+      plotYF <- plotYF %>% layout( title = paste(picker_state_var(), "," ,picker_lga_var()),
                                    xaxis = list(tickfont = font_plot(),
                                                 title = "Month",
                                                 fixedrange = TRUE,
                                                 title= font_axis_title(),
                                                 ticks = "outside",
+                                                tickvals = ~ Months,
                                                 showline = TRUE,
-                                                ticktext = list("Jan", "Feb", "Mar", "Apr", "May", "Jun",
-                                                                "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"),
-                                                tickvals = ~Months),
+                                                dtick = "M1",
+                                                tickformat="%b-%Y"
+
+                                   ),
 
 
                                    #width = "auto",
@@ -137,7 +164,7 @@ mod_yellow_fever_vaccine_stock_analysis_yellow_fever_coverage_server <- function
                                    margin = plot_margin(),
 
                                    yaxis = list(side = 'right',
-                                                #range = c(0, 100),
+                                                range = if(max(chart_data()$`Yellow Fever Coverage`,na.rm = T) <= 100){c(0, 110)}else{ NULL},
                                                 title = 'Coverage (%)',
                                                 showline = TRUE,
                                                 showgrid = FALSE,

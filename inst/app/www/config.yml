@@ -4,4 +4,4 @@ default:
     password: !expr Sys.getenv("DBPWD")
     host: !expr Sys.getenv("DBHOST")
     port: 3306
-    database: "stream2"
+    database: "stream2_demo"

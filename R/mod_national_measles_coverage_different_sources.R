@@ -18,7 +18,7 @@ mod_national_measles_coverage_different_sources_ui <- function(id){
 
         div(class ="column-icon-div measles-column-icon-div",
             img(class = "column-icon", src = "www/fully-vaccinated-today-icon.svg",  height = 40, width = 80, alt="nigeria coat of arms", role="img")),
-        HTML("<h6 class = 'column-title'> Chart 1: National <span class = 'measles-span'>Measles</span> Coverage (%) by different sources, Nigeria (National)</h6>"),
+        HTML("<h6 class = 'column-title'> Chart 8: National <span class = 'measles-span'>Measles</span> Coverage (%) by different sources, Nigeria (National)</h6>"),
 
 
         HTML(paste0('<a id="', ns("downloadData"), '" class="btn btn-default shiny-download-link download-data-btn" href="" target="_blank" download>
@@ -36,7 +36,11 @@ mod_national_measles_coverage_different_sources_ui <- function(id){
                      </a>')),
 
         withSpinner(plotlyOutput(ns("plot")),
-                    type = 6, size = 0.3,hide.ui = F)
+                    type = 6, size = 0.3,hide.ui = F),
+
+
+                p("***Note: This Chart is fixed, All the above filters don't affect the this chart (Chart 8)***"),
+
 
     )
 
@@ -69,7 +73,9 @@ mod_national_measles_coverage_different_sources_server <- function(id,
     chart_data <- reactive({
         dplyr::tbl(stream2_pool, "slide1_data") %>%
         dplyr::collect() %>%
-        dplyr::mutate(dplyr::across(.col = c(Year,State), as.factor))
+        mutate(as.numeric(Year))
+        #dplyr::mutate(dplyr::across(.col = c(Year), as.factor)) %>%
+        #fct_reorder()
       })
 
 indicator_plot <- reactive({
@@ -83,33 +89,38 @@ indicator_plot <- reactive({
         type = "bar",
         hovertemplate = paste('<b>Coverage %</b>: %{y:.1f}',
                               '<br><b style="text-align:left;">Year</b>: %{x}<br>'),
-        name = "*PMCCS")
-      fig <- fig %>% add_trace(
-        x = ~Year,y = ~`Admin (DHIS2)`,
-        type = 'scatter',
-        color = I("#E9D8A6"),
-        mode = 'lines+markers',
-        line = list(shape = 'spline', linetype = I("solid")),
-        marker = list(symbol = I("circle")),
-        hovertemplate = paste('<b>Coverage %</b>: %{y:.0f}',
-                              '<br><b style="text-align:left;">Year</b>: %{x}<br>'),
-        name = "Admin (DHIS2)")
+        name = "*PMCCS (MCV1)")
+
       fig <- fig %>%
         add_trace(
-          x = ~Year,y = ~NDHS,
+          x = ~Year,y = ~`WUENIC (MCV1)`, type = 'scatter', mode = 'lines+markers',
+          line = list(shape = 'spline', linetype = I("solid")),
+          marker = list(symbol = I("circle")),
+          color = I("#EE9B00"),
+          hovertemplate = paste('<b>Coverage %</b>: %{y:.0f}',
+                                '<br><b style="text-align:left;">Year</b>: %{x}<br>'),
+          name = "*WUENIC (MCV1)")
+
+      fig <- fig %>%
+        add_trace(
+          x = ~Year,
+          y = ~NDHS,
           color = I("#0A9396"),
           hovertemplate = paste('<b>Coverage %</b>: %{y:.0f}',
                                 '<br><b style="text-align:left;">Year</b>: %{x}<br>'),
           type = "bar",
-          name = "*NDHS")
+          name = "*NDHS (MCV1)")
+
       fig <- fig %>%
         add_trace(
-          x = ~Year,y = ~`SMART Survey`,
+          x = ~Year,
+          y = ~`SMART Survey`,
           color = I("#94D2BD"),
           type = "bar",
           hovertemplate = paste('<b>Coverage %</b>: %{y:.0f}',
                                 '<br><b style="text-align:left;">Year</b>: %{x}<br>'),
-          name = "*SMART Survey")
+          name = "*SMART Survey (MCV1)")
+
       fig <- fig %>%
         add_trace(
           x = ~Year,y = ~`NICS/MICS`,
@@ -117,18 +128,43 @@ indicator_plot <- reactive({
           color = I("#00a5cf"),
           hovertemplate = paste('<b>Coverage %</b>: %{y:.0f}',
                                 '<br><b style="text-align:left;">Year</b>: %{x}<br>'),
-          name = "*NICS/MICS")
+          name = "*NICS/MICS (MCV1)")
+
+
+      fig <- fig %>% add_trace(
+        x = ~Year,
+        y = ~`Dhis2 (MCV1)`,
+        type = 'scatter',
+        color = I("#E9D8A6"),
+        mode = 'lines+markers',
+        line = list(shape = 'spline', linetype = I("solid")),
+        marker = list(symbol = I("circle")),
+        hovertemplate = paste('<b>Coverage %</b>: %{y:.0f}',
+                              '<br><b style="text-align:left;">Year</b>: %{x}<br>'),
+        name = "Dhis2 (MCV1)")
+
+      fig <- fig %>% add_trace(
+        x = ~Year,
+        y = ~`Dhis2 (MCV2)`,
+        type = 'scatter',
+        color = I("#B37064"),
+        mode = 'lines+markers',
+        line = list(shape = 'spline', linetype = I("solid")),
+        marker = list(symbol = I("circle")),
+        hovertemplate = paste('<b>Coverage %</b>: %{y:.0f}',
+                              '<br><b style="text-align:left;">Year</b>: %{x}<br>'),
+        name = "Dhis2 (MCV2)")
+
+
       fig <- fig %>%
         add_trace(
-          x = ~Year,y = ~WUENIC, type = 'scatter', mode = 'lines+markers',
+          x = ~Year,y = ~`WUENIC (MCV2)`, type = 'scatter', mode = 'lines+markers',
           line = list(shape = 'spline', linetype = I("solid")),
           marker = list(symbol = I("circle")),
-          color = I("#EE9B00"),
+          color = I("#0ce6ed"),
           hovertemplate = paste('<b>Coverage %</b>: %{y:.0f}',
                                 '<br><b style="text-align:left;">Year</b>: %{x}<br>'),
-          name = "*WUENIC")
-
-
+          name = "*WUENIC (MCV2)")
 
       hline <- function(y = 0, color = "blue", dash = "dash") {
         list(
@@ -170,7 +206,6 @@ indicator_plot <- reactive({
 
       fig <- fig %>%
         layout(xaxis = list(tickvals=chart_data()$Year,
-
                             tickfont = font_plot(),
                             title = "Years",
                             title= font_axis_title(),
@@ -215,7 +250,7 @@ indicator_plot <- reactive({
     output$downloadData <- downloadHandler(
 
       filename = function() {
-        paste0("Chart 1- National Measles Coverage by different sources-Nigeria National Wide-", Sys.Date(), ".csv")
+        paste0("Chart 8- National Measles Coverage by different sources-Nigeria National Wide-", Sys.Date(), ".csv")
       },
       content = function(file) {
         readr::write_csv(chart_data(), file)
@@ -226,7 +261,7 @@ indicator_plot <- reactive({
 
     output$downloadChart <- downloadHandler(
       filename = function() {
-        paste0("Chart 1- National Measles Coverage by different sources-Nigeria National Wide.png")
+        paste0("Chart 8- National Measles Coverage by different sources-Nigeria National Wide.png")
       },
       content = function(file) {
         owd <- setwd(tempdir())

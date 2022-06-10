@@ -15,7 +15,7 @@ mod_age_group_of_confirmed_meningitis_cases_by_vaccination_status_ui <- function
         div(class ="column-icon-div measles-column-icon-div",
             img(class = "column-icon", src = "www/age-group-vaccination-icon.svg",  height = 40, width = 80, alt="nigeria coat of arms", role="img")),
 
-        HTML("<h6 class = 'column-title'> Chart 3: Age Group of Confirmed <span class = 'measles-span'>Meningitis</span> Cases by Vaccination Status</h6>"),
+        HTML("<h6 class = 'column-title'> Chart 2: Age Group of Confirmed <span class = 'measles-span'>Meningitis</span> Cases by Vaccination Status</h6>"),
 
         #  h6("Chart 3: Age Group of Confirmed Meningitis Cases by Vaccination Status", class = "column-title"),
         HTML(paste0('<a id="', ns("downloadData"), '" class="btn btn-default shiny-download-link download-data-btn" href="" target="_blank" download>
@@ -46,20 +46,22 @@ mod_age_group_of_confirmed_meningitis_cases_by_vaccination_status_ui <- function
 mod_age_group_of_confirmed_meningitis_cases_by_vaccination_status_server <- function(id,
                                                                                      picker_year_var,
                                                                                      picker_month_var,
-                                                                                     picker_state_var){
+                                                                                     picker_state_var,
+                                                                                     picker_lga_var){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
 
     chart_data <- reactive({
 
       dplyr::tbl(stream2_pool, "meningitis_cases_age_combined")%>%
-        dplyr::filter(Year %in% !!picker_year_var() & Months %in% !!picker_month_var() & State %in% !!picker_state_var())%>%
-        collect() %>% group_by(`Age group`) %>%
+        filter(Year %in% !!picker_year_var() &
+                 State %in% !!picker_state_var() &
+                 Months %in%  !!picker_month_var() &
+                 LGA %in% !!picker_lga_var()) %>%group_by(`Age group`) %>%
         summarise(across(c(Vaccinated,Unvaccinated,Unknown), ~ sum(.x, na.rm = TRUE))) %>%  ungroup() %>% dplyr::collect() %>%
-        dplyr::mutate(`Age group` =
-                        factor(`Age group`,
-                               labels = c("0-8 M", "9-23 M", "24-48 M", "5-9", "10-14", "15-19", "20-24", "25-29", "30-34", ">=35"),
-                               levels = c("0-8 M", "9-23 M", "24-48 M", "5-9", "10-14", "15-19", "20-24", "25-29", "30-34", ">=35")))
+        dplyr::mutate(`Age group` = factor(`Age group`, labels = c("0-8 M", "9-23 M", "24-48 M", "5-9", "10-14", "15-19", "20-24", "25-29", "30-34", ">=35"),
+                                           levels = c("0-8 M", "9-23 M", "24-48 M", "5-9", "10-14", "15-19", "20-24", "25-29", "30-34", ">=35")))
+
 
 
     })
@@ -87,8 +89,7 @@ mod_age_group_of_confirmed_meningitis_cases_by_vaccination_status_server <- func
 
                   color = I("#edb952"),
                   name = "Vaccinated") %>%
-        layout(title = list(text = paste(paste0("State: ", picker_state_var()),paste0("Year: ", picker_year_var()), sep = "     "),
-                            font = font_plot_title()),
+        layout(title = paste(picker_state_var(), "," ,picker_lga_var()),
                barmode = 'stack',
                xaxis = list(tickfont = font_plot(),
                             title = "Age group (M- months)",

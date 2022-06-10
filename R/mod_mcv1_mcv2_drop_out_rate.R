@@ -21,7 +21,7 @@ mod_mcv1_mcv2_drop_out_rate_ui <- function(id){
 
       #  h6("Chart 8: MCV 1 and MCV 2 Drop Out Rate", class = "column-title"),
 
-        HTML("<h6 class = 'column-title'>Chart 8: <span class = 'measles-span'>MCV 1</span> & <span class = 'measles-span'>MCV 2</span> Drop Out Rate</h6>"),
+        HTML("<h6 class = 'column-title'>Chart 5: <span class = 'measles-span'>MCV 1</span> & <span class = 'measles-span'>MCV 2</span> Drop Out Rate</h6>"),
 
       HTML(paste0('<a id="', ns("downloadData"), '" class="btn btn-default shiny-download-link download-data-btn" href="" target="_blank" download>
                       <i class="fa fa-download" aria-hidden="true"></i>
@@ -53,7 +53,8 @@ mod_mcv1_mcv2_drop_out_rate_ui <- function(id){
 mod_mcv1_mcv2_drop_out_rate_server <- function(id,
                                                picker_year_var,
                                                picker_month_var,
-                                               picker_state_var
+                                               picker_state_var,
+                                               picker_lga_var
                                                ){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
@@ -63,8 +64,11 @@ mod_mcv1_mcv2_drop_out_rate_server <- function(id,
       # slide 9
       dplyr::tbl(stream2_pool, "s9_combined")%>%
         filter(Year %in% !!picker_year_var() &
-                 Months %in%  !!picker_month_var())%>%dplyr::collect()%>%
-        dplyr::mutate(dplyr::across(.col = c(Year,State, Months ), as.factor))
+                 Months %in%  !!picker_month_var() &
+                 State %in% !!picker_state_var() &
+                 LGA %in% !!picker_lga_var() )%>%dplyr::collect()%>%
+        dplyr::mutate(Months = as.Date(str_c(Year, Months, 01,sep = "-"), "%Y-%b-%d"),
+                      dplyr::across(.col = c(Year,State), as.factor))
 
 
     })
@@ -72,15 +76,27 @@ mod_mcv1_mcv2_drop_out_rate_server <- function(id,
     indicator_plot <- reactive({
 
 
-      fig <- chart_data() %>% mutate(State = fct_reorder(State, `MCV 1 MCV 2 Droupout`, .desc = TRUE)) %>%
-        plot_ly(type = "bar", x =~State, y=~`MCV 1 MCV 2 Droupout`,
+
+
+      # fig <- dplyr::tbl(stream2_pool, "s9_combined") %>%
+      #   dplyr::filter(Year %in% "2021" &
+      #                   Months %in%  "Jan" &
+      #                   State %in% "Abia" &
+      #                   LGA %in% "Aba south") %>% dplyr::collect() %>%
+      #   dplyr::mutate(Months = as.Date(str_c(Year, Months, 01,sep = "-"), "%Y-%b-%d"),
+      #                 dplyr::across(.col = c(Year,State ), as.factor)) %>%
+      #   dplyr::arrange(Months)
+
+      chart_data()%>%
+        plot_ly(type = "bar",
+                x =~ Months,
+                y = ~`MCV 1 MCV 2 Dropout`,
                 color = I("#edb952"),
                 hovertemplate = paste('<b>Rate</b>: %{y:.1f}',
                                       '<br><b style="text-align:left;">State </b>: %{x}<br>',
                                       "<extra></extra>"))%>%
         layout(
-          title = list(text = paste0("Year: ", picker_year_var()),
-                       font = font_plot_title()),
+          title = paste(picker_state_var(), "," ,picker_lga_var()),
 
           plot_bgcolor = measles_plot_bgcolor(),
           paper_bgcolor = measles_paper_bgcolor(),
@@ -92,16 +108,18 @@ mod_mcv1_mcv2_drop_out_rate_server <- function(id,
           hoverlabel = list(font = font_hoverlabel()),
           font = font_plot(),
 
-          xaxis = list(title = "States",
-                       tickfont = font_plot(),
+          xaxis = list(tickfont = font_plot(),
+                       title = "Month",
+                       fixedrange = TRUE,
                        title= font_axis_title(),
                        ticks = "outside",
-                       fixedrange = TRUE,
-                       showline = T,
-                       tickangle=-45
+                       tickvals = ~Months,
+                       showline = TRUE,
+                       dtick = "M1",
+                       tickformat="%b-%Y"
           ),
-          yaxis = list(range = c(0, 100),
-                       title = 'MCV 1 MCV 2 Droupout Rate(%)',
+          yaxis = list(  range = if(max(chart_data()$`MCV 1 MCV 2 Dropout`,na.rm = T) <= 100){c(0, 100)}else{ NULL},
+                       title = 'MCV 1 MCV 2 Dropout Rate(%)',
                        showline = TRUE,
                        showgrid = FALSE,
                        fixedrange = TRUE,
@@ -112,7 +130,6 @@ mod_mcv1_mcv2_drop_out_rate_server <- function(id,
       # config(modeBarButtons = list(list("toImage", "resetScale2d", "zoomIn2d", "zoomOut2d")),
       #        displaylogo = FALSE, toImageButtonOptions = list(filename = "Chart 8- MCV 1 and MCV 2 Drop Out Rate.png"))
 
-      fig
     })
 
 
@@ -123,7 +140,7 @@ mod_mcv1_mcv2_drop_out_rate_server <- function(id,
     output$downloadData <- downloadHandler(
 
       filename = function() {
-        paste0("Chart 8-", picker_year_var(), picker_month_var()[1] ," - ", picker_month_var()[length(picker_month_var())] ,".csv")
+        paste0("Chart 5-", picker_year_var(), picker_month_var()[1] ," - ", picker_month_var()[length(picker_month_var())] ,".csv")
       },
       content = function(file) {
         readr::write_csv(chart_data(), file)
@@ -133,7 +150,7 @@ mod_mcv1_mcv2_drop_out_rate_server <- function(id,
 
     output$downloadChart <- downloadHandler(
       filename = function() {
-        paste0("Chart 8-", picker_year_var(),  picker_month_var()[1] ," - ", picker_month_var()[length(picker_month_var())] ,".png")
+        paste0("Chart 5-", picker_year_var(),  picker_month_var()[1] ," - ", picker_month_var()[length(picker_month_var())] ,".png")
       },
       content = function(file) {
         owd <- setwd(tempdir())

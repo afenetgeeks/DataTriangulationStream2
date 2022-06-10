@@ -1,13 +1,6 @@
 #' The application User-Interface
-#'
-#' @param request Internal parameter for `{shiny}`.
-#'     DO NOT REMOVE.
-#' @import shiny
-#' @import dbplyr
-#' @importFrom shinyMobile f7Page f7SingleLayout f7Row
-#' @noRd
 
-#webshot::install_phantomjs(version = "2.1.1", force = FALSE)
+webshot::install_phantomjs(version = "2.1.1", force = FALSE)
 
 
 #' Add external Resources to the Application
@@ -17,6 +10,7 @@
 #'
 #' @import shiny
 #' @importFrom golem add_resource_path activate_js favicon bundle_resources
+#' @import dbplyr
 #' @noRd
 golem_add_external_resources <- function(){
 

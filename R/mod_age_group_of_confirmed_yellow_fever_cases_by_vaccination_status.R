@@ -20,7 +20,7 @@ mod_age_group_of_confirmed_yellow_fever_cases_by_vaccination_status_ui <- functi
 
         #h6("Chart 4: Age Group of Confirmed Yellow Fever Cases by Vaccination Status", class = "column-title"),
 
-        HTML("<h6 class = 'column-title'>Chart 4: Age Group of Confirmed <span class = 'yf-span'>Yellow Fever</span> Cases by Vaccination Status</h6>"),
+        HTML("<h6 class = 'column-title'>Chart 1: Age Group of Confirmed <span class = 'yf-span'>Yellow Fever</span> Cases by Vaccination Status</h6>"),
 
         HTML(paste0('<a id="', ns("downloadData"), '" class="btn btn-default shiny-download-link download-data-btn" href="" target="_blank" download>
                       <i class="fa fa-download" aria-hidden="true"></i>
@@ -51,7 +51,8 @@ mod_age_group_of_confirmed_yellow_fever_cases_by_vaccination_status_ui <- functi
 mod_age_group_of_confirmed_yellow_fever_cases_by_vaccination_status_server <- function(id,
                                                                                        picker_year_var,
                                                                                        picker_month_var,
-                                                                                       picker_state_var
+                                                                                       picker_state_var,
+                                                                                       picker_lga_var
                                                                                        ){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
@@ -62,7 +63,8 @@ mod_age_group_of_confirmed_yellow_fever_cases_by_vaccination_status_server <- fu
       dplyr::tbl(stream2_pool, "yf_by_age_group")%>%
         filter(Year %in% !!picker_year_var() &
                  State %in% !!picker_state_var() &
-                 Months %in%  !!picker_month_var()) %>%group_by(`Age group`) %>%
+                 Months %in%  !!picker_month_var() &
+                 LGA %in% !!picker_lga_var()) %>%group_by(`Age group`) %>%
         summarise(across(c(Vaccinated,Unvaccinated,Unknown), ~ sum(.x, na.rm = TRUE))) %>%  ungroup() %>% dplyr::collect() %>%
         dplyr::mutate(`Age group` = factor(`Age group`, labels = c("0-8 M", "9-23 M", "24-48 M", "5-9", "10-14", "15-19", "20-24", "25-29", "30-34", ">=35"),
                                            levels = c("0-8 M", "9-23 M", "24-48 M", "5-9", "10-14", "15-19", "20-24", "25-29", "30-34", ">=35")))
@@ -92,8 +94,7 @@ mod_age_group_of_confirmed_yellow_fever_cases_by_vaccination_status_server <- fu
                   hovertemplate = paste('<b>Cases</b>: %{y:.0f}',
                                         '<br><b style="text-align:left;">Age group</b>: %{x}<br>'),
                   name = "Vaccinated") %>%
-        layout(  title = list(text = paste(paste0("State: ", picker_state_var()),paste0("Year: ", picker_year_var()), sep = "     "),
-                              font = font_plot_title()),
+        layout( title = paste(picker_state_var(), "," ,picker_lga_var()),
                  barmode = 'stack',
                  xaxis = list(tickfont = font_plot(),
                               title = "Age group (M- months)",

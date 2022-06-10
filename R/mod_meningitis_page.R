@@ -25,7 +25,7 @@ meningitis_page <- function(id = "meningitis_page", href = "/meningitis_page") {
 
         mod_dashboard_heading_ui("dashboard_heading_3"),
 
-        mod_inputs_ui("inputs_3"),
+        mod_inputs_ui("inputs_3", disease = "Meningitis"),
 
         div(class = "row-page",
             mod_confirmed_meningitis_cases_coverage_ui("confirmed_meningitis_cases_coverage_1")
@@ -50,13 +50,15 @@ meningitis_page <- function(id = "meningitis_page", href = "/meningitis_page") {
       mod_confirmed_meningitis_cases_coverage_server("confirmed_meningitis_cases_coverage_1",
                                                      picker_year_var = reactive({dropdown_inputs$picker_year_var}),
                                                      picker_month_var = reactive({dropdown_inputs$picker_month_var}),
-                                                     picker_state_var = reactive({dropdown_inputs$picker_state_var})
+                                                     picker_state_var = reactive({dropdown_inputs$picker_state_var}),
+                                                     picker_lga_var   = reactive({dropdown_inputs$picker_lga_var})
                                                      )
 
        mod_age_group_of_confirmed_meningitis_cases_by_vaccination_status_server("age_group_of_confirmed_meningitis_cases_by_vaccination_status_1",
                                                                                 picker_year_var = reactive({dropdown_inputs$picker_year_var}),
                                                                                 picker_month_var = reactive({dropdown_inputs$picker_month_var}),
-                                                                                picker_state_var = reactive({dropdown_inputs$picker_state_var}))
+                                                                                picker_state_var = reactive({dropdown_inputs$picker_state_var}),
+                                                                                picker_lga_var   = reactive({dropdown_inputs$picker_lga_var}))
 
 
      mod_map_confirmed_meningitis_cases_coverage_annual_data_server("map_confirmed_meningitis_cases_coverage_annual_data_1")

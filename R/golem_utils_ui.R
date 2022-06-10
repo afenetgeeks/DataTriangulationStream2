@@ -15,45 +15,61 @@
 ##"sans-serif"
 
 
-nav_links <-  tags$ul(id="nav",
-
-                      tags$li( tags$a(href = "#", "Disease"),
-
-                               tags$ul(
-
-                                 tags$li(
-                                   tags$a(href = "/DataTriangulationStream2-disease-filter/", "Measles"),
-                                 ),
-                                 tags$li(
-                                   tags$a(href = "/DataTriangulationStream2-disease-filter/yellow_fever_page", "Yellow Fever"),
-                                 ),
-                                 tags$li(
-                                   tags$a(href = "/DataTriangulationStream2-disease-filter/meningitis_page", "Meningitis"),
-                                 )
-                               )
-                      )
-)
 
 
+nav_links <- function(disease){
 
-# nav_links <-  tags$ul(id="nav",
+
+  tags$ul(id="nav",
+
+          tags$li( tags$a(href = "#", disease),
+
+                   tags$ul(
+
+                     tags$li(
+                       tags$a(href = "/DataTriangulationStream2-disease-filter/measles_page", "Measles"),
+                     ),
+                     tags$li(
+                       tags$a(href = "/DataTriangulationStream2-disease-filter/yellow_fever_page", "Yellow Fever"),
+                     ),
+                     tags$li(
+                       tags$a(href = "/DataTriangulationStream2-disease-filter/meningitis_page", "Meningitis"),
+                     )
+                   )
+          )
+  )
+}
+
+
+
+
+
+
+# nav_links <- function(disease){
 #
-#                       tags$li( tags$a(href = "#", "Disease"),
 #
-#                                tags$ul(
+#   tags$ul(id="nav",
 #
-#                                  tags$li(
-#                                    tags$a(href = "/", "Measles"),
-#                                  ),
-#                                  tags$li(
-#                                    tags$a(href = "/yellow_fever_page", "Yellow Fever"),
-#                                  ),
-#                                  tags$li(
-#                                    tags$a(href = "/meningitis_page", "Meningitis"),
-#                                  )
-#                                )
-#                       )
-# )
+#           tags$li( tags$a(href = "#", disease),
+#
+#                    tags$ul(
+#
+#                      tags$li(
+#                        tags$a(href = "/measles_page", "Measles"),
+#                      ),
+#                      tags$li(
+#                        tags$a(href = "/yellow_fever_page", "Yellow Fever"),
+#                      ),
+#                      tags$li(
+#                        tags$a(href = "/meningitis_page", "Meningitis"),
+#                      )
+#                    )
+#           )
+#   )
+#}
+
+
+
 
 
 

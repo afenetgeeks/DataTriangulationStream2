@@ -22,7 +22,7 @@ mod_discrepancy_mcv1_yellow_fever_given_by_state_ui <- function(id){
 
       # h6("Chart 9: Discrepancy (MCV 1 & Yellow Fever given)  by State", class = "column-title"),
 
-        HTML("<h6 class = 'column-title'>Chart 9: Discrepancy (<span class = 'measles-span'>MCV 1</span> & <span class = 'yf-span'>Yellow Fever</span> given )  by State </h6>"),
+        HTML("<h6 class = 'column-title'>Chart 6(Measles) 3 (Yellow Fever): Discrepancy (<span class = 'measles-span'>MCV 1</span> & <span class = 'yf-span'>Yellow Fever</span> given )  by State </h6>"),
 
       HTML(paste0('<a id="', ns("downloadData"), '" class="btn btn-default shiny-download-link download-data-btn" href="" target="_blank" download>
                       <i class="fa fa-download" aria-hidden="true"></i>
@@ -54,7 +54,8 @@ mod_discrepancy_mcv1_yellow_fever_given_by_state_ui <- function(id){
 mod_discrepancy_mcv1_yellow_fever_given_by_state_server <- function(id,
                                                                     picker_year_var,
                                                                     picker_month_var,
-                                                                    picker_state_var
+                                                                    picker_state_var,
+                                                                    picker_lga_var
                                                                     ){
   moduleServer( id, function(input, output, session){
 
@@ -64,90 +65,100 @@ mod_discrepancy_mcv1_yellow_fever_given_by_state_server <- function(id,
       # slide 10
       dplyr::tbl(stream2_pool, "s10_combined")%>%
         filter(Year %in% !!picker_year_var() &
-                 Months %in%  !!picker_month_var())%>%dplyr::collect()%>%
-        dplyr::mutate(dplyr::across(.col = c(Year,State, Months ), as.factor))
+                 Months %in%  !!picker_month_var() &
+                State %in% !!picker_state_var() &
+                 LGA %in% !!picker_lga_var())%>%dplyr::collect()%>%
+        dplyr::mutate(Months = as.Date(str_c(Year, Months, 01,sep = "-"), "%Y-%b-%d"),
+                      dplyr::across(.col = c(Year,State), as.factor))%>%
+        dplyr::arrange(Months)
 })
 
     indicator_plot <- reactive({
 
 
-      plotM <- plot_ly(data = chart_data() %>%
-                         dplyr::mutate(State = fct_reorder(State,`Measles 1 given`, .desc = TRUE)) )
+      plotmcac <- plot_ly(data = chart_data())
 
-      plotM <- plotM %>% add_trace(x = ~State,
-                                   y = ~`Measles 1 given`,
-                                   type = 'bar',
-                                   color = I("#005F73"),
+      plotmcac <- plotmcac %>% add_trace(x = ~Months,
+                                         y = ~Discrepancy,
+                                         type = 'bar',
+                                         color =  I("#00a5cf"),
+                                         name = 'Discrepancy %',
+                                         #   marker = list(color = '#0000ff'),
+                                         hovertemplate = paste('<b style="text-align:left;>Value</b>: %{y:.0f}',
+                                                               '<br><b style="text-align:left;">Month </b>: %{x}<br>'))
 
-                                   name = 'MCV 1',
-                                   hovertemplate = paste('<b>Number</b>: %{y:.0f}',
-                                                         '<br><b style="text-align:left;">State </b>: %{x}<br>'))
+      #
+      plotmcac <- plotmcac %>% add_trace(x = ~Months,
+                                         y = ~`Measles 1 given`,
+                                         color = I("#004e64"),
+                                         mode = 'lines+markers',
+                                         type = 'scatter',
+                                         line = list(shape = 'spline', linetype = I("solid")),
+                                         marker = list(symbol = I("circle")),
+                                         name = 'Measles 1 given',
+                                         hovertemplate = paste('<b>Measles 1 given/b>: %{y:.1f}',
+                                                               '<br><b style="text-align:left;">Months </b>: %{x}<br>'),
+                                         yaxis = 'y2')
 
-      plotM <- plotM %>% add_trace(x = ~State,
-                                   y = ~`Yellow Fever given`,
-                                   type = 'bar',
-                                   color = I("#00a5cf"),
-                                   name = 'Yellow Fever given',
-                                   hovertemplate = paste('<b>Number</b>: %{y:.0f}',
-                                                         '<br><b style="text-align:left;">State </b>: %{x}<br>'))
+      plotmcac <- plotmcac %>% add_trace(x = ~Months,
+                                         y = ~`Yellow Fever given`,
+                                         color = I("#edb952"),
+                                         line = list(shape = 'spline', linetype = I("solid")),
+                                         marker = list(symbol = I("circle")),
+                                         mode = 'lines+markers',
+                                         type = 'scatter',
+                                         hovertemplate = paste('<b>Yellow Fever given</b>: %{y:.1f}',
+                                                               '<br><b style="text-align:left;">Months </b>: %{x}<br>'),
+                                         name = 'Yellow Fever given',
+                                         yaxis = 'y2')
 
-      plotM <- plotM %>% add_trace(x = ~State,
-                                   y = ~Discrepancy,
-                                   color = I("#edb952"),
-                                   type = 'scatter', mode = 'markers',
-                                   name = 'Discrepancy',
-                                   yaxis = 'y2',
-                                   hovertemplate = paste('<b>%</b>: %{y:.1f}',
-                                                         '<br><b style="text-align:left;">State </b>: %{x}<br>'))
+      plotmcac <- plotmcac %>% layout(title = paste(picker_state_var(), "," ,picker_lga_var()),
+                                      xaxis = list(tickfont = font_plot(),
+                                                   title = "Month",
+                                                   fixedrange = TRUE,
+                                                   title= font_axis_title(),
+                                                   ticks = "outside",
+                                                   tickvals = ~Months,
+                                                   showline = TRUE,
+                                                   dtick = "M1",
+                                                   tickformat="%b-%Y"
+                                      ),
 
-      plotM <- plotM %>% layout( title = list(text =  paste0("Year: ", picker_year_var()),
-                                              font = font_plot_title()),
-                                 xaxis = list(title = "States",
-                                              tickfont = font_plot(),
-                                              fixedrange = TRUE,
-                                              title= font_axis_title(),
-                                              ticks = "outside",
-                                              showline = T,
-                                              tickangle=-45
-                                 ),
-
-
-
-                                 plot_bgcolor = measles_plot_bgcolor(),
-                                 paper_bgcolor = measles_paper_bgcolor(),
-                                 margin = plot_margin(),
-
-
-                                 yaxis = list(side = 'left',
-                                              title = 'Number of Doses.',
-                                              rangemode="tozero",
-                                              showline = TRUE,
-                                              showgrid = FALSE,
-                                              fixedrange = TRUE,
-                                              zeroline = T,
-                                              ticks = "outside",
-                                              title = font_axis_title(), tickfont = font_plot()),
-                                 yaxis2 = list(#range = c(0, 100),
-                                   rangemode="tozero",
-                                   side = 'right',
-                                   overlaying = "y",
-                                   fixedrange = TRUE,
-                                   title = 'Rate (%)',
-                                   showgrid = FALSE,ticks = "outside",
-                                   zeroline = FALSE,showline = TRUE, title = font_axis_title(), tickfont = font_plot()),
+                                      plot_bgcolor = measles_plot_bgcolor(),
+                                      paper_bgcolor = measles_paper_bgcolor(),
 
 
-                                 legend = list(orientation = "h",   # show entries horizontally
-                                               xanchor = "center",  # use center of legend as anchor
-                                               x = 0.5,y=-0.6),
-                                 hoverlabel = list(font = font_hoverlabel()),
-                                 font = font_plot())%>%
+                                      margin = list(r = 85),
+
+                                      yaxis = list(side = 'right',
+                                                   title = 'Discrepancy',
+                                                   range = if(max(chart_data()$Discrepancy, na.rm = T) <= 100){c(0, 100)}else{NULL},
+                                                   showline = TRUE,
+                                                   rangemode="tozero",
+                                                   showgrid = FALSE, zeroline = T, ticks = "outside",
+                                                   title = font_axis_title(), tickfont =  font_axis_title()),
+
+                                      yaxis2 = list(
+                                        rangemode="tozero",
+                                        side = 'left',
+                                        title = 'Yellow Fever & Measles 1 (given)',
+                                        overlaying = "y",
+                                        showgrid = FALSE,
+                                        ticks = "outside",
+                                        zeroline = T,
+                                        showline = TRUE,
+                                        title = font_axis_title(),
+                                        tickfont =  font_axis_title()),
+                                        legend = list(orientation = "h",   # show entries horizontally
+                                                    xanchor = "center",  # use center of legend as anchor
+                                                    x = 0.5,
+                                                    y = -0.25),
+                                      hoverlabel = list(font = font_plot()),
+                                      font = font_plot())%>%
         config(displayModeBar = FALSE)
 
-      # config(modeBarButtons = list(list("toImage", "resetScale2d", "zoomIn2d", "zoomOut2d")),
-      #        displaylogo = FALSE, toImageButtonOptions = list(filename = "Chart 9- Discrepancy (MCV 1 & Yellow Fever given)  by State.png"))
+      plotmcac
 
-      plotM
 
     })
 

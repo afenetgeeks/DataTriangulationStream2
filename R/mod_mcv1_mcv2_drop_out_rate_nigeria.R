@@ -21,7 +21,7 @@ mod_mcv1_mcv2_drop_out_rate_nigeria_ui <- function(id){
         #h6("Chart 7: MCV 1 & MCV 2 Drop Out Rate, Nigeria", class = "column-title"),
 
 
-        HTML("<h6 class = 'column-title'>Chart 7: <span class = 'measles-span'>MCV 1</span> & <span class = 'measles-span'>MCV 2</span> Drop Out Rate, Nigeria </h6>"),
+        HTML("<h6 class = 'column-title'>Chart 4: <span class = 'measles-span'>MCV 1</span> & <span class = 'measles-span'>MCV 2</span> Drop Out Rate, Nigeria </h6>"),
 
         HTML(paste0('<a id="', ns("downloadData"), '" class="btn btn-default shiny-download-link download-data-btn" href="" target="_blank" download>
                       <i class="fa fa-download" aria-hidden="true"></i>
@@ -49,7 +49,8 @@ mod_mcv1_mcv2_drop_out_rate_nigeria_ui <- function(id){
 mod_mcv1_mcv2_drop_out_rate_nigeria_server <- function(id,
                                                        picker_year_var,
                                                        picker_month_var,
-                                                       picker_state_var
+                                                       picker_state_var,
+                                                       picker_lga_var
                                                        ){
   moduleServer( id, function(input, output, session){
 
@@ -60,19 +61,34 @@ mod_mcv1_mcv2_drop_out_rate_nigeria_server <- function(id,
       # slide 8
         dplyr::tbl(stream2_pool, "s8_combined") %>%
         dplyr::filter(Year %in% !!picker_year_var() &
-                     Months %in%  !!picker_month_var()) %>% dplyr::collect() %>%
-        dplyr::mutate(Months = lubridate::month(as.Date(stringr::str_c(Year, Months, 01,sep = "-"), "%Y-%b-%d"), label = T),
+                      Months %in%  !!picker_month_var() &
+                      State %in% !!picker_state_var() &
+                      LGA %in% !!picker_lga_var()) %>%
+        dplyr::collect() %>%
+        dplyr::mutate(Months = as.Date(str_c(Year, Months, 01,sep = "-"), "%Y-%b-%d"),
                       dplyr::across(.col = c(Year,State ), as.factor)) %>%
         dplyr::arrange(Months)
+
 
       })
 
     indicator_plot <- reactive({
 
+#
+#       chart_data <-  dplyr::tbl(stream2_pool, "s8_combined") %>%
+#         dplyr::filter(Year %in% "2021" &
+#                         Months %in%  "Jan" &
+#                         State %in% "Abia" &
+#                         LGA %in% "Aba North") %>% dplyr::collect() %>%
+#         dplyr::mutate(Months = as.Date(str_c(Year, Months, 01,sep = "-"), "%Y-%b-%d"),
+#                       dplyr::across(.col = c(Year,State ), as.factor)) %>%
+#         dplyr::arrange(Months)
+
 
       plotM12Dropout <- plot_ly(data = chart_data())
 
-      plotM12Dropout <- plotM12Dropout %>% add_trace(x = ~Months, y = ~`Measles 1 given (administered)`,
+      plotM12Dropout <- plotM12Dropout %>% add_trace(x = ~Months,
+                                                     y = ~`Measles 1 given (administered)`,
                                                      type = 'bar',
                                                      name = 'MCV 1',
                                                      color = I("#005F73"),
@@ -87,29 +103,28 @@ mod_mcv1_mcv2_drop_out_rate_nigeria_server <- function(id,
                                                                            '<br><b style="text-align:left;">Month </b>: %{x}<br>'))
 
       plotM12Dropout <- plotM12Dropout %>% add_trace(x = ~Months,
-                                                     y = ~`MCV 1 MCV 2 Droupout`,
+                                                     y = ~`MCV 1 MCV 2 Dropout`,
                                                      type = 'scatter', mode = 'lines+markers',
                                                      line = list(shape = 'spline', linetype = I("solid")),
                                                      marker = list(symbol = I("circle")),
-                                                     name = 'MCV 1 MCV 2 Droupout',
+                                                     name = 'MCV 1 MCV 2 Dropout rate',
                                                      yaxis = 'y2',
                                                      color = I("#edb952"),
                                                      hovertemplate = paste('<b>Coverage %</b>: %{y:.1f}',
                                                                            '<br><b style="text-align:left;">Month </b>: %{x}<br>'))
 
-      plotM12Dropout <- plotM12Dropout %>% layout( title = list(text = paste(paste0("National Data only: "),paste0("Year: ", picker_year_var()), sep = " "),
-                                                                font = font_plot_title()),
+      plotM12Dropout <- plotM12Dropout %>% layout( title = paste(picker_state_var(), "," ,picker_lga_var()),
+
                                                    xaxis = list(tickfont = font_plot(),
                                                                 title = "Month",
                                                                 fixedrange = TRUE,
                                                                 title= font_axis_title(),
                                                                 ticks = "outside",
-                                                                #type = 'date',
+                                                                tickvals = ~Months,
                                                                 showline = TRUE,
-                                                                tickvals = ~Months
+                                                                dtick = "M1",
+                                                                tickformat="%b-%Y"
                                                    ),
-
-
                                                    #width = "auto",
                                                    # autosize = F,
 
@@ -129,7 +144,7 @@ mod_mcv1_mcv2_drop_out_rate_nigeria_server <- function(id,
                                                                 ticks = "outside",
                                                                 title = font_axis_title(), tickfont = font_plot()),
                                                    yaxis2 = list(side = 'right',
-                                                                 range = c(0, 100),
+                                                                 range = if(max(chart_data()$`MCV 1 MCV 2 Dropout`, na.rm = T) <= 100){c(0, 100)}else{ NULL},
                                                                  overlaying = "y",
                                                                  fixedrange = TRUE,
                                                                  title = 'Rate(%)',
@@ -164,7 +179,7 @@ mod_mcv1_mcv2_drop_out_rate_nigeria_server <- function(id,
     output$downloadData <- downloadHandler(
 
       filename = function() {
-        paste0("Chart 7-",  picker_year_var(), picker_month_var()[1] ," - ", picker_month_var()[length(picker_month_var())] ,".csv")
+        paste0("Chart 4-",  picker_year_var(), picker_month_var()[1] ," - ", picker_month_var()[length(picker_month_var())] ,".csv")
       },
       content = function(file) {
         readr::write_csv(chart_data(), file)
@@ -174,7 +189,7 @@ mod_mcv1_mcv2_drop_out_rate_nigeria_server <- function(id,
 
     output$downloadChart <- downloadHandler(
       filename = function() {
-        paste0("Chart 7-",  picker_year_var(),  picker_month_var()[1] ," - ", picker_month_var()[length(picker_month_var())] ,".png")
+        paste0("Chart 4-",  picker_year_var(),  picker_month_var()[1] ," - ", picker_month_var()[length(picker_month_var())] ,".png")
       },
       content = function(file) {
         owd <- setwd(tempdir())

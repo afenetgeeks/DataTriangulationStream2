@@ -13,18 +13,32 @@ mod_map_confirmed_yellow_fever_cases_yellow_fever_coverage_annual_data_ui <- fun
   tagList(
 
     div(class = "col-6 col-6-t yf-col map_col",
+
+        span(class = "info-icon-container",
+             tags$a(class = "info-icon-link", href="#",
+                    img(class = "info-icon", src = "www/info_icon.svg", alt="info-icon"),
+                    span(class="info-tooltiptext",
+                         p(style="color:#ffffff;font-size:10px;algin:left;", "The blue bubbles represent clusters of yellow fever cases in a State. The numbers in each bubble are cases in that cluster"),
+
+                         p(style="color:#ffffff;font-size:10px;algin:left;","Click on a cluster bubble to zoom in a cluster")))),
+
+
         div(class ="column-icon-div yf-column-icon-div",
             img(class = "column-icon", src = "www/fully-vaccinated-today-icon.svg",  height = 40, width = 80, alt="nigeria coat of arms", role="img")),
 
        # h6("Chart 11: Confirmed Yellow Fever cases, Yellow Fever coverage (Annual data)", class = "column-title"),
-        HTML("<h6 class = 'column-title'>Chart 11: Confirmed <span class = 'yf-span'>Yellow Fever</span> cases, <span class = 'yf-span'>Yellow Fever</span> coverage (Annual data)</h6>"),
+        HTML("<h6 class = 'column-title column-title-map'>Chart 4: Confirmed <span class = 'yf-span'>Yellow Fever</span> cases, <span class = 'yf-span'>Yellow Fever</span> coverage (Annual data)</h6>"),
 
 
         div(class = "map_charts_inputs",
 
             pickerInput(inputId = ns("picker_year"), label =  NULL,
-                        choices = years_vector_util(), multiple = F, selected = "2021",
+                        choices = years_vector_util(), multiple = F, selected = "2022",
                         options = list(title = "Years",`actions-box` = TRUE,size = 10,`selected-text-format` = "count > 2")),
+
+            pickerInput(inputId = ns("picker_month"), label =  NULL,
+                        choices = c("Year Data", months_vector_util()), multiple = F, selected = "Year Data",
+                        options = list(title = "Months",`actions-box` = TRUE,size = 10,`selected-text-format` = "count > 2")),
 
             pickerInput(ns("picker_state"),label = NULL,
                         choices = c(national_util(),sort(states_vector_util())), multiple = T,selected = national_util(),
@@ -47,12 +61,7 @@ mod_map_confirmed_yellow_fever_cases_yellow_fever_coverage_annual_data_ui <- fun
                           </p>
                       </div>
                      </a>')),
-        withSpinner(leafletOutput(ns("yfcMap"), height=440),type = 6, size = 0.4,hide.ui = F),
-
-        p("Quick guide!!"),
-        tags$i(style="color:#0e7290;font-size:10px", "The blue bubbles represent clusters of measles cases in a State. The numbers in each bubble are cases in that cluster"),
-        br(),
-        tags$i(style="color:#0e7290;font-size:10px","Click on a cluster bubble to zoom into that cluster")
+        withSpinner(leafletOutput(ns("yfcMap"), height=440),type = 6, size = 0.4,hide.ui = F)
     )
 
  )
@@ -71,48 +80,102 @@ mod_map_confirmed_yellow_fever_cases_yellow_fever_coverage_annual_data_server <-
 
     picker_state_var <- reactive({input$picker_state})
     picker_year_var <- reactive({ input$picker_year})
-
+    picker_month_var <- reactive({input$picker_month})
 
     # slide 12
     stream2_data <- reactiveValues()
 
     observe({
-      if(sum(picker_state_var() == "Federal Government") == 1){
 
-        stream2_data$dhis2_data <- dplyr::tbl(stream2_pool, "yf_coverage_s12_states") %>%
-          filter(Year == !!picker_year_var())%>%
-          dplyr::collect()%>%
-          dplyr::mutate(dplyr::across(.col = c(Year,State,`Coverage %`), as.factor),
-                        State = str_replace(State,pattern = "Federal Capital Territory",replacement = "Fct"))
-
-        }
-      else{
-
-        stream2_data$dhis2_data <- dplyr::tbl(stream2_pool, "yf_coverage_s12_states") %>%
-          filter(Year == !!picker_year_var() &
-                   State %in% !!picker_state_var())%>%
-          dplyr::collect()%>%
-          dplyr::mutate(dplyr::across(.col = c(Year,State,`Coverage %`), as.factor),
-                        State = str_replace(State,pattern = "Federal Capital Territory",replacement = "Fct"))
-
-        }
 
       if(sum(picker_state_var() == "Federal Government") == 1){
 
-        stream2_data$sormas_yfc <-  dplyr::tbl(stream2_pool, "sormas_yf_geocodes") %>%
-          filter(Year == !!picker_year_var())%>%
-          dplyr::collect()%>%
-          dplyr::mutate(dplyr::across(.col = c(Year,State, LGA), as.factor),
-                                           State = str_replace(State,pattern = "Federal Capital Territory",replacement = "Fct"))
+        if(sum(picker_month_var() == "Year Data") == 1){
+
+          stream2_data$dhis2_data <- dplyr::tbl(stream2_pool, "yf_coverage_s12_states") %>%
+            filter(Year %in% !!picker_year_var() & Month %in% "Ann" & LGA  %in% "State Level data") %>% dplyr::collect() %>%
+            dplyr::mutate(dplyr::across(.col = c(Year,State,`Coverage %`), as.factor),
+                          State = str_replace(State,pattern = "Federal Capital Territory",replacement = "Fct"))
+
+        }else{
+
+          stream2_data$dhis2_data <- dplyr::tbl(stream2_pool, "yf_coverage_s12_states") %>%
+            filter(Year %in% !!picker_year_var() & Month  %in% !!picker_month_var() & LGA  %in% !!"State Level data") %>% dplyr::collect() %>%
+            dplyr::mutate(dplyr::across(.col = c(Year,State,`Coverage %`), as.factor),
+                          State = str_replace(State,pattern = "Federal Capital Territory",replacement = "Fct"))
 
         }
-      else{
 
-        stream2_data$sormas_yfc <-  dplyr::tbl(stream2_pool, "sormas_yf_geocodes") %>%
-          filter(Year == !!picker_year_var() &
-                   State %in% !!picker_state_var())%>%
-          dplyr::collect()%>%dplyr::mutate(dplyr::across(.col = c(Year,State, LGA), as.factor),
-                                           State = str_replace(State,pattern = "Federal Capital Territory",replacement = "Fct"))
+      }else{
+
+        if(sum(picker_month_var() == "Year Data") == 1){
+
+          stream2_data$dhis2_data <- dplyr::tbl(stream2_pool, "yf_coverage_s12_states") %>%
+            filter(Year %in% !!picker_year_var() &
+                     State %in% !!picker_state_var() & Month %in% "Ann" & LGA %in% "State Level data")%>%dplyr::collect() %>%
+            dplyr::mutate(dplyr::across(.col = c(Year,State,`Coverage %`), as.factor),
+                          State = str_replace(State,pattern = "Federal Capital Territory",replacement = "Fct"))
+
+        }else{
+
+          stream2_data$dhis2_data <- dplyr::tbl(stream2_pool, "yf_coverage_s12_states") %>%
+            filter(Year %in% !!picker_year_var() &
+                     State %in% !!picker_state_var() & Month %in% !!picker_month_var() & LGA %in% "State Level data")%>%dplyr::collect() %>%
+            dplyr::mutate(dplyr::across(.col = c(Year,State,`Coverage %`), as.factor),
+                          State = str_replace(State,pattern = "Federal Capital Territory",replacement = "Fct"))
+
+        }
+
+
+
+      }
+
+
+
+      ################
+
+      if(sum(picker_state_var() == "Federal Government") == 1){
+
+        if(sum(picker_month_var() == "Year Data") == 1){
+
+          stream2_data$sormas_yfc <- dplyr::tbl(stream2_pool, "sormas_yf_geocodes") %>%
+            filter(Year %in% !!picker_year_var()) %>% dplyr::collect()%>%
+            dplyr::mutate(dplyr::across(.col = c(Year,State, Months, LGA), as.factor),
+                          State = str_replace(State,pattern = "Federal Capital Territory",replacement = "Fct"))
+
+        }else{
+
+          stream2_data$sormas_yfc <- dplyr::tbl(stream2_pool, "sormas_yf_geocodes") %>%
+            filter(Year %in% !!picker_year_var() & Months %in% !!picker_month_var()) %>%
+            dplyr::collect()%>%
+            dplyr::mutate(dplyr::across(.col = c(Year,State, Months, LGA), as.factor),
+                          State = str_replace(State,pattern = "Federal Capital Territory",replacement = "Fct"))
+
+        }
+
+      }else{
+
+
+        if(sum(picker_month_var() == "Year Data") == 1){
+
+          stream2_data$sormas_yfc <- dplyr::tbl(stream2_pool, "sormas_yf_geocodes") %>%
+            filter(Year == !!picker_year_var()&
+                     State %in% !!picker_state_var() ) %>% dplyr::collect()%>%
+            dplyr::mutate(dplyr::across(.col = c(Year,State, LGA), as.factor),
+                          State = str_replace(State,pattern = "Federal Capital Territory",replacement = "Fct"))
+
+        }else{
+
+          stream2_data$sormas_yfc <- dplyr::tbl(stream2_pool, "sormas_yf_geocodes") %>%
+            filter(Year == !!picker_year_var()&
+                     State %in% !!picker_state_var()  & Months %in% !!picker_month_var()) %>% dplyr::collect()%>%
+            dplyr::mutate(dplyr::across(.col = c(Year,State, LGA), as.factor),
+                          State = str_replace(State,pattern = "Federal Capital Territory",replacement = "Fct"))
+
+        }
+
+
+
       }
 
 
@@ -126,12 +189,14 @@ mod_map_confirmed_yellow_fever_cases_yellow_fever_coverage_annual_data_server <-
                             na.color = 'red')
 
       if(sum(picker_state_var() == "Federal Government") == 1){
+
+
         states_gadm_sp_data$spdf@data <- states_gadm_sp_data$spdf@data %>%
           left_join(as.data.frame(stream2_data$dhis2_data),
                     by = c("NAME_1" = "State"))
 
         yfc_map <-  leaflet() %>%
-          addProviderTiles("Stamen.Toner") %>%
+         addProviderTiles("Stamen.Toner") %>%
           setView(lat =  9.077751,lng = 8.6774567, zoom = 6) %>%
           addPolygons( data = states_gadm_sp_data$spdf,
                        fillColor = ~pal_yf(states_gadm_sp_data$spdf@data$`Coverage %`),
@@ -167,7 +232,7 @@ mod_map_confirmed_yellow_fever_cases_yellow_fever_coverage_annual_data_server <-
                     by = c("NAME_1" = "State"))
 
         yfc_map <-  leaflet() %>%
-          addProviderTiles("Stamen.Toner") %>%
+         addProviderTiles("Stamen.Toner") %>%
           # setView(lat =  states_gadm_sp_data_state$spdf@data$Lat,
           #         lng = states_gadm_sp_data_state$spdf@data$Long, zoom = 6) %>%
           addPolygons( data = states_gadm_sp_data_state$spdf,
@@ -240,41 +305,6 @@ mod_map_confirmed_yellow_fever_cases_yellow_fever_coverage_annual_data_server <-
         #export(indicator_plot(), file=file)
       }
     )
-
-
-
-
-    # output$dl2 <- downloadHandler(
-    #   filename = paste0( Sys.Date()
-    #                      , "Confirmed Yellow Fever cases, Yellow Fever coverage by states, 2020"
-    #                      , ".png"
-    #   )
-    #
-    #   , content = function(file) {
-    #      mapshot( x = yfc_map_leaflef()
-    #              , file = file
-    #              , cliprect = "viewport" # the clipping rectangle matches the height & width from the viewing port
-    #              , selfcontained = FALSE # when this was not specified, the function for produced a PDF of two pages: one of the leaflet map, the other a blank page.
-    #     )
-    #   } # end of content() function
-    # ) # end of downloadHandler() func)
-    #
-    # output$download_chart_data <- downloadHandler(
-    #   filename = 'yfc_csvs.zip',
-    #   content = function(fname) {
-    #
-    #     write.csv(stream2_data$dhis2_data, file = "yfc_admin.csv", sep =",")
-    #     write.csv(stream2_data$sormas_yfc, file = "yfc_sormas.csv", sep =",")
-    #
-    #     zip(zipfile=fname, files=c("yfc_admin.csv","yfc_sormas.csv"))
-    #   },
-    #   contentType = "application/zip"
-    # )
-    #
-    #
-
-
-
 
   })
 }

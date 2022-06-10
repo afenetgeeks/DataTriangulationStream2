@@ -31,7 +31,6 @@ Imports:
     htmlwidgets,
     leaflet,
     leaflet.extras,
-    lubridate,
     magrittr,
     plotly,
     pool,
@@ -47,9 +46,12 @@ Imports:
     webshot
 Suggests: 
     knitr,
+    lubridate,
     rmarkdown,
     spelling,
     testthat
+VignetteBuilder: 
+    knitr
 Remotes: 
     ColinFay/brochure,
     tidyverse/dplyr
@@ -58,4 +60,3 @@ Language: en-US
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
-VignetteBuilder: knitr

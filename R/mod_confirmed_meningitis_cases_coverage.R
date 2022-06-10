@@ -18,7 +18,7 @@ mod_confirmed_meningitis_cases_coverage_ui <- function(id){
 
         # h6("Chart 2: Confirmed measles cases, MCV 1 coverage", class = "column-title"),
 
-        HTML("<h6 class = 'column-title'>Chart 2: Confirmed <span class = 'measles-span'>Meningitis</span> cases, <span class = 'measles-span'>Meningitis</span> coverage </h6>"),
+        HTML("<h6 class = 'column-title'>Chart 1: Confirmed <span class = 'measles-span'>Meningitis</span> cases, <span class = 'measles-span'>Meningitis</span> coverage </h6>"),
 
         HTML(paste0('<a id="', ns("downloadData"), '" class="btn btn-default shiny-download-link download-data-btn" href="" target="_blank" download>
                       <i class="fa fa-download" aria-hidden="true"></i>
@@ -46,7 +46,9 @@ mod_confirmed_meningitis_cases_coverage_ui <- function(id){
 mod_confirmed_meningitis_cases_coverage_server <- function(id,
                                                            picker_year_var,
                                                            picker_month_var,
-                                                           picker_state_var){
+                                                           picker_state_var,
+                                                           picker_lga_var
+                                                           ){
   moduleServer( id, function(input, output, session){
 
     ns <- session$ns
@@ -54,9 +56,13 @@ mod_confirmed_meningitis_cases_coverage_server <- function(id,
     chart_data <- reactive({
 
       dplyr::tbl(stream2_pool, "meningitis_coverage_cases_data")%>%
-        dplyr::filter(Year %in% !!picker_year_var() & Months %in% !!picker_month_var() & State %in% !!picker_state_var())%>%
+        dplyr::filter(Year %in% !!picker_year_var() &
+                        Months %in% !!picker_month_var() &
+                        State %in% !!picker_state_var() &
+                        LGA %in% !!picker_lga_var())%>%
         collect() %>%
-        mutate(Months = lubridate::month(as.Date(str_c(Year, Months, 01,sep = "-"), "%Y-%b-%d"), label = T),
+        mutate(Months = as.Date(str_c(Year, Months, 01,sep = "-"), "%Y-%b-%d"),
+
                across(c(Year,State ), as.factor))
 
     })
@@ -89,16 +95,17 @@ mod_confirmed_meningitis_cases_coverage_server <- function(id,
 
 
       plotmcac <- plotmcac %>% layout(
-         title = list(text = paste(paste0("State: ", picker_state_var()),paste0("Year: ", picker_year_var()),sep = "     "),
-                      font = font_plot_title()),
+         title = paste(picker_state_var(), "," ,picker_lga_var()),
         xaxis = list(tickfont = font_plot(),
                      title = "Month",
                      fixedrange = TRUE,
                      title= font_axis_title(),
                      ticks = "outside",
-                     tickvals = ~Months,
-                     showline = TRUE
-        ),
+                     tickvals = ~ Months,
+                     showline = TRUE,
+                     dtick = "M1",
+                     tickformat="%b-%Y"
+                     ),
 
         plot_bgcolor = measles_plot_bgcolor(),
         paper_bgcolor = measles_paper_bgcolor(),
@@ -114,7 +121,7 @@ mod_confirmed_meningitis_cases_coverage_server <- function(id,
                      zeroline = T,
                      ticks = "outside",
                      title = font_axis_title(), tickfont = font_plot()),
-        yaxis2 = list(#range = c(0, 100),
+        yaxis2 = list(range = if(max(chart_data()$`Meningitis Coverage (Dhis2)`, na.rm = T) <= 100){c(0, 100)}else{ NULL},
           rangemode="tozero",
           fixedrange = TRUE,
           side = 'right',

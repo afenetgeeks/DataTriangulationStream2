@@ -45,6 +45,10 @@ run_app <- function(
       measles_page(),
       yellow_fever_page(),
       meningitis_page(),
+      redirect(
+        from = "/measles_page",
+        to = "/"
+      ),
       onStart = onStart,
       options = options,
       enableBookmarking = enableBookmarking,

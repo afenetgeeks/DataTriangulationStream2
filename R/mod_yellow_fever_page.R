@@ -40,15 +40,21 @@ yellow_fever_page <- function(id = "yellow_fever_page", href = "/yellow_fever_pa
         mod_inputs_ui("inputs_2",disease = "Yellow Fever"),
 
         div(class = "row-page",
-            mod_age_group_of_confirmed_yellow_fever_cases_by_vaccination_status_ui("age_group_of_confirmed_yellow_fever_cases_by_vaccination_status_1"),
-            mod_yellow_fever_vaccine_stock_analysis_yellow_fever_coverage_ui("yellow_fever_vaccine_stock_analysis_yellow_fever_coverage_1")
+            mod_yf_coverage_confirmed_cases_ui("yf_coverage_confirmed_cases_1"),
+            mod_age_group_of_confirmed_yellow_fever_cases_by_vaccination_status_ui("age_group_of_confirmed_yellow_fever_cases_by_vaccination_status_1")
+
 
         ),
 
         div(class = "row-page",
-            mod_discrepancy_mcv1_yellow_fever_given_by_state_ui("discrepancy_mcv1_yellow_fever_given_by_state_2"),
-            mod_map_confirmed_yellow_fever_cases_yellow_fever_coverage_annual_data_ui("map_confirmed_yellow_fever_cases_yellow_fever_coverage_annual_data_1")
-        ),
+            mod_yellow_fever_vaccine_stock_analysis_yellow_fever_coverage_ui("yellow_fever_vaccine_stock_analysis_yellow_fever_coverage_1"),
+            mod_discrepancy_mcv1_yellow_fever_given_by_state_ui("discrepancy_mcv1_yellow_fever_given_by_state_2")
+           ),
+
+        mod_map_confirmed_yellow_fever_cases_yellow_fever_coverage_annual_data_ui("map_confirmed_yellow_fever_cases_yellow_fever_coverage_annual_data_1"),
+
+
+
 
         mod_footer_information_ui("footer_information_2")
 
@@ -60,6 +66,13 @@ yellow_fever_page <- function(id = "yellow_fever_page", href = "/yellow_fever_pa
     server = function(input, output, session) {
 
       dropdown_inputs <- mod_inputs_server("inputs_2")
+
+      mod_yf_coverage_confirmed_cases_server("yf_coverage_confirmed_cases_1"  ,
+                                             picker_year_var = reactive({dropdown_inputs$picker_year_var}),
+                                             picker_month_var = reactive({dropdown_inputs$picker_month_var}),
+                                             picker_state_var = reactive({dropdown_inputs$picker_state_var}),
+                                             picker_lga_var   = reactive({dropdown_inputs$picker_lga_var})
+      )
 
 
 mod_age_group_of_confirmed_yellow_fever_cases_by_vaccination_status_server("age_group_of_confirmed_yellow_fever_cases_by_vaccination_status_1",

@@ -18,8 +18,6 @@
 
 
 nav_links <- function(disease){
-
-
   tags$ul(id="nav",
 
           tags$li( tags$a(href = "#", disease),
@@ -66,7 +64,7 @@ nav_links <- function(disease){
 #                    )
 #           )
 #   )
-#}
+# }
 
 
 
@@ -131,6 +129,56 @@ plot_margin <- function(){
 
 plot_margin_one_side <- function(){
   list(r = 81, l = 81)
+}
+
+
+
+
+
+plot_rate_range <- function(min_rate, max_rate){
+
+
+  if(max_rate < 101 ){
+
+    if(min_rate > 0  ){
+      c(0, 100)
+
+    }else{
+
+        c(min_rate + (min_rate/2), 100)
+    }
+
+  }else{
+
+    if(  min_rate > 0 ){
+
+      c(0,  max_rate + (max_rate/ 2))
+
+    }else{
+
+      c( min_rate + (min_rate/2) , max_rate + (max_rate/ 2) )
+    }
+
+  }
+
+
+}
+
+
+
+
+plot_number_range <-  function( min_number, max_number){
+
+
+    if(min_number > 0){
+
+      c(0,  max_number + (max_number/ 2))
+
+      }
+    else{
+      c(min_number + ( min_number/2) , max_number + (max_number/ 2) )
+      }
+
 }
 
 

@@ -14,11 +14,13 @@ mod_national_measles_coverage_different_sources_ui <- function(id){
   ns <- NS(id)
   tagList(
 
-    div(class = "col-12 col-12-t measles-col",
+    div(class = "col-6 col-6-t measles-col map_col",
+
+   # div(class = "col-12 col-12-t measles-col",
 
         div(class ="column-icon-div measles-column-icon-div",
             img(class = "column-icon", src = "www/fully-vaccinated-today-icon.svg",  height = 40, width = 80, alt="nigeria coat of arms", role="img")),
-        HTML("<h6 class = 'column-title'> Chart 8: National <span class = 'measles-span'>Measles</span> Coverage (%) by different sources, Nigeria (National)</h6>"),
+        HTML("<h6 class = 'column-title'> Chart 6: National <span class = 'measles-span'>MCV</span> Coverage (%) by different sources, Nigeria (National)</h6>"),
 
 
         HTML(paste0('<a id="', ns("downloadData"), '" class="btn btn-default shiny-download-link download-data-btn" href="" target="_blank" download>
@@ -39,7 +41,7 @@ mod_national_measles_coverage_different_sources_ui <- function(id){
                     type = 6, size = 0.3,hide.ui = F),
 
 
-                p("***Note: This Chart is fixed, All the above filters don't affect the this chart (Chart 8)***"),
+                p(style="text-align:center;", "***Note: This Chart is fixed, All the above filters don't affect the this chart (Chart 6)***"),
 
 
     )
@@ -71,25 +73,15 @@ mod_national_measles_coverage_different_sources_server <- function(id,
     # slide 1
 
     chart_data <- reactive({
-        dplyr::tbl(stream2_pool, "slide1_data") %>%
+        dplyr::tbl(stream2_pool, "mcv_different_sources") %>%
         dplyr::collect() %>%
         mutate(as.numeric(Year))
-        #dplyr::mutate(dplyr::across(.col = c(Year), as.factor)) %>%
-        #fct_reorder()
+
       })
 
 indicator_plot <- reactive({
 
       fig <- plot_ly(chart_data())
-
-      fig <- fig %>% add_trace(
-        color = I("#005F73"),
-        x = ~Year,
-        y = ~PMCCS,
-        type = "bar",
-        hovertemplate = paste('<b>Coverage %</b>: %{y:.1f}',
-                              '<br><b style="text-align:left;">Year</b>: %{x}<br>'),
-        name = "*PMCCS (MCV1)")
 
       fig <- fig %>%
         add_trace(
@@ -155,16 +147,20 @@ indicator_plot <- reactive({
                               '<br><b style="text-align:left;">Year</b>: %{x}<br>'),
         name = "Dhis2 (MCV2)")
 
+      fig <- fig %>% add_trace(
+        x = ~Year,
+        y = ~`WUENIC (MCV2)`,
+        type = 'scatter',
+        color = I("#0ce6ed"),
+        mode = 'lines+markers',
+        line = list(shape = 'spline', linetype = I("solid")),
+        marker = list(symbol = I("circle")),
+        hovertemplate = paste('<b>Coverage %</b>: %{y:.0f}',
+                              '<br><b style="text-align:left;">Year</b>: %{x}<br>'),
+        name = "*WUENIC (MCV2)")
 
-      fig <- fig %>%
-        add_trace(
-          x = ~Year,y = ~`WUENIC (MCV2)`, type = 'scatter', mode = 'lines+markers',
-          line = list(shape = 'spline', linetype = I("solid")),
-          marker = list(symbol = I("circle")),
-          color = I("#0ce6ed"),
-          hovertemplate = paste('<b>Coverage %</b>: %{y:.0f}',
-                                '<br><b style="text-align:left;">Year</b>: %{x}<br>'),
-          name = "*WUENIC (MCV2)")
+
+
 
       hline <- function(y = 0, color = "blue", dash = "dash") {
         list(
@@ -231,15 +227,10 @@ indicator_plot <- reactive({
                plot_bgcolor = measles_plot_bgcolor(),
                paper_bgcolor = measles_paper_bgcolor(),
                margin = plot_margin_one_side(),
-
-               # plot_bgcolor = "rgba(0, 0, 0, 0)",
-               # paper_bgcolor = 'rgba(0, 0, 0, 0)',
                hoverlabel = list(font = font_hoverlabel()),
                font = font_plot())%>%
               config(displayModeBar = FALSE)
-        # config(modeBarButtons = list(list("toImage")),
-        #        displaylogo = FALSE,
-        #        toImageButtonOptions = list(filename = "Chart 1- National Measles Coverage (%) by different sources, Nigeria (National Wide).png"))
+
       fig
 
      })
@@ -250,7 +241,7 @@ indicator_plot <- reactive({
     output$downloadData <- downloadHandler(
 
       filename = function() {
-        paste0("Chart 8- National Measles Coverage by different sources-Nigeria National Wide-", Sys.Date(), ".csv")
+        paste0("Chart 6- National Measles Coverage by different sources-Nigeria National Wide-", Sys.Date(), ".csv")
       },
       content = function(file) {
         readr::write_csv(chart_data(), file)
@@ -261,7 +252,7 @@ indicator_plot <- reactive({
 
     output$downloadChart <- downloadHandler(
       filename = function() {
-        paste0("Chart 8- National Measles Coverage by different sources-Nigeria National Wide.png")
+        paste0("Chart 6- National Measles Coverage by different sources-Nigeria National Wide.png")
       },
       content = function(file) {
         owd <- setwd(tempdir())

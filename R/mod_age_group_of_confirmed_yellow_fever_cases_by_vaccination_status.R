@@ -1,6 +1,6 @@
 #' age_group_of_confirmed_yellow_fever_cases_by_vaccination_status UI Function
 #'
-#' @description A shiny Module for slide 5 for chart 4 in on the dashboard
+#' @description A shiny Module
 #'
 #' @param id,input,output,session Internal parameters for {shiny}.
 #'
@@ -18,9 +18,7 @@ mod_age_group_of_confirmed_yellow_fever_cases_by_vaccination_status_ui <- functi
         div(class ="column-icon-div yf-column-icon-div",
             img(class = "column-icon", src = "www/age-group-vaccination-icon.svg",  height = 40, width = 80, alt="nigeria coat of arms", role="img")),
 
-        #h6("Chart 4: Age Group of Confirmed Yellow Fever Cases by Vaccination Status", class = "column-title"),
-
-        HTML("<h6 class = 'column-title'>Chart 1: Age Group of Confirmed <span class = 'yf-span'>Yellow Fever</span> Cases by Vaccination Status</h6>"),
+        HTML("<h6 class = 'column-title'>Chart 2: Age Group of Confirmed <span class = 'yf-span'>Yellow Fever</span> Cases by Vaccination Status</h6>"),
 
         HTML(paste0('<a id="', ns("downloadData"), '" class="btn btn-default shiny-download-link download-data-btn" href="" target="_blank" download>
                       <i class="fa fa-download" aria-hidden="true"></i>
@@ -57,17 +55,16 @@ mod_age_group_of_confirmed_yellow_fever_cases_by_vaccination_status_server <- fu
   moduleServer( id, function(input, output, session){
     ns <- session$ns
 
-    # slide 5
     chart_data <- reactive({
 
-      dplyr::tbl(stream2_pool, "yf_by_age_group")%>%
+      dplyr::tbl(stream2_pool, "yf_age_group")%>%
         filter(Year %in% !!picker_year_var() &
                  State %in% !!picker_state_var() &
                  Months %in%  !!picker_month_var() &
                  LGA %in% !!picker_lga_var()) %>%group_by(`Age group`) %>%
         summarise(across(c(Vaccinated,Unvaccinated,Unknown), ~ sum(.x, na.rm = TRUE))) %>%  ungroup() %>% dplyr::collect() %>%
-        dplyr::mutate(`Age group` = factor(`Age group`, labels = c("0-8 M", "9-23 M", "24-48 M", "5-9", "10-14", "15-19", "20-24", "25-29", "30-34", ">=35"),
-                                           levels = c("0-8 M", "9-23 M", "24-48 M", "5-9", "10-14", "15-19", "20-24", "25-29", "30-34", ">=35")))
+        dplyr::mutate(`Age group` = factor(`Age group`, labels = c("< 9","9 - 59" , "60 - 180","> 180"),
+                                           levels = c("< 9","9 - 59" , "60 - 180","> 180")))
 
       })
 
@@ -97,16 +94,12 @@ mod_age_group_of_confirmed_yellow_fever_cases_by_vaccination_status_server <- fu
         layout( title = paste(picker_state_var(), "," ,picker_lga_var()),
                  barmode = 'stack',
                  xaxis = list(tickfont = font_plot(),
-                              title = "Age group (M- months)",
+                              title = "Age group (in Months)",
                               fixedrange = TRUE,
                               title= font_axis_title(),
                               ticks = "outside",
                               showline = TRUE),
-                 #width = "auto",
-                 # autosize = F,
 
-                 # plot_bgcolor = "rgba(0, 0, 0, 0)",
-                 # paper_bgcolor = 'rgba(0, 0, 0, 0)',
 
                  plot_bgcolor = yf_plot_bgcolor(),
                  paper_bgcolor = yf_paper_bgcolor(),
@@ -132,10 +125,6 @@ mod_age_group_of_confirmed_yellow_fever_cases_by_vaccination_status_server <- fu
                  font = font_plot())%>%
         config(displayModeBar = FALSE)
 
-      # config(modeBarButtons = list(list("toImage", "resetScale2d", "zoomIn2d", "zoomOut2d")),
-      #        displaylogo = FALSE, toImageButtonOptions = list(filename = "Chart 4- Age Group of Confirmed Yellow Fever Cases by Vaccination Status.png"))
-
-
       p5
 
 
@@ -147,7 +136,7 @@ mod_age_group_of_confirmed_yellow_fever_cases_by_vaccination_status_server <- fu
     output$downloadData <- downloadHandler(
 
       filename = function() {
-        paste0("Chart 4-", picker_state_var(), picker_year_var(), picker_month_var()[1] ," - ", picker_month_var()[length(picker_month_var())] ,".csv")
+        paste0("Chart 2-", picker_state_var(), picker_year_var(), picker_month_var()[1] ," - ", picker_month_var()[length(picker_month_var())] ,".csv")
       },
       content = function(file) {
         readr::write_csv(chart_data(), file)
@@ -157,14 +146,13 @@ mod_age_group_of_confirmed_yellow_fever_cases_by_vaccination_status_server <- fu
 
     output$downloadChart <- downloadHandler(
       filename = function() {
-        paste0("Chart 4-", picker_state_var(), picker_year_var(),  picker_month_var()[1] ," - ", picker_month_var()[length(picker_month_var())] ,".png")
+        paste0("Chart 2-", picker_state_var(), picker_year_var(),  picker_month_var()[1] ," - ", picker_month_var()[length(picker_month_var())] ,".png")
       },
       content = function(file) {
         owd <- setwd(tempdir())
         on.exit(setwd(owd))
         saveWidget(indicator_plot(), "temp.html", selfcontained = FALSE)
         webshot("temp.html", file = file, cliprect = "viewport")
-        #export(indicator_plot(), file=file)
       }
     )
 

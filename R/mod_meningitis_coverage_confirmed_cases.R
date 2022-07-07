@@ -1,31 +1,30 @@
-#' confirmed_measles_cases_MCV1_coverage UI Function
+#' meningitis_coverage_confirmed_cases UI Function
 #'
-#' @description A shiny Module for slide 3
+#' @description A shiny Module.
 #'
 #' @param id,input,output,session Internal parameters for {shiny}.
 #'
 #' @noRd
 #'
 #' @importFrom shiny NS tagList
-#' @importFrom shinyMobile f7Shadow f7Col f7Card f7DownloadButton
-#' @importFrom plotly plotlyOutput
-#' @importFrom shinycssloaders withSpinner
-mod_confirmed_measles_cases_MCV1_coverage_ui <- function(id){
+mod_meningitis_coverage_confirmed_cases_ui <- function(id){
   ns <- NS(id)
   tagList(
 
-    div(class = "col-6 col-6-t measles-col",
-        div(class ="column-icon-div measles-column-icon-div",
+
+    div(class = "col-6 col-6-t yf-col",
+        div(class ="column-icon-div yf-column-icon-div",
             img(class = "column-icon", src = "www/partially-vaccinated-today-icon.svg",  height = 40, width = 80, alt="nigeria coat of arms", role="img")),
 
-        HTML("<h6 class = 'column-title'>Chart 1: Confirmed <span class = 'measles-span'>measles</span> cases, <span class = 'measles-span'>MCV 1</span> overage,Alt denominator </h6>"),
 
-       HTML(paste0('<a id="', ns("downloadData"), '" class="btn btn-default shiny-download-link download-data-btn" href="" target="_blank" download>
+        HTML("<h6 class = 'column-title'> Chart 1: Confirmed meningitis cases, Coverage,and Alt denominator </h6>"),
+
+        HTML(paste0('<a id="', ns("downloadData"), '" class="btn btn-default shiny-download-link download-data-btn" href="" target="_blank" download>
                       <i class="fa fa-download" aria-hidden="true"></i>
                       <div class = tooltipdiv> <p class="tooltiptext">Download the data for this Chart</p> </div>
                      </a>')),
 
-       HTML(paste0('<a id="', ns("downloadChart"), '" class="btn btn-default shiny-download-link download-data-btn download-chart-btn" href="" target="_blank" download>
+        HTML(paste0('<a id="', ns("downloadChart"), '" class="btn btn-default shiny-download-link download-data-btn download-chart-btn" href="" target="_blank" download>
                      <i class="fa fa-chart-bar"></i>
                       <div class = tooltipdiv>
                           <p class="tooltiptext">
@@ -36,31 +35,27 @@ mod_confirmed_measles_cases_MCV1_coverage_ui <- function(id){
 
         withSpinner(plotlyOutput(ns("plot")),type = 6, size = 0.3,hide.ui = F)
 
-        )
     )
+
+
+  )
 }
 
-
-#' confirmed_measles_cases_MCV1_coverage Server Functions
-#' @importFrom plotly renderPlotly plot_ly  add_trace layout config
-#' @importFrom dplyr collect tbl mutate arrange filter across
-#' @import future
-#' @import promises
+#' meningitis_coverage_confirmed_cases Server Functions
+#'
 #' @noRd
-mod_confirmed_measles_cases_MCV1_coverage_server <- function(id,
-                                                             picker_year_var,
-                                                             picker_month_var,
-                                                             picker_state_var,
-                                                             picker_lga_var
-                                                            ){
-
+mod_meningitis_coverage_confirmed_cases_server <- function(id,
+                                                           picker_year_var,
+                                                           picker_month_var,
+                                                           picker_state_var,
+                                                           picker_lga_var){
   moduleServer( id, function(input, output, session){
 
     ns <- session$ns
 
     chart_data <- reactive({
 
-      dplyr::tbl(stream2_pool, "measles_alt_denominator")%>%
+      dplyr::tbl(stream2_pool, "men_A_alt_denominator")%>%
         dplyr::filter(Year %in% !!picker_year_var() &
                         Months %in% !!picker_month_var() &
                         State %in% !!picker_state_var() &
@@ -73,69 +68,48 @@ mod_confirmed_measles_cases_MCV1_coverage_server <- function(id,
 
     indicator_plot <- reactive({
 
-       min_max_rate <- range(chart_data()$`MCV 1`,na.rm = T)
+      min_max_rate <- range(chart_data()$`Disease Coverage`,na.rm = T)
 
-       min_max_number <-  range(chart_data()$`Measles Cases (CaseBased)`,na.rm = T)
+      min_max_number <-  range(chart_data()$`Disease Cases`,na.rm = T)
 
 
       plotmcac <- plot_ly(data = chart_data() %>% arrange(Months))
 
       plotmcac <- plotmcac %>% add_trace(x = ~Months,
-                                         y = ~`MCV 1`,
+                                         y = ~`Disease Coverage`,
                                          yaxis = 'y2',
                                          color = I("#004e64"),
                                          mode = 'lines+markers', type = 'scatter',
                                          line = list(shape = 'spline', linetype = I("solid")),
                                          marker = list(symbol = I("circle")),
-                                         name = 'MCV 1',
-                                         hovertemplate = paste('<b>MCV 1</b>: %{y:.1f}',
+                                         name = 'Meningitis Coverage',
+                                         hovertemplate = paste('<b>Meningitis Coverage</b>: %{y:.1f}',
                                                                '<br><b style="text-align:left;">Month </b>: %{x}<br>')
       )
 
-      plotmcac <- plotmcac %>% add_trace(x = ~Months,
-                                         y = ~`MCV 2`,
-                                         yaxis = 'y2',
-                                         color = I("#94D2BD"),
-                                         mode = 'lines+markers', type = 'scatter',
-                                         line = list(shape = 'spline', linetype = I("solid")),
-                                         marker = list(symbol = I("circle")),
-                                         name = 'MCV 2',
-                                         hovertemplate = paste('<b>MCV 2</b>: %{y:.1f}',
-                                                               '<br><b style="text-align:left;">Month </b>: %{x}<br>')
-      )
 
       plotmcac <- plotmcac %>% add_trace(x = ~ Months,
-                                         y = ~ `MCV 1 Alt Denominator`,
+                                         y = ~ `Disease Alt Denominator`,
                                          yaxis = 'y2',
                                          color = I("#edb952"),
                                          line = list(shape = 'spline', linetype = I("solid")),
                                          marker = list(symbol = I("circle")),
                                          mode = 'lines+markers', type = 'scatter',
-                                         hovertemplate = paste('<b>MCV 1 Alt Denominator %</b>: %{y:.1f}',
+                                         hovertemplate = paste('<b>Meningitis Alt Denominator %</b>: %{y:.1f}',
                                                                '<br><b style="text-align:left;">Month </b>: %{x}<br>'),
-                                         name = 'MCV 1 Alt Denominator')
+                                         name = 'Meningitis Alt Denominator')
+
 
       plotmcac <- plotmcac %>% add_trace(x = ~ Months,
-                                         y = ~ `MCV 2 Alt Denominator`,
-                                         yaxis = 'y2',
-                                         color = I("#E9D8A6"),
-                                         line = list(shape = 'spline', linetype = I("solid")),
-                                         marker = list(symbol = I("circle")),
-                                         mode = 'lines+markers', type = 'scatter',
-                                         hovertemplate = paste('<b>MCV 2 Alt Denominator %</b>: %{y:.1f}',
-                                                               '<br><b style="text-align:left;">Month </b>: %{x}<br>'),
-                                         name = 'MCV 2 Alt Denominator')
-
-      plotmcac <- plotmcac %>% add_trace(x = ~ Months,
-                                         y = ~ `Measles Cases (CaseBased)`,
+                                         y = ~ `Disease Cases`,
                                          type = 'bar',
                                          color =  I("#00a5cf"),
-                                         name = 'Measles Cases (Sormas)',
-                                         #   marker = list(color = '#0000ff'),
+                                         name = 'Meningitis Cases (Sormas)',
+
                                          hovertemplate = paste('<b>Cases</b>: %{y:.0f}',
                                                                '<br><b style="text-align:left;">Month </b>: %{x}<br>')
 
-                                       )
+      )
 
       plotmcac <- plotmcac %>% layout(title =  paste(picker_state_var(), "," ,picker_lga_var()),
 
@@ -155,21 +129,21 @@ mod_confirmed_measles_cases_MCV1_coverage_server <- function(id,
                                       margin = plot_margin(),
 
                                       yaxis2 = list(range = plot_rate_range(min_max_rate[1], min_max_rate[2]),
-                                                   rangemode="tozero",
-                                                   fixedrange = TRUE,
-                                                   side = 'left',
-                                                   title = 'Coverage (%)',
+                                                    rangemode="tozero",
+                                                    fixedrange = TRUE,
+                                                    side = 'left',
+                                                    title = 'Coverage (%)',
 
 
-                                                   showgrid = FALSE,
-                                                   ticks = "outside",
-                                                   zeroline = T,
-                                                   showline = TRUE,
-                                                   title = font_axis_title(),
-                                                   tickfont = font_plot()),
+                                                    showgrid = FALSE,
+                                                    ticks = "outside",
+                                                    zeroline = T,
+                                                    showline = TRUE,
+                                                    title = font_axis_title(),
+                                                    tickfont = font_plot()),
 
                                       yaxis = list(range = plot_number_range(min_max_number[1], min_max_number[2]),
-                                                    side = 'right',
+                                                   side = 'right',
                                                    title = 'Number of cases',
                                                    showline = TRUE,
                                                    rangemode="tozero",
@@ -219,7 +193,7 @@ mod_confirmed_measles_cases_MCV1_coverage_server <- function(id,
         on.exit(setwd(owd))
         saveWidget(indicator_plot(), "temp.html", selfcontained = FALSE)
         webshot("temp.html", file = file, cliprect = "viewport")
-        #export(indicator_plot(), file=file)
+
       }
     )
 
@@ -228,7 +202,7 @@ mod_confirmed_measles_cases_MCV1_coverage_server <- function(id,
 }
 
 ## To be copied in the UI
-# mod_confirmed_measles_cases_MCV1_coverage_ui("confirmed_measles_cases_MCV1_coverage_1")
+# mod_meningitis_coverage_confirmed_cases_ui("meningitis_coverage_confirmed_cases_1")
 
 ## To be copied in the server
-# mod_confirmed_measles_cases_MCV1_coverage_server("confirmed_measles_cases_MCV1_coverage_1")
+# mod_meningitis_coverage_confirmed_cases_server("meningitis_coverage_confirmed_cases_1")

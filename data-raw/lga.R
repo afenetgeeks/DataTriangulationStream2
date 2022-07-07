@@ -2,7 +2,7 @@
 
 library(DataTriangulationStream2)
 
-lga_from_sormas <- dplyr::tbl(stream2_pool, "sormas_measles_geocodes")  %>%
+lga_from_dhis2 <- dplyr::tbl(stream2_pool, "measles_alt_denominator")  %>%
   collect() %>%
   filter(State %in%  unique(State)) %>%
   group_by(State, LGA) %>%
@@ -11,19 +11,11 @@ lga_from_sormas <- dplyr::tbl(stream2_pool, "sormas_measles_geocodes")  %>%
   ungroup() %>%
   dplyr::select(-n)
 
-lga <- tibble::tibble(State = unique(lga_from_sormas$State), LGA ="State Level data")  %>%
-  rbind(lga_from_sormas)%>%
+lga <- tibble::tibble(State = unique(lga_from_dhis2$State), LGA ="State level data")  %>%
+  rbind(lga_from_dhis2)%>%
   mutate(State = dplyr::case_when(
     State == "Fct" ~ "Federal Capital Territory",
     TRUE ~ State
   ))
-
-
-
-
-# sum(lga %>% group_by(State) %>%
-#   summarise(n = dplyr::n()) %>%
-#   arrange(desc(n)) %>%
-#   ungroup() %>% dplyr::pull(n))
 
 usethis::use_data(lga, overwrite = TRUE)

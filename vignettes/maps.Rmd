@@ -1,0 +1,159 @@
+---
+title: "maps"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{maps}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(DataTriangulationStream2)
+```
+
+
+```{r}
+
+    picker_state_var <- "Federal Government"
+    picker_year_var <- "2021"
+    picker_month_var <- "Year Data"
+
+    stream2_data<- list()
+
+
+
+      req(picker_state_var, cancelOutput = T)
+
+      if(sum(picker_state_var == "Federal Government") == 1){
+
+        if(sum(picker_month_var == "Year Data") == 1){
+
+          stream2_data$dhis2_data <- dplyr::tbl(stream2_pool, "measles_coverage_s11_states") %>%
+        filter(Year %in% !!picker_year_var() & Months %in% "Ann" & LGA  %in% "State level data") %>% dplyr::collect() %>%
+        dplyr::mutate(dplyr::across(.col = c(Year,State,`Coverage %`), as.factor),
+                      State = str_replace(State,pattern = "Federal Capital Territory",replacement = "Fct"))
+
+      }else{
+
+        stream2_data$dhis2_data <- dplyr::tbl(stream2_pool, "measles_coverage_s11_states") %>%
+          filter(Year %in% !!picker_year_var() & Months  %in% !!picker_month_var & LGA  %in% !!"State level data") %>% dplyr::collect() %>%
+          dplyr::mutate(dplyr::across(.col = c(Year,State,`Coverage %`), as.factor),
+                        State = str_replace(State,pattern = "Federal Capital Territory",replacement = "Fct"))
+
+      }
+
+      
+
+
+
+      }
+
+
+
+################
+
+    if(sum(picker_state_var == "Federal Government") == 1){
+
+      if(sum(picker_month_var == "Year Data") == 1){
+
+      stream2_data$sormas_mvc <- dplyr::tbl(stream2_pool, "sormas_measles_geocodes") %>%
+        filter(Year %in% !!picker_year_var()) %>% dplyr::collect()%>%
+        dplyr::mutate(dplyr::across(.col = c(Year,State, Months, LGA), as.factor),
+                      State = str_replace(State,pattern = "Federal Capital Territory",replacement = "Fct"))
+
+      }else{
+
+        stream2_data$sormas_mvc <- dplyr::tbl(stream2_pool, "sormas_measles_geocodes") %>%
+          filter(Year %in% !!picker_year_var() & Months %in% !!picker_month_var) %>%
+          dplyr::collect()%>%
+          dplyr::mutate(dplyr::across(.col = c(Year,State, Months, LGA), as.factor),
+                        State = str_replace(State,pattern = "Federal Capital Territory",replacement = "Fct"))
+
+        }
+
+      }
+
+
+    ###################
+
+      pal_mvc <- colorFactor(c('red','yellow','green','#424242'),
+                             levels = c("0 - 50%","50 - 85%","85 - 100%", "> 100%"),
+                             na.color = 'red')
+
+      if(sum(picker_state_var == "Federal Government") == 1){
+
+        states_gadm_sp_data$spdf@data <- states_gadm_sp_data$spdf@data %>%
+          left_join(as.data.frame(stream2_data$dhis2_data), by = c("NAME_1" = "State"))
+
+       mvc_map <- leaflet() %>%
+   addProviderTiles("TomTom.Basic") %>%
+  setView(lat =  9.077751,lng = 8.6774567, zoom = 6)  %>%
+  addPolygons(data = states_gadm_sp_data$spdf,
+              fillColor = ~pal_mvc(states_gadm_sp_data$spdf@data$`Coverage %`),
+              stroke = TRUE,
+              color = "black",
+              weight = 2.5,
+              fillOpacity = 0.5,
+              fill = T,
+              label = ~paste0(
+                "<span>", states_gadm_sp_data$spdf@data$NAME_1, "</span>"
+              )%>%
+                lapply(htmltools::HTML),
+              labelOptions = labelOptions(
+                textsize = "10px",
+                direction = "auto", noHide = T,textOnly = T
+              )) %>%
+  addLegend(colors = make_shapes(colors = colors(), sizes = sizes() , borders = borders() , shapes = shapes()),
+            labels = make_labels(sizes = sizes(), labels = labels()),
+            opacity =  0.6, title = "Coverage %", position = "bottomright") %>%
+  addResetMapButton()
+
+
+
+add_state_clusters <- function(leaflet_map, data, states){
+  
+  for(state in states){
+    
+    leaflet_map <- leaflet_map %>%
+      leaflet:: addMarkers(data = dplyr::filter(data ,State == state),
+                           lat = ~Lat,
+                           lng = ~Long,
+                           clusterOptions = leaflet::markerClusterOptions(maxClusterRadius = 250,
+                                                                          showCoverageOnHover = FALSE,
+                                                                          singleMarkerMode = TRUE,
+                                                                          iconCreateFunction =
+                                                                            htmlwidgets::JS("function(cluster) {
+                                             return new L.DivIcon({
+                                               html: '<div style=\"background-color:rgba(78, 224, 237, 0.5)\"><span>' + cluster.getChildCount() + '</div><span>',
+                                               className: 'marker-cluster',
+                                                iconSize: new L.Point(0, 70)
+                                             });
+                                           }")))
+    
+  #  
+  }
+  
+  return(leaflet_map)
+  
+}
+
+
+mvc_map <- add_state_clusters(leaflet_map =  mvc_map,
+                              states = str_replace(states_vector_util(),pattern = "Federal Capital Territory",replacement = "Fct"),
+                              data =  stream2_data$sormas_mvc)
+
+
+
+
+mvc_map
+}
+      
+```
+

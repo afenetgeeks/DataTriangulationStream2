@@ -1,13 +1,12 @@
 #' yellow_fever_vaccine_stock_analysis_yellow_fever_coverage UI Function
 #'
-#' @description A shiny Module. slide 7 ------
+#' @description A shiny Module.
 #'
 #' @param id,input,output,session Internal parameters for {shiny}.
 #'
 #' @noRd
 #'
 #' @importFrom shiny NS tagList
-#' @importFrom shinyMobile f7Shadow f7Col f7Card f7DownloadButton
 #' @importFrom plotly plotlyOutput
 #' @importFrom shinycssloaders withSpinner
 mod_yellow_fever_vaccine_stock_analysis_yellow_fever_coverage_ui <- function(id){
@@ -18,9 +17,7 @@ mod_yellow_fever_vaccine_stock_analysis_yellow_fever_coverage_ui <- function(id)
         div(class ="column-icon-div yf-column-icon-div",
             img(class = "column-icon", src = "www/vaccination-today-icon.svg",  height = 40, width = 80, alt="nigeria coat of arms", role="img")),
 
-       # h6("Chart 6: Yellow Fever Vaccine Stock Analysis & Yellow Fever Coverage", class = "column-title"),
-
-        HTML("<h6 class = 'column-title'>Chart 2: <span class = 'yf-span'>Yellow Fever</span> Vaccine Stock Analysis & <span class = 'yf-span'>Yellow Fever</span> Coverage (Annual data)</h6>"),
+        HTML("<h6 class = 'column-title'>Chart 3: <span class = 'yf-span'>Yellow Fever</span> Vaccine Stock Analysis & <span class = 'yf-span'>Yellow Fever</span> given</h6>"),
 
        HTML(paste0('<a id="', ns("downloadData"), '" class="btn btn-default shiny-download-link download-data-btn" href="" target="_blank" download>
                       <i class="fa fa-download" aria-hidden="true"></i>
@@ -55,21 +52,16 @@ mod_yellow_fever_vaccine_stock_analysis_yellow_fever_coverage_server <- function
   moduleServer( id, function(input, output, session){
     ns <- session$ns
 
-
-
     chart_data <- reactive({
 
-      dplyr::tbl(stream2_pool, "s7_combined")%>%
+      dplyr::tbl(stream2_pool, "yf_stock_analysis")%>%
         filter(Year %in% !!picker_year_var() &
-                 Month %in% !!picker_month_var() &
+                 Months %in% !!picker_month_var() &
                  State %in%  !! picker_state_var()  &
                  LGA %in% !!picker_lga_var()) %>%collect() %>%
         mutate(
                Months = as.Date(str_c(Year, Months, 01,sep = "-"), "%Y-%b-%d"),
-               across(c(Year,State ), as.factor),
-               `Yellow Fever Doses Wastage Rate` =
-                 ((`Yellow Fever Vaccine - Doses Opened (used)` - `Yellow Fever given (administered)`)/
-                    `Yellow Fever Vaccine - Doses Opened (used)`)*100
+               across(c(Year,State ), as.factor)
                ) %>%
         arrange(Months)
 
@@ -77,37 +69,27 @@ mod_yellow_fever_vaccine_stock_analysis_yellow_fever_coverage_server <- function
 
     indicator_plot <- reactive({
 
+      min_max_rate <- range(chart_data()$`Doses Wastage Rate`,na.rm = T)
+
+      min_max_number <- range(chart_data()$`Doses Available (Opening Balance+Received)`,na.rm = T)
+
 
       plotYF <- plot_ly(data = chart_data() %>% arrange(Months))
 
+
       plotYF <- plotYF %>% add_trace(x = ~Months,
-                                     y = ~`Yellow Fever Coverage`,
+                                     y = ~`Doses Wastage Rate`,
                                      type = 'bar',
-
-                                     color = I("#005F73"),
-                                     name = 'Yellow Fever Coverage',
-                                     #marker = list(color = '#ffa500'),
-                                     hovertemplate = paste('<b>Coverage %</b>: %{y:.1f}',
-                                                           '<br><b style="text-align:left;">Month </b>: %{x}<br>'))
-
-      plotYF <- plotYF %>% add_trace(x = ~Months,
-                                     y = ~`Yellow Fever Doses Wastage Rate`,
-
-                                   type = 'scatter', mode = 'lines+markers',
-                                   line = list(shape = 'spline', linetype = I("solid")),
-                                   marker = list(symbol = I("circle")),
                                    color = I("#B37064"),
                                    hovertemplate = paste('<b>Yellow Fever Doses Wastage Rate %</b>: %{y:.1f}',
                                                          '<br><b style="text-align:left;">Month </b>: %{x}<br>'),
-
                                    name = 'Yellow Fever Doses Wastage Rate',
-                                   #marker = list(color = '#ffa500'),
                                    hoverinfo = "text",
-                                   text = ~scales::number(`Yellow Fever Doses Wastage Rate`,big.mark = ","))
+                                   text = ~scales::number(`Doses Wastage Rate`,big.mark = ","))
 
 
       plotYF <- plotYF %>% add_trace(x = ~ Months,
-                                     y = ~`Yellow Fever Vaccine - Doses Opened (used)`,
+                                     y = ~`Vaccine - Doses Opened (used)`,
                                      color = I("#00a5cf"),
                                      type = 'scatter',
                                      mode = 'lines+markers',
@@ -118,19 +100,20 @@ mod_yellow_fever_vaccine_stock_analysis_yellow_fever_coverage_server <- function
                                      hovertemplate = paste('<b>Number</b>: %{y:.0f}',
                                                            '<br><b style="text-align:left;">Month </b>: %{x}<br>'))
 
-      plotYF <- plotYF %>% add_trace(x = ~Months, y = ~`Yellow Fever given (administered)`, type = 'scatter',
+      plotYF <- plotYF %>% add_trace(x = ~Months,
+                                     y = ~`doses_given`,
+                                     type = 'scatter',
                                      mode = 'lines+markers',
                                      line = list(shape = 'spline', linetype = I("solid")),
                                      marker = list(symbol = I("circle")),
                                      color = I("#94D2BD"),
                                      yaxis = 'y2',
-                                     name = 'Yellow Fever given (administered)',
-
+                                     name = 'Yellow Fever given',
                                      hovertemplate = paste('<b>Number</b>: %{y:.0f}',
                                                            '<br><b style="text-align:left;">Month </b>: %{x}<br>'))
 
       plotYF <- plotYF %>% add_trace(x = ~Months,
-                                     y = ~`Yellow Fever Doses Available (Opening Balance+Received)`,
+                                     y = ~`Doses Available (Opening Balance+Received)`,
                                      type = 'scatter',
                                      color = I("#edb952"),
                                      mode = 'lines+markers',
@@ -163,16 +146,17 @@ mod_yellow_fever_vaccine_stock_analysis_yellow_fever_coverage_server <- function
                                    paper_bgcolor = yf_paper_bgcolor(),
                                    margin = plot_margin(),
 
-                                   yaxis = list(side = 'right',
-                                                range = if(max(chart_data()$`Yellow Fever Coverage`,na.rm = T) <= 100){c(0, 110)}else{ NULL},
-                                                title = 'Coverage (%)',
+                                   yaxis = list(side = 'left',
+                                                range = plot_rate_range(min_max_rate[1], min_max_rate[2]),
+                                                title = 'Wastage Rate (%)',
                                                 showline = TRUE,
                                                 showgrid = FALSE,
                                                 zeroline = T,
                                                 fixedrange = TRUE,
                                                 ticks = "outside",
                                                 title = font_axis_title(), tickfont = font_plot()),
-                                   yaxis2 = list(side = 'left',
+                                   yaxis2 = list(range =  plot_number_range(min_max_number[1], min_max_number[2]),
+                                                 side = 'right',
                                                  rangemode="tozero",
                                                  overlaying = "y",
                                                  title = 'Number',
@@ -208,7 +192,7 @@ mod_yellow_fever_vaccine_stock_analysis_yellow_fever_coverage_server <- function
     output$downloadData <- downloadHandler(
 
       filename = function() {
-        paste0("Chart 6-", picker_state_var(), picker_year_var(), picker_month_var()[1] ," - ", picker_month_var()[length(picker_month_var())] ,".csv")
+        paste0("Chart 3-", picker_state_var(), picker_year_var(), picker_month_var()[1] ," - ", picker_month_var()[length(picker_month_var())] ,".csv")
       },
       content = function(file) {
         readr::write_csv(chart_data(), file)
@@ -218,7 +202,7 @@ mod_yellow_fever_vaccine_stock_analysis_yellow_fever_coverage_server <- function
 
     output$downloadChart <- downloadHandler(
       filename = function() {
-        paste0("Chart 6-", picker_state_var(), picker_year_var(),  picker_month_var()[1] ," - ", picker_month_var()[length(picker_month_var())] ,".png")
+        paste0("Chart 3-", picker_state_var(), picker_year_var(),  picker_month_var()[1] ," - ", picker_month_var()[length(picker_month_var())] ,".png")
       },
       content = function(file) {
         owd <- setwd(tempdir())

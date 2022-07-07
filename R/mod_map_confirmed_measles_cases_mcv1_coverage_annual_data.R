@@ -14,8 +14,7 @@ mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_ui <- function(id){
   ns <- NS(id)
   tagList(
 
-
-    div(class = "col-6 col-6-t measles-col map_col",
+        div(class = "col-12 col-12-t measles-col",
 
         span(class = "info-icon-container",
              tags$a(class = "info-icon-link", href="#",
@@ -27,8 +26,7 @@ mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_ui <- function(id){
         div(class ="column-icon-div measles-column-icon-div",
             img(class = "column-icon", src = "www/partially-vaccinated-today-icon.svg",  height = 40, width = 80, alt="nigeria coat of arms", role="img")),
 
-       # h6("Chart 10: Confirmed Measles cases, MCV 1 coverage (Annual data)", class = "column-title"),
-        HTML("<h6 class = 'column-title column-title-map'>Chart 7: Confirmed <span class = 'measles-span'>Measles</span> cases, <span class = 'measles-span'>MCV 1</span> coverage (Annual data)</h6>"),
+        HTML("<h6 class = 'column-title column-title-map'>Chart 7: Confirmed <span class = 'measles-span'>Measles</span> cases, <span class = 'measles-span'>MCV 1</span> coverage </h6>"),
 
 
         div(class = "map_charts_inputs",
@@ -86,22 +84,23 @@ mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_server <- function(id)
 
     stream2_data<- reactiveValues()
 
-
     observe({
+
+      req(picker_state_var(), cancelOutput = T)
 
       if(sum(picker_state_var() == "Federal Government") == 1){
 
         if(sum(picker_month_var() == "Year Data") == 1){
 
-          stream2_data$dhis2_data <- dplyr::tbl(stream2_pool, "measles_coverage_s11_states") %>%
-        filter(Year %in% !!picker_year_var() & Months %in% "Ann" & LGA  %in% "State Level data") %>% dplyr::collect() %>%
+          stream2_data$dhis2_data <- dplyr::tbl(stream2_pool, "measles_coverage_map") %>%
+        filter(Year %in% !!picker_year_var() & Months %in% "Ann" & LGA  %in% "State level data") %>% dplyr::collect() %>%
         dplyr::mutate(dplyr::across(.col = c(Year,State,`Coverage %`), as.factor),
                       State = str_replace(State,pattern = "Federal Capital Territory",replacement = "Fct"))
 
       }else{
 
-        stream2_data$dhis2_data <- dplyr::tbl(stream2_pool, "measles_coverage_s11_states") %>%
-          filter(Year %in% !!picker_year_var() & Months  %in% !!picker_month_var() & LGA  %in% !!"State Level data") %>% dplyr::collect() %>%
+        stream2_data$dhis2_data <- dplyr::tbl(stream2_pool, "measles_coverage_map") %>%
+          filter(Year %in% !!picker_year_var() & Months  %in% !!picker_month_var() & LGA  %in% !!"State level data") %>% dplyr::collect() %>%
           dplyr::mutate(dplyr::across(.col = c(Year,State,`Coverage %`), as.factor),
                         State = str_replace(State,pattern = "Federal Capital Territory",replacement = "Fct"))
 
@@ -111,24 +110,20 @@ mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_server <- function(id)
 
         if(sum(picker_month_var() == "Year Data") == 1){
 
-          stream2_data$dhis2_data <- dplyr::tbl(stream2_pool, "measles_coverage_s11_states") %>%
+          stream2_data$dhis2_data <- dplyr::tbl(stream2_pool, "measles_coverage_map") %>%
             filter(Year %in% !!picker_year_var() &
-                     State %in% !!picker_state_var() & Months %in% "Ann" & LGA %in% "State Level data")%>%dplyr::collect() %>%
+                     State %in% !!picker_state_var() & Months %in% "Ann" & LGA %in% "State level data")%>%dplyr::collect() %>%
             dplyr::mutate(dplyr::across(.col = c(Year,State,`Coverage %`), as.factor),
                           State = str_replace(State,pattern = "Federal Capital Territory",replacement = "Fct"))
 
         }else{
 
-          stream2_data$dhis2_data <- dplyr::tbl(stream2_pool, "measles_coverage_s11_states") %>%
+          stream2_data$dhis2_data <- dplyr::tbl(stream2_pool, "measles_coverage_map") %>%
             filter(Year %in% !!picker_year_var() &
-                     State %in% !!picker_state_var() & Months %in% !!picker_month_var() & LGA %in% "State Level data")%>%dplyr::collect() %>%
+                     State %in% !!picker_state_var() & Months %in% !!picker_month_var() & LGA %in% "State level data")%>%dplyr::collect() %>%
             dplyr::mutate(dplyr::across(.col = c(Year,State,`Coverage %`), as.factor),
                           State = str_replace(State,pattern = "Federal Capital Territory",replacement = "Fct"))
-
-        }
-
-
-
+       }
       }
 
 
@@ -139,14 +134,14 @@ mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_server <- function(id)
 
       if(sum(picker_month_var() == "Year Data") == 1){
 
-      stream2_data$sormas_mvc <- dplyr::tbl(stream2_pool, "sormas_measles_geocodes") %>%
+      stream2_data$sormas_mvc <- dplyr::tbl(stream2_pool, "measles_cases_map") %>%
         filter(Year %in% !!picker_year_var()) %>% dplyr::collect()%>%
         dplyr::mutate(dplyr::across(.col = c(Year,State, Months, LGA), as.factor),
                       State = str_replace(State,pattern = "Federal Capital Territory",replacement = "Fct"))
 
       }else{
 
-        stream2_data$sormas_mvc <- dplyr::tbl(stream2_pool, "sormas_measles_geocodes") %>%
+        stream2_data$sormas_mvc <- dplyr::tbl(stream2_pool, "measles_cases_map") %>%
           filter(Year %in% !!picker_year_var() & Months %in% !!picker_month_var()) %>%
           dplyr::collect()%>%
           dplyr::mutate(dplyr::across(.col = c(Year,State, Months, LGA), as.factor),
@@ -159,7 +154,7 @@ mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_server <- function(id)
 
         if(sum(picker_month_var() == "Year Data") == 1){
 
-          stream2_data$sormas_mvc <- dplyr::tbl(stream2_pool, "sormas_measles_geocodes") %>%
+          stream2_data$sormas_mvc <- dplyr::tbl(stream2_pool, "measles_cases_map") %>%
             filter(Year == !!picker_year_var()&
                      State %in% !!picker_state_var() ) %>% dplyr::collect()%>%
             dplyr::mutate(dplyr::across(.col = c(Year,State, LGA), as.factor),
@@ -167,7 +162,7 @@ mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_server <- function(id)
 
         }else{
 
-          stream2_data$sormas_mvc <- dplyr::tbl(stream2_pool, "sormas_measles_geocodes") %>%
+          stream2_data$sormas_mvc <- dplyr::tbl(stream2_pool, "measles_cases_map") %>%
             filter(Year == !!picker_year_var()&
                      State %in% !!picker_state_var()  & Months %in% !!picker_month_var()) %>% dplyr::collect()%>%
             dplyr::mutate(dplyr::across(.col = c(Year,State, LGA), as.factor),
@@ -184,6 +179,8 @@ mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_server <- function(id)
 
     mvc_map_leaflet <-  reactive({
 
+      req(picker_state_var(), cancelOutput = T)
+
       pal_mvc <- colorFactor(c('red','yellow','green','#424242'),
                              levels = c("0 - 50%","50 - 85%","85 - 100%", "> 100%"),
                              na.color = 'red')
@@ -194,7 +191,7 @@ mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_server <- function(id)
           left_join(as.data.frame(stream2_data$dhis2_data), by = c("NAME_1" = "State"))
 
         mvc_map <-  leaflet() %>%
-        addProviderTiles("Stamen.Toner") %>%
+        addProviderTiles("TomTom.Basic") %>%
           setView(lat =  9.077751,lng = 8.6774567, zoom = 6)  %>%
           addPolygons(data = states_gadm_sp_data$spdf,
                       fillColor = ~pal_mvc(states_gadm_sp_data$spdf@data$`Coverage %`),
@@ -208,7 +205,7 @@ mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_server <- function(id)
                       )%>%
                         lapply(htmltools::HTML),
                         labelOptions = labelOptions(
-                        textsize = "10px",
+                        textsize = "8px",
                         direction = "auto", noHide = T,textOnly = T
                       )) %>%
           addLegend(colors = make_shapes(colors = colors(), sizes = sizes() , borders = borders() , shapes = shapes()),
@@ -230,9 +227,8 @@ mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_server <- function(id)
           left_join(as.data.frame(stream2_data$dhis2_data), by = c("NAME_1" = "State"))
 
         mvc_map <-  leaflet() %>%
-        addProviderTiles("Stamen.Toner") %>%
-          # setView(lat =  states_gadm_sp_data_state$spdf@data$Lat,
-          #         lng = states_gadm_sp_data_state$spdf@data$Long, zoom = 6)  %>%
+        addProviderTiles("TomTom.Basic") %>%
+
           addPolygons(data = states_gadm_sp_data_state$spdf,
                       fillColor = ~pal_mvc(states_gadm_sp_data_state$spdf@data$`Coverage %`),
                       stroke = TRUE,
@@ -244,7 +240,7 @@ mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_server <- function(id)
                       )%>%
                         lapply(htmltools::HTML),
                       labelOptions = labelOptions(
-                        textsize = "10px",
+                        textsize = "8px",
                         direction = "auto", noHide = T,textOnly = T
                       )) %>%
           leaflet::addMarkers(data = stream2_data$sormas_mvc,
@@ -279,7 +275,7 @@ mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_server <- function(id)
     output$downloadData <- downloadHandler(
 
       filename = function() {
-        paste0("Chart 7-", picker_state_var(), picker_year_var() ,".zip")
+        paste0("Chart 7-",  picker_year_var() ,".zip")
       },
      content = function(fname) {
 
@@ -295,7 +291,7 @@ mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_server <- function(id)
 
     output$downloadChart <- downloadHandler(
       filename = function() {
-        paste0("Chart 7-", picker_state_var(), picker_year_var() ,".png")
+        paste0("Chart 7-",  picker_year_var() ,".png")
       },
       content = function(file) {
 
@@ -304,22 +300,10 @@ mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_server <- function(id)
 
         saveWidget(mvc_map_leaflet(), "temp.html", selfcontained = FALSE)
         webshot("temp.html", file = file, cliprect = "viewport")
-        #export(indicator_plot(), file=file)
       }
     )
 
 
-    # output$download_chart_data <- downloadHandler(
-    #   filename = 'mvc_csvs.zip',
-    #   content = function(fname) {
-    #
-    #     write.csv(stream2_data$dhis2_data, file = "mvc_admin.csv", sep =",")
-    #     write.csv(stream2_data$sormas_mvc, file = "mvc_sormas.csv", sep =",")
-    #
-    #     zip(zipfile=fname, files=c("mvc_admin.csv","mvc_sormas.csv"))
-    #   },
-    #   contentType = "application/zip"
-    # )
 
 
   })

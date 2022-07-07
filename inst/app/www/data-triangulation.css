@@ -1,4 +1,3 @@
-
 .mainHeader {
     background-color: #045d5d;
     height: 50px;
@@ -202,7 +201,7 @@
 body {
   background-color: #f7f9f9; /* #DCDCDC */
   color: #191919;
-  font: 900 12px/20px "Roboto";
+  font: 12px/20px "Roboto";
   letter-spacing: normal;
   height: auto;
   margin: 0;
@@ -520,7 +519,7 @@ div.Quick-Tip{
 }
 
 .measles-span{
-  color: #ff8600;
+  font-weight: bold;
 }
 
 .measles-col{
@@ -528,7 +527,7 @@ div.Quick-Tip{
 }
 
 .yf-span{
- color: #0D8C96;
+ font-weight: bold;
 }
 
 .yf-col{
@@ -590,4 +589,18 @@ div.Quick-Tip{
 
 .leaflet-top {
     top: 318px;
+}
+
+
+.marker-cluster div {
+    width: 16px;!important;
+    height: 16px;!important;
+    margin-left: 5px;!important;
+    margin-top: -13px;!important;
+    text-align: center;!important;
+    border-radius: 15px;!important;
+    display: flex;!important;
+    align-items: center;!important;
+    justify-content: center;!important;
+    font: 8px "Helvetica Neue", Arial, Helvetica, sans-serif;!important;
 }

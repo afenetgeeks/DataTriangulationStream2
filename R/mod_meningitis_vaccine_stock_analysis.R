@@ -1,17 +1,13 @@
-#' measles_vaccine_stock_analysis_measles_coverage UI Function
+#' meningitis_vaccine_stock_analysis UI Function
 #'
-#' @description A shiny Module slide 6
+#' @description A shiny Module.
 #'
 #' @param id,input,output,session Internal parameters for {shiny}.
 #'
 #' @noRd
 #'
 #' @importFrom shiny NS tagList
-#' @importFrom shinyMobile f7Shadow f7Col f7Card f7DownloadButton
-#' @importFrom plotly plotlyOutput
-#' @importFrom shinycssloaders withSpinner
-#'
-mod_measles_vaccine_stock_analysis_measles_coverage_ui <- function(id){
+mod_meningitis_vaccine_stock_analysis_ui <- function(id){
   ns <- NS(id)
   tagList(
 
@@ -19,14 +15,14 @@ mod_measles_vaccine_stock_analysis_measles_coverage_ui <- function(id){
         div(class ="column-icon-div measles-column-icon-div",
             img(class = "column-icon", src = "www/vaccination-today-icon.svg",  height = 40, width = 80, alt="nigeria coat of arms", role="img")),
 
-        HTML("<h6 class = 'column-title'>Chart 3: MCV Stock Analysis & MCV (1 & 2) given</h6>"),
+        HTML("<h6 class = 'column-title'>Chart 3: Men A vaccine stock analysis & Men A given</h6>"),
 
-       HTML(paste0('<a id="', ns("downloadData"), '" class="btn btn-default shiny-download-link download-data-btn" href="" target="_blank" download>
+        HTML(paste0('<a id="', ns("downloadData"), '" class="btn btn-default shiny-download-link download-data-btn" href="" target="_blank" download>
                       <i class="fa fa-download" aria-hidden="true"></i>
                       <div class = tooltipdiv> <p class="tooltiptext">Download the data for this Chart</p> </div>
                      </a>')),
 
-       HTML(paste0('<a id="', ns("downloadChart"), '" class="btn btn-default shiny-download-link download-data-btn download-chart-btn" href="" target="_blank" download>
+        HTML(paste0('<a id="', ns("downloadChart"), '" class="btn btn-default shiny-download-link download-data-btn download-chart-btn" href="" target="_blank" download>
                      <i class="fa fa-chart-bar"></i>
                       <div class = tooltipdiv>
                           <p class="tooltiptext">
@@ -41,25 +37,21 @@ mod_measles_vaccine_stock_analysis_measles_coverage_ui <- function(id){
   )
 }
 
-#' measles_vaccine_stock_analysis_measles_coverage Server Functions
-#' @importFrom plotly renderPlotly plot_ly  add_trace layout config
-#' @importFrom dplyr collect tbl mutate arrange filter across
+#' meningitis_vaccine_stock_analysis Server Functions
 #'
 #' @noRd
-mod_measles_vaccine_stock_analysis_measles_coverage_server <- function(id,
-                                                                       picker_year_var,
-                                                                       picker_month_var,
-                                                                       picker_state_var,
-                                                                       picker_lga_var
-                                                                       ){
-
+mod_meningitis_vaccine_stock_analysis_server <- function(id,
+                                                         picker_year_var,
+                                                         picker_month_var,
+                                                         picker_state_var,
+                                                         picker_lga_var){
   moduleServer( id, function(input, output, session){
 
     ns <- session$ns
 
     chart_data <- reactive({
 
-       dplyr::tbl(stream2_pool, "measles_stock_analysis")%>%
+      dplyr::tbl(stream2_pool, "men_A_stock_analysis")%>%
         dplyr::filter(Year %in% !!picker_year_var() &
                         Months %in% !!picker_month_var() &
                         State %in% !!picker_state_var() &
@@ -70,10 +62,10 @@ mod_measles_vaccine_stock_analysis_measles_coverage_server <- function(id,
         dplyr::arrange(Months)
 
 
-      })
+    })
 
     indicator_plot <- reactive({
-      # measles_OB_OU_Received_1_combined_by_Year
+      # Men_A_OB_OU_Received_1_combined_by_Year
 
       min_max_rate <-  range(chart_data()$`Doses Wastage Rate`,na.rm = T)
 
@@ -86,9 +78,9 @@ mod_measles_vaccine_stock_analysis_measles_coverage_server <- function(id,
       plotM <- plotM %>% add_trace(x = ~Months, y = ~`Doses Wastage Rate`,
                                    type = 'bar',
                                    color = I("#B37064"),
-                                   hovertemplate = paste('<b>MCV Doses Wastage Rate %</b>: %{y:.1f}',
+                                   hovertemplate = paste('<b>Men A Doses Wastage Rate %</b>: %{y:.1f}',
                                                          '<br><b style="text-align:left;">Month </b>: %{x}<br>'),
-                                   name = 'MCV Doses Wastage Rate',
+                                   name = 'Men A Doses Wastage Rate',
                                    hoverinfo = "text",
                                    text = ~scales::number(`Doses Wastage Rate`,big.mark = ","))
 
@@ -98,7 +90,7 @@ mod_measles_vaccine_stock_analysis_measles_coverage_server <- function(id,
                                    type = 'scatter', mode = 'lines+markers',
                                    line = list(shape = 'spline', linetype = I("solid")),
                                    marker = list(symbol = I("circle")),
-                                   name = 'MCV - Doses Opened (Used)',
+                                   name = 'Men A - Doses Opened (Used)',
                                    yaxis = 'y2',
                                    hovertemplate = paste('<b>Number</b>: %{y:.0f}',
                                                          '<br><b style="text-align:left;">Month </b>: %{x}<br>'),
@@ -113,7 +105,7 @@ mod_measles_vaccine_stock_analysis_measles_coverage_server <- function(id,
                                    mode = 'lines+markers',
                                    line = list(shape = 'spline', linetype = I("solid")),
                                    marker = list(symbol = I("circle")),
-                                   name = 'MCV (1&2) given',
+                                   name = 'Men A given',
                                    yaxis = 'y2',
                                    hovertemplate = paste('<b>Number</b>: %{y:.1f}',
                                                          '<br><b style="text-align:left;">Month </b>: %{x}<br>'),
@@ -128,7 +120,7 @@ mod_measles_vaccine_stock_analysis_measles_coverage_server <- function(id,
                                    mode = 'lines+markers',
                                    line = list(shape = 'spline', linetype = I("solid")),
                                    marker = list(symbol = I("circle")),
-                                   name = 'MCV Doses Available (Opening Balance+Received)',
+                                   name = 'Men A Doses Available (Opening Balance+Received)',
                                    yaxis = 'y2',
                                    hovertemplate = paste('<b>Number</b>: %{y:.0f}',
                                                          '<br><b style="text-align:left;">Month </b>: %{x}<br>'),
@@ -156,14 +148,14 @@ mod_measles_vaccine_stock_analysis_measles_coverage_server <- function(id,
 
 
                                  yaxis = list(range = plot_rate_range(min_max_rate[1], min_max_rate[2]),
-                                   side = 'left',
-                                   title = 'Rate (%)',
-                                   showline = TRUE,
-                                   showgrid = FALSE,
-                                   fixedrange = TRUE,
-                                   zeroline = T,
-                                   ticks = "outside",
-                                   title = font_axis_title(), tickfont = font_plot()),
+                                              side = 'left',
+                                              title = 'Rate (%)',
+                                              showline = TRUE,
+                                              showgrid = FALSE,
+                                              fixedrange = TRUE,
+                                              zeroline = T,
+                                              ticks = "outside",
+                                              title = font_axis_title(), tickfont = font_plot()),
 
 
                                  yaxis2 = list(range =  plot_number_range(min_max_number[1], min_max_number[2]),
@@ -186,7 +178,7 @@ mod_measles_vaccine_stock_analysis_measles_coverage_server <- function(id,
                                  font = font_plot())%>%
         config(displayModeBar = FALSE)
 
-            plotM
+      plotM
 
     })
 
@@ -221,7 +213,7 @@ mod_measles_vaccine_stock_analysis_measles_coverage_server <- function(id,
 }
 
 ## To be copied in the UI
-# mod_measles_vaccine_stock_analysis_measles_coverage_ui("measles_vaccine_stock_analysis_measles_coverage_1")
+# mod_meningitis_vaccine_stock_analysis_ui("meningitis_vaccine_stock_analysis_1")
 
 ## To be copied in the server
-# mod_measles_vaccine_stock_analysis_measles_coverage_server("measles_vaccine_stock_analysis_measles_coverage_1")
+# mod_meningitis_vaccine_stock_analysis_server("meningitis_vaccine_stock_analysis_1")

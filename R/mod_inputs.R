@@ -35,7 +35,7 @@ mod_inputs_ui <- function(id, disease){
                                                                                                 tags$a(class = "info-icon-link", href="#",
                                                                                                        img(class = "info-icon", src = "www/info_icon.svg", alt="info-icon"),
                                                                                                        span(class="info-tooltiptext", "LGA information"))),
-                                                       choices = "State Level data" , multiple = F,selected = "State Level data",
+                                                       choices = "State level data" , multiple = F,selected = "State level data",
                                                        options = list(title = "LGA",`actions-box` = TRUE,size = 10, `selected-text-format` = "count > 2"))),
 
 
@@ -75,10 +75,10 @@ mod_inputs_server <- function(id){
 
       if(sum(state_selected() == national_util()) == 1 ){
 
-        "State Level data"
+        "State level data"
 
       }else{
-       c("State Level data", sort( lga %>%filter(State %in% state_selected()) %>%
+       c("State level data", sort( lga %>%filter(State %in% state_selected()) %>%
           dplyr::pull(LGA)))
       }
 
@@ -92,7 +92,7 @@ mod_inputs_server <- function(id){
       updatePickerInput(session = session,
                         inputId = "picker_lga",
                         choices = unique(lga_list()),
-                        selected = "State Level data")
+                        selected = "State level data")
 
     })
 

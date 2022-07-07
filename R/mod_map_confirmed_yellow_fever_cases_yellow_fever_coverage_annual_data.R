@@ -12,22 +12,19 @@ mod_map_confirmed_yellow_fever_cases_yellow_fever_coverage_annual_data_ui <- fun
   ns <- NS(id)
   tagList(
 
-    div(class = "col-6 col-6-t yf-col map_col",
+    div(class = "col-12 col-12-t yf-col map_col",
 
         span(class = "info-icon-container",
              tags$a(class = "info-icon-link", href="#",
                     img(class = "info-icon", src = "www/info_icon.svg", alt="info-icon"),
                     span(class="info-tooltiptext",
                          p(style="color:#ffffff;font-size:10px;algin:left;", "The blue bubbles represent clusters of yellow fever cases in a State. The numbers in each bubble are cases in that cluster"),
-
                          p(style="color:#ffffff;font-size:10px;algin:left;","Click on a cluster bubble to zoom in a cluster")))),
-
 
         div(class ="column-icon-div yf-column-icon-div",
             img(class = "column-icon", src = "www/fully-vaccinated-today-icon.svg",  height = 40, width = 80, alt="nigeria coat of arms", role="img")),
 
-       # h6("Chart 11: Confirmed Yellow Fever cases, Yellow Fever coverage (Annual data)", class = "column-title"),
-        HTML("<h6 class = 'column-title column-title-map'>Chart 4: Confirmed <span class = 'yf-span'>Yellow Fever</span> cases, <span class = 'yf-span'>Yellow Fever</span> coverage (Annual data)</h6>"),
+        HTML("<h6 class = 'column-title column-title-map'>Chart 5: Confirmed <span class = 'yf-span'>Yellow Fever</span> cases, <span class = 'yf-span'>Yellow Fever</span> coverage</h6>"),
 
 
         div(class = "map_charts_inputs",
@@ -87,20 +84,22 @@ mod_map_confirmed_yellow_fever_cases_yellow_fever_coverage_annual_data_server <-
 
     observe({
 
+      req(picker_state_var(), cancelOutput = T)
+
 
       if(sum(picker_state_var() == "Federal Government") == 1){
 
         if(sum(picker_month_var() == "Year Data") == 1){
 
-          stream2_data$dhis2_data <- dplyr::tbl(stream2_pool, "yf_coverage_s12_states") %>%
-            filter(Year %in% !!picker_year_var() & Month %in% "Ann" & LGA  %in% "State Level data") %>% dplyr::collect() %>%
+          stream2_data$dhis2_data <- dplyr::tbl(stream2_pool, "yf_coverage_map") %>%
+            filter(Year %in% !!picker_year_var() & Months %in% "Ann" & LGA  %in% "State level data") %>% dplyr::collect() %>%
             dplyr::mutate(dplyr::across(.col = c(Year,State,`Coverage %`), as.factor),
                           State = str_replace(State,pattern = "Federal Capital Territory",replacement = "Fct"))
 
         }else{
 
-          stream2_data$dhis2_data <- dplyr::tbl(stream2_pool, "yf_coverage_s12_states") %>%
-            filter(Year %in% !!picker_year_var() & Month  %in% !!picker_month_var() & LGA  %in% !!"State Level data") %>% dplyr::collect() %>%
+          stream2_data$dhis2_data <- dplyr::tbl(stream2_pool, "yf_coverage_map") %>%
+            filter(Year %in% !!picker_year_var() & Months  %in% !!picker_month_var() & LGA  %in% !!"State level data") %>% dplyr::collect() %>%
             dplyr::mutate(dplyr::across(.col = c(Year,State,`Coverage %`), as.factor),
                           State = str_replace(State,pattern = "Federal Capital Territory",replacement = "Fct"))
 
@@ -110,17 +109,17 @@ mod_map_confirmed_yellow_fever_cases_yellow_fever_coverage_annual_data_server <-
 
         if(sum(picker_month_var() == "Year Data") == 1){
 
-          stream2_data$dhis2_data <- dplyr::tbl(stream2_pool, "yf_coverage_s12_states") %>%
+          stream2_data$dhis2_data <- dplyr::tbl(stream2_pool, "yf_coverage_map") %>%
             filter(Year %in% !!picker_year_var() &
-                     State %in% !!picker_state_var() & Month %in% "Ann" & LGA %in% "State Level data")%>%dplyr::collect() %>%
+                     State %in% !!picker_state_var() & Months %in% "Ann" & LGA %in% "State level data")%>%dplyr::collect() %>%
             dplyr::mutate(dplyr::across(.col = c(Year,State,`Coverage %`), as.factor),
                           State = str_replace(State,pattern = "Federal Capital Territory",replacement = "Fct"))
 
         }else{
 
-          stream2_data$dhis2_data <- dplyr::tbl(stream2_pool, "yf_coverage_s12_states") %>%
+          stream2_data$dhis2_data <- dplyr::tbl(stream2_pool, "yf_coverage_map") %>%
             filter(Year %in% !!picker_year_var() &
-                     State %in% !!picker_state_var() & Month %in% !!picker_month_var() & LGA %in% "State Level data")%>%dplyr::collect() %>%
+                     State %in% !!picker_state_var() & Months %in% !!picker_month_var() & LGA %in% "State level data")%>%dplyr::collect() %>%
             dplyr::mutate(dplyr::across(.col = c(Year,State,`Coverage %`), as.factor),
                           State = str_replace(State,pattern = "Federal Capital Territory",replacement = "Fct"))
 
@@ -138,14 +137,14 @@ mod_map_confirmed_yellow_fever_cases_yellow_fever_coverage_annual_data_server <-
 
         if(sum(picker_month_var() == "Year Data") == 1){
 
-          stream2_data$sormas_yfc <- dplyr::tbl(stream2_pool, "sormas_yf_geocodes") %>%
+          stream2_data$sormas_yfc <- dplyr::tbl(stream2_pool, "yf_cases_map") %>%
             filter(Year %in% !!picker_year_var()) %>% dplyr::collect()%>%
             dplyr::mutate(dplyr::across(.col = c(Year,State, Months, LGA), as.factor),
                           State = str_replace(State,pattern = "Federal Capital Territory",replacement = "Fct"))
 
         }else{
 
-          stream2_data$sormas_yfc <- dplyr::tbl(stream2_pool, "sormas_yf_geocodes") %>%
+          stream2_data$sormas_yfc <- dplyr::tbl(stream2_pool, "yf_cases_map") %>%
             filter(Year %in% !!picker_year_var() & Months %in% !!picker_month_var()) %>%
             dplyr::collect()%>%
             dplyr::mutate(dplyr::across(.col = c(Year,State, Months, LGA), as.factor),
@@ -158,7 +157,7 @@ mod_map_confirmed_yellow_fever_cases_yellow_fever_coverage_annual_data_server <-
 
         if(sum(picker_month_var() == "Year Data") == 1){
 
-          stream2_data$sormas_yfc <- dplyr::tbl(stream2_pool, "sormas_yf_geocodes") %>%
+          stream2_data$sormas_yfc <- dplyr::tbl(stream2_pool, "yf_cases_map") %>%
             filter(Year == !!picker_year_var()&
                      State %in% !!picker_state_var() ) %>% dplyr::collect()%>%
             dplyr::mutate(dplyr::across(.col = c(Year,State, LGA), as.factor),
@@ -166,7 +165,7 @@ mod_map_confirmed_yellow_fever_cases_yellow_fever_coverage_annual_data_server <-
 
         }else{
 
-          stream2_data$sormas_yfc <- dplyr::tbl(stream2_pool, "sormas_yf_geocodes") %>%
+          stream2_data$sormas_yfc <- dplyr::tbl(stream2_pool, "yf_cases_map") %>%
             filter(Year == !!picker_year_var()&
                      State %in% !!picker_state_var()  & Months %in% !!picker_month_var()) %>% dplyr::collect()%>%
             dplyr::mutate(dplyr::across(.col = c(Year,State, LGA), as.factor),
@@ -184,6 +183,8 @@ mod_map_confirmed_yellow_fever_cases_yellow_fever_coverage_annual_data_server <-
 
     yfc_map_leaflef <-  reactive({
 
+      req(picker_state_var(), cancelOutput = T)
+
       pal_yf <- colorFactor(c('red','yellow','green','#424242'),
                             levels = c("0 - 50%","50 - 85%","85 - 100%", "> 100%"),
                             na.color = 'red')
@@ -196,7 +197,7 @@ mod_map_confirmed_yellow_fever_cases_yellow_fever_coverage_annual_data_server <-
                     by = c("NAME_1" = "State"))
 
         yfc_map <-  leaflet() %>%
-         addProviderTiles("Stamen.Toner") %>%
+         addProviderTiles("TomTom.Basic") %>%
           setView(lat =  9.077751,lng = 8.6774567, zoom = 6) %>%
           addPolygons( data = states_gadm_sp_data$spdf,
                        fillColor = ~pal_yf(states_gadm_sp_data$spdf@data$`Coverage %`),
@@ -232,7 +233,7 @@ mod_map_confirmed_yellow_fever_cases_yellow_fever_coverage_annual_data_server <-
                     by = c("NAME_1" = "State"))
 
         yfc_map <-  leaflet() %>%
-         addProviderTiles("Stamen.Toner") %>%
+         addProviderTiles("TomTom.Basic") %>%
           # setView(lat =  states_gadm_sp_data_state$spdf@data$Lat,
           #         lng = states_gadm_sp_data_state$spdf@data$Long, zoom = 6) %>%
           addPolygons( data = states_gadm_sp_data_state$spdf,
@@ -280,7 +281,7 @@ mod_map_confirmed_yellow_fever_cases_yellow_fever_coverage_annual_data_server <-
     output$downloadData <- downloadHandler(
 
       filename = function() {
-        paste0("Chart 11-", picker_state_var(), picker_year_var() ,".zip")
+        paste0("Chart 5-", picker_state_var(), picker_year_var() ,".zip")
       },
       content = function(fname) {
 
@@ -295,14 +296,14 @@ mod_map_confirmed_yellow_fever_cases_yellow_fever_coverage_annual_data_server <-
 
     output$downloadChart <- downloadHandler(
       filename = function() {
-        paste0("Chart 11-", picker_state_var(), picker_year_var() ,".png")
+        paste0("Chart 5-", picker_state_var(), picker_year_var() ,".png")
       },
       content = function(file) {
         owd <- setwd(tempdir())
         on.exit(setwd(owd))
         saveWidget(yfc_map_leaflef(), "temp.html", selfcontained = FALSE)
         webshot("temp.html", file = file, cliprect = "viewport")
-        #export(indicator_plot(), file=file)
+
       }
     )
 

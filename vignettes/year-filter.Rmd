@@ -20,7 +20,7 @@ library(DataTriangulationStream2)
 
 
 ```{r}
-chart_data <- dplyr::tbl(stream2_pool, "s3_combined")%>%
+chart_data <- dplyr::tbl(connection, "s3_combined")%>%
         dplyr::filter(Year %in% !!c("2019","2020","2021", "2022") & Months %in% !!months_vector_util() & State %in% !!"Federal Government")%>%
         collect() %>%
         mutate(Months = as.Date(str_c(Year, Months, 01,sep = "-"), "%Y-%b-%d"),

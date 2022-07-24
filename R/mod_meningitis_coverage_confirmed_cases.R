@@ -55,7 +55,7 @@ mod_meningitis_coverage_confirmed_cases_server <- function(id,
 
     chart_data <- reactive({
 
-      dplyr::tbl(stream2_pool, "men_A_alt_denominator")%>%
+      dplyr::tbl(connection, "men_A_alt_denominator")%>%
         dplyr::filter(Year %in% !!picker_year_var() &
                         Months %in% !!picker_month_var() &
                         State %in% !!picker_state_var() &
@@ -82,7 +82,7 @@ mod_meningitis_coverage_confirmed_cases_server <- function(id,
                                          mode = 'lines+markers', type = 'scatter',
                                          line = list(shape = 'spline', linetype = I("solid")),
                                          marker = list(symbol = I("circle")),
-                                         name = 'Meningitis Coverage',
+                                         name = 'Meningitis Coverage (DHIS2)',
                                          hovertemplate = paste('<b>Meningitis Coverage</b>: %{y:.1f}',
                                                                '<br><b style="text-align:left;">Month </b>: %{x}<br>')
       )
@@ -111,7 +111,8 @@ mod_meningitis_coverage_confirmed_cases_server <- function(id,
 
       )
 
-      plotmcac <- plotmcac %>% layout(title =  paste(picker_state_var(), "," ,picker_lga_var()),
+      plotmcac <- plotmcac %>% layout(title = chart_label(picker_state_var = picker_state_var(),
+                                                          picker_lga_var = picker_lga_var()),
 
                                       xaxis = list(tickfont = font_plot(),
                                                    title = "Month",
@@ -175,7 +176,7 @@ mod_meningitis_coverage_confirmed_cases_server <- function(id,
     output$downloadData <- downloadHandler(
 
       filename = function() {
-        paste0("Chart 1-", picker_state_var(), picker_year_var(), picker_month_var()[1] ," - ", picker_month_var()[length(picker_month_var())] ,".csv")
+        paste0("Chart 1- Meningitis", picker_state_var(), picker_lga_var() ,".csv")
       },
       content = function(file) {
 
@@ -186,7 +187,7 @@ mod_meningitis_coverage_confirmed_cases_server <- function(id,
 
     output$downloadChart <- downloadHandler(
       filename = function() {
-        paste0("Chart 1-", picker_state_var(), picker_year_var(),  picker_month_var()[1] ," - ", picker_month_var()[length(picker_month_var())] ,".png")
+        paste0("Chart 1- Meningitis", picker_state_var(), picker_lga_var(),".png")
       },
       content = function(file) {
         owd <- setwd(tempdir())

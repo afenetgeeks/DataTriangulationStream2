@@ -35,14 +35,14 @@ library(DataTriangulationStream2)
 
         if(sum(picker_month_var == "Year Data") == 1){
 
-          stream2_data$dhis2_data <- dplyr::tbl(stream2_pool, "measles_coverage_s11_states") %>%
+          stream2_data$dhis2_data <- dplyr::tbl(connection, "measles_coverage_s11_states") %>%
         filter(Year %in% !!picker_year_var() & Months %in% "Ann" & LGA  %in% "State level data") %>% dplyr::collect() %>%
         dplyr::mutate(dplyr::across(.col = c(Year,State,`Coverage %`), as.factor),
                       State = str_replace(State,pattern = "Federal Capital Territory",replacement = "Fct"))
 
       }else{
 
-        stream2_data$dhis2_data <- dplyr::tbl(stream2_pool, "measles_coverage_s11_states") %>%
+        stream2_data$dhis2_data <- dplyr::tbl(connection, "measles_coverage_s11_states") %>%
           filter(Year %in% !!picker_year_var() & Months  %in% !!picker_month_var & LGA  %in% !!"State level data") %>% dplyr::collect() %>%
           dplyr::mutate(dplyr::across(.col = c(Year,State,`Coverage %`), as.factor),
                         State = str_replace(State,pattern = "Federal Capital Territory",replacement = "Fct"))
@@ -63,14 +63,14 @@ library(DataTriangulationStream2)
 
       if(sum(picker_month_var == "Year Data") == 1){
 
-      stream2_data$sormas_mvc <- dplyr::tbl(stream2_pool, "sormas_measles_geocodes") %>%
+      stream2_data$sormas_mvc <- dplyr::tbl(connection, "sormas_measles_geocodes") %>%
         filter(Year %in% !!picker_year_var()) %>% dplyr::collect()%>%
         dplyr::mutate(dplyr::across(.col = c(Year,State, Months, LGA), as.factor),
                       State = str_replace(State,pattern = "Federal Capital Territory",replacement = "Fct"))
 
       }else{
 
-        stream2_data$sormas_mvc <- dplyr::tbl(stream2_pool, "sormas_measles_geocodes") %>%
+        stream2_data$sormas_mvc <- dplyr::tbl(connection, "sormas_measles_geocodes") %>%
           filter(Year %in% !!picker_year_var() & Months %in% !!picker_month_var) %>%
           dplyr::collect()%>%
           dplyr::mutate(dplyr::across(.col = c(Year,State, Months, LGA), as.factor),

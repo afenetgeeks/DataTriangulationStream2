@@ -17,7 +17,7 @@ mod_yellow_fever_vaccine_stock_analysis_yellow_fever_coverage_ui <- function(id)
         div(class ="column-icon-div yf-column-icon-div",
             img(class = "column-icon", src = "www/vaccination-today-icon.svg",  height = 40, width = 80, alt="nigeria coat of arms", role="img")),
 
-        HTML("<h6 class = 'column-title'>Chart 3: <span class = 'yf-span'>Yellow Fever</span> Vaccine Stock Analysis & <span class = 'yf-span'>Yellow Fever</span> given</h6>"),
+        HTML("<h6 class = 'column-title'>Chart 3: Yellow Fever vaccine stock analysis & vaccine given</h6>"),
 
        HTML(paste0('<a id="', ns("downloadData"), '" class="btn btn-default shiny-download-link download-data-btn" href="" target="_blank" download>
                       <i class="fa fa-download" aria-hidden="true"></i>
@@ -54,7 +54,7 @@ mod_yellow_fever_vaccine_stock_analysis_yellow_fever_coverage_server <- function
 
     chart_data <- reactive({
 
-      dplyr::tbl(stream2_pool, "yf_stock_analysis")%>%
+      dplyr::tbl(connection, "yf_stock_analysis")%>%
         filter(Year %in% !!picker_year_var() &
                  Months %in% !!picker_month_var() &
                  State %in%  !! picker_state_var()  &
@@ -125,7 +125,10 @@ mod_yellow_fever_vaccine_stock_analysis_yellow_fever_coverage_server <- function
                                      hovertemplate = paste('<b>Number</b>: %{y:.0f}',
                                                            '<br><b style="text-align:left;">Month </b>: %{x}<br>'))
 
-      plotYF <- plotYF %>% layout( title = paste(picker_state_var(), "," ,picker_lga_var()),
+      plotYF <- plotYF %>% layout( title = chart_label(picker_state_var = picker_state_var(),
+                                                       picker_lga_var = picker_lga_var()),
+
+
                                    xaxis = list(tickfont = font_plot(),
                                                 title = "Month",
                                                 fixedrange = TRUE,
@@ -176,10 +179,6 @@ mod_yellow_fever_vaccine_stock_analysis_yellow_fever_coverage_server <- function
                                    font = font_plot())%>%
         config(displayModeBar = FALSE)
 
-      # config(modeBarButtons = list(list("toImage", "resetScale2d", "zoomIn2d", "zoomOut2d")),
-      #        displaylogo = FALSE, toImageButtonOptions = list(filename = "Chart 6- Yellow Fever Vaccine Stock Analysis & Yellow Fever Coverage.png"))
-
-
       plotYF
 
 
@@ -192,7 +191,7 @@ mod_yellow_fever_vaccine_stock_analysis_yellow_fever_coverage_server <- function
     output$downloadData <- downloadHandler(
 
       filename = function() {
-        paste0("Chart 3-", picker_state_var(), picker_year_var(), picker_month_var()[1] ," - ", picker_month_var()[length(picker_month_var())] ,".csv")
+        paste0("Chart 3- Yellow Fever", picker_state_var(), picker_year_var(),".csv")
       },
       content = function(file) {
         readr::write_csv(chart_data(), file)
@@ -202,7 +201,7 @@ mod_yellow_fever_vaccine_stock_analysis_yellow_fever_coverage_server <- function
 
     output$downloadChart <- downloadHandler(
       filename = function() {
-        paste0("Chart 3-", picker_state_var(), picker_year_var(),  picker_month_var()[1] ," - ", picker_month_var()[length(picker_month_var())] ,".png")
+        paste0("Chart 3- Yellow Fever", picker_state_var(), picker_year_var() ,".png")
       },
       content = function(file) {
         owd <- setwd(tempdir())

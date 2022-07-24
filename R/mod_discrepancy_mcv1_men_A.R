@@ -17,7 +17,7 @@ mod_discrepancy_mcv1_men_A_ui <- function(id){
         div(class ="column-icon-div measles-column-icon-div",
             img(class = "column-icon", src = "www/total-registrations-icon.svg",  height = 40, width = 80, alt="nigeria coat of arms", role="img")),
 
-        HTML("<h6 class = 'column-title'>Chart 4: Co-administered Antigen Discrepancy: MCV 1 & Men A given by State</h6>"),
+        HTML("<h6 class = 'column-title'>Chart 4: Co-administered Antigen discrepancy: MCV 1 & Men A given</h6>"),
 
         HTML(paste0('<a id="', ns("downloadData"), '" class="btn btn-default shiny-download-link download-data-btn" href="" target="_blank" download>
                       <i class="fa fa-download" aria-hidden="true"></i>
@@ -39,6 +39,7 @@ mod_discrepancy_mcv1_men_A_ui <- function(id){
   )
 }
 
+
 #' discrepancy_mcv1_men_A Server Functions
 #'
 #' @noRd
@@ -53,14 +54,15 @@ mod_discrepancy_mcv1_men_A_server <- function(id,
 
     chart_data <- reactive({
 
-      dplyr::tbl(stream2_pool, "measles_men_A_discrepancy")%>%
+      dplyr::tbl(connection, "measles_men_A_discrepancy")%>%
         filter(Year %in% !!picker_year_var() &
                  Months %in%  !!picker_month_var() &
                  State %in% !!picker_state_var() &
                  LGA %in% !!picker_lga_var())%>%dplyr::collect()%>%
         dplyr::mutate(Months = as.Date(str_c(Year, Months, 01,sep = "-"), "%Y-%b-%d"),
                       dplyr::across(.col = c(Year,State), as.factor))%>%
-        dplyr::arrange(Months)
+        dplyr::arrange(Months)%>%
+        mutate(discrepancy = abs(discrepancy))
     })
 
     indicator_plot <- reactive({
@@ -105,7 +107,9 @@ mod_discrepancy_mcv1_men_A_server <- function(id,
                                          name = 'Men A given',
                                          yaxis = 'y2')
 
-      plotmcac <- plotmcac %>% layout(title = paste(picker_state_var(), "," ,picker_lga_var()),
+      plotmcac <- plotmcac %>% layout(title =chart_label(picker_state_var = picker_state_var(),
+                                                         picker_lga_var = picker_lga_var()),
+
                                       xaxis = list(tickfont = font_plot(),
                                                    title = "Month",
                                                    fixedrange = TRUE,
@@ -158,7 +162,7 @@ mod_discrepancy_mcv1_men_A_server <- function(id,
     output$downloadData <- downloadHandler(
 
       filename = function() {
-        paste0("Measles Men A Discrepancy",  picker_year_var(), picker_month_var()[1] ," - ", picker_month_var()[length(picker_month_var())] ,".csv")
+        paste0("Chart 4 - Measles Men A discrepancy",   picker_state_var(), picker_lga_var() ,".csv")
       },
       content = function(file) {
         readr::write_csv(chart_data(), file)
@@ -168,7 +172,7 @@ mod_discrepancy_mcv1_men_A_server <- function(id,
 
     output$downloadChart <- downloadHandler(
       filename = function() {
-        paste0("Measles Men A Discrepancy",  picker_year_var(),  picker_month_var()[1] ," - ", picker_month_var()[length(picker_month_var())] ,".png")
+        paste0("Chart 4 - Measles Men A discrepancy",   picker_state_var(), picker_lga_var() ,".png")
       },
       content = function(file) {
         owd <- setwd(tempdir())

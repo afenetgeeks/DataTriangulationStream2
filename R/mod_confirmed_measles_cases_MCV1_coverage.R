@@ -18,7 +18,7 @@ mod_confirmed_measles_cases_MCV1_coverage_ui <- function(id){
         div(class ="column-icon-div measles-column-icon-div",
             img(class = "column-icon", src = "www/partially-vaccinated-today-icon.svg",  height = 40, width = 80, alt="nigeria coat of arms", role="img")),
 
-        HTML("<h6 class = 'column-title'>Chart 1: Confirmed <span class = 'measles-span'>measles</span> cases, <span class = 'measles-span'>MCV 1</span> overage,Alt denominator </h6>"),
+        HTML("<h6 class = 'column-title'>Chart 1: Confirmed Measles cases,MCV 1 coverage,Alt denominator </h6>"),
 
        HTML(paste0('<a id="', ns("downloadData"), '" class="btn btn-default shiny-download-link download-data-btn" href="" target="_blank" download>
                       <i class="fa fa-download" aria-hidden="true"></i>
@@ -60,7 +60,7 @@ mod_confirmed_measles_cases_MCV1_coverage_server <- function(id,
 
     chart_data <- reactive({
 
-      dplyr::tbl(stream2_pool, "measles_alt_denominator")%>%
+      dplyr::tbl(connection, "measles_alt_denominator")%>%
         dplyr::filter(Year %in% !!picker_year_var() &
                         Months %in% !!picker_month_var() &
                         State %in% !!picker_state_var() &
@@ -87,7 +87,7 @@ mod_confirmed_measles_cases_MCV1_coverage_server <- function(id,
                                          mode = 'lines+markers', type = 'scatter',
                                          line = list(shape = 'spline', linetype = I("solid")),
                                          marker = list(symbol = I("circle")),
-                                         name = 'MCV 1',
+                                         name = 'MCV 1(DHIS2)',
                                          hovertemplate = paste('<b>MCV 1</b>: %{y:.1f}',
                                                                '<br><b style="text-align:left;">Month </b>: %{x}<br>')
       )
@@ -99,7 +99,7 @@ mod_confirmed_measles_cases_MCV1_coverage_server <- function(id,
                                          mode = 'lines+markers', type = 'scatter',
                                          line = list(shape = 'spline', linetype = I("solid")),
                                          marker = list(symbol = I("circle")),
-                                         name = 'MCV 2',
+                                         name = 'MCV 2(DHIS2)',
                                          hovertemplate = paste('<b>MCV 2</b>: %{y:.1f}',
                                                                '<br><b style="text-align:left;">Month </b>: %{x}<br>')
       )
@@ -137,7 +137,8 @@ mod_confirmed_measles_cases_MCV1_coverage_server <- function(id,
 
                                        )
 
-      plotmcac <- plotmcac %>% layout(title =  paste(picker_state_var(), "," ,picker_lga_var()),
+      plotmcac <- plotmcac %>% layout(title = chart_label(picker_state_var = picker_state_var(),
+                                                          picker_lga_var = picker_lga_var()),
 
                                       xaxis = list(tickfont = font_plot(),
                                                    title = "Month",
@@ -201,7 +202,7 @@ mod_confirmed_measles_cases_MCV1_coverage_server <- function(id,
     output$downloadData <- downloadHandler(
 
       filename = function() {
-        paste0("Chart 1-", picker_state_var(), picker_year_var(), picker_month_var()[1] ," - ", picker_month_var()[length(picker_month_var())] ,".csv")
+        paste0("Chart 1- Measles",  picker_state_var(), picker_lga_var(),".csv")
       },
       content = function(file) {
 
@@ -212,7 +213,7 @@ mod_confirmed_measles_cases_MCV1_coverage_server <- function(id,
 
     output$downloadChart <- downloadHandler(
       filename = function() {
-        paste0("Chart 1-", picker_state_var(), picker_year_var(),  picker_month_var()[1] ," - ", picker_month_var()[length(picker_month_var())] ,".png")
+        paste0("Chart 1-  Measles", picker_state_var(), picker_lga_var(),".png")
       },
       content = function(file) {
         owd <- setwd(tempdir())

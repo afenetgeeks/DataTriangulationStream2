@@ -20,7 +20,7 @@ mod_national_measles_coverage_different_sources_ui <- function(id){
 
         div(class ="column-icon-div measles-column-icon-div",
             img(class = "column-icon", src = "www/fully-vaccinated-today-icon.svg",  height = 40, width = 80, alt="nigeria coat of arms", role="img")),
-        HTML("<h6 class = 'column-title'> Chart 6: National <span class = 'measles-span'>MCV</span> Coverage (%) by different sources, Nigeria (National)</h6>"),
+        HTML("<h6 class = 'column-title'> Chart 6: National MCV coverage (%) by different sources</h6>"),
 
 
         HTML(paste0('<a id="', ns("downloadData"), '" class="btn btn-default shiny-download-link download-data-btn" href="" target="_blank" download>
@@ -73,7 +73,7 @@ mod_national_measles_coverage_different_sources_server <- function(id,
     # slide 1
 
     chart_data <- reactive({
-        dplyr::tbl(stream2_pool, "mcv_different_sources") %>%
+        dplyr::tbl(connection, "mcv_different_sources") %>%
         dplyr::collect() %>%
         mutate(as.numeric(Year))
 
@@ -241,7 +241,7 @@ indicator_plot <- reactive({
     output$downloadData <- downloadHandler(
 
       filename = function() {
-        paste0("Chart 6- National Measles Coverage by different sources-Nigeria National Wide-", Sys.Date(), ".csv")
+        paste0("Chart 6- Measles National Measles Coverage by different sources.csv")
       },
       content = function(file) {
         readr::write_csv(chart_data(), file)
@@ -252,7 +252,7 @@ indicator_plot <- reactive({
 
     output$downloadChart <- downloadHandler(
       filename = function() {
-        paste0("Chart 6- National Measles Coverage by different sources-Nigeria National Wide.png")
+        paste0("Chart 6- Measlses National Measles Coverage by different sources.png")
       },
       content = function(file) {
         owd <- setwd(tempdir())

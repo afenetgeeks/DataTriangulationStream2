@@ -47,12 +47,12 @@ measles_page <- function(id = "measles_page", href = "/") {
 
         div(class = "row-page",
             mod_measles_vaccine_stock_analysis_measles_coverage_ui("measles_vaccine_stock_analysis_measles_coverage_1"),
-            mod_mcv1_mcv2_drop_out_rate_nigeria_ui("mcv1_mcv2_drop_out_rate_nigeria_1")
+            mod_discrepancy_mcv1_yellow_fever_given_by_state_ui("discrepancy_mcv1_yellow_fever_given_by_state_1")
         ),
 
 
         div(class = "row-page",
-            mod_discrepancy_mcv1_yellow_fever_given_by_state_ui("discrepancy_mcv1_yellow_fever_given_by_state_1"),
+            mod_mcv1_mcv2_drop_out_rate_nigeria_ui("mcv1_mcv2_drop_out_rate_nigeria_1"),
             mod_national_measles_coverage_different_sources_ui("national_measles_coverage_different_sources_1")
 
         ),

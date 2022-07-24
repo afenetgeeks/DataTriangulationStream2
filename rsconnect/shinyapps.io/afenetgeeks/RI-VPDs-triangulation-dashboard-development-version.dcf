@@ -5,9 +5,10 @@ account: afenetgeeks
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 5950001
-bundleId: 5784041
+bundleId: 6128127
 url: https://afenetgeeks.shinyapps.io/RI-VPDs-triangulation-dashboard-development-version/
-when: 1649608685.30269
-lastSyncTime: 1649608685.3027
+when: 1658686479.71735
+lastSyncTime: 1658686479.71736
 asMultiple: FALSE
 asStatic: FALSE
+ignoredFiles: tests/spelling.R|tests/testthat/test-golem-recommended.R|tests/testthat.R|vignettes/maps.Rmd|vignettes/meningitis-backend.Rmd|vignettes/wastage-rate.Rmd|vignettes/year-filter.Rmd

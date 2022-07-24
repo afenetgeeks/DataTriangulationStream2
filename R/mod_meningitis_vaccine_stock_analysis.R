@@ -15,7 +15,7 @@ mod_meningitis_vaccine_stock_analysis_ui <- function(id){
         div(class ="column-icon-div measles-column-icon-div",
             img(class = "column-icon", src = "www/vaccination-today-icon.svg",  height = 40, width = 80, alt="nigeria coat of arms", role="img")),
 
-        HTML("<h6 class = 'column-title'>Chart 3: Men A vaccine stock analysis & Men A given</h6>"),
+        HTML("<h6 class = 'column-title'>Chart 3: Men A vaccine stock analysis & vaccine given</h6>"),
 
         HTML(paste0('<a id="', ns("downloadData"), '" class="btn btn-default shiny-download-link download-data-btn" href="" target="_blank" download>
                       <i class="fa fa-download" aria-hidden="true"></i>
@@ -51,7 +51,7 @@ mod_meningitis_vaccine_stock_analysis_server <- function(id,
 
     chart_data <- reactive({
 
-      dplyr::tbl(stream2_pool, "men_A_stock_analysis")%>%
+      dplyr::tbl(connection, "men_A_stock_analysis")%>%
         dplyr::filter(Year %in% !!picker_year_var() &
                         Months %in% !!picker_month_var() &
                         State %in% !!picker_state_var() &
@@ -126,7 +126,9 @@ mod_meningitis_vaccine_stock_analysis_server <- function(id,
                                                          '<br><b style="text-align:left;">Month </b>: %{x}<br>'),
                                    text = ~scales::number(`Doses Available (Opening Balance+Received)`, big.mark = ","))
 
-      plotM <- plotM %>% layout( title = paste(picker_state_var(), "," ,picker_lga_var()),
+      plotM <- plotM %>% layout( title = chart_label(picker_state_var = picker_state_var(),
+                                                     picker_lga_var = picker_lga_var()),
+
                                  xaxis = list(tickfont = font_plot(),
                                               title = "Month",
                                               fixedrange = TRUE,
@@ -188,7 +190,7 @@ mod_meningitis_vaccine_stock_analysis_server <- function(id,
     output$downloadData <- downloadHandler(
 
       filename = function() {
-        paste0("Chart 3-", picker_state_var(), picker_year_var(), picker_month_var()[1] ," - ", picker_month_var()[length(picker_month_var())] ,".csv")
+        paste0("Chart 3- Meningitis", picker_state_var(), picker_lga_var() ,".csv")
       },
       content = function(file) {
         readr::write_csv(chart_data(), file)
@@ -198,7 +200,7 @@ mod_meningitis_vaccine_stock_analysis_server <- function(id,
 
     output$downloadChart <- downloadHandler(
       filename = function() {
-        paste0("Chart 3-", picker_state_var(), picker_year_var(),  picker_month_var()[1] ," - ", picker_month_var()[length(picker_month_var())] ,".png")
+        paste0("Chart 3- Meningitis", picker_state_var(), picker_lga_var(),".png")
       },
       content = function(file) {
         owd <- setwd(tempdir())

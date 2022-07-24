@@ -69,6 +69,16 @@ nav_links <- function(disease){
 
 
 
+chart_label <- function(picker_state_var,picker_lga_var ){
+  if(picker_state_var =="Federal Government"){
+
+    paste(picker_state_var)
+
+  }else{
+
+    paste( picker_state_var , "," ,picker_lga_var)
+  }
+}
 
 
 

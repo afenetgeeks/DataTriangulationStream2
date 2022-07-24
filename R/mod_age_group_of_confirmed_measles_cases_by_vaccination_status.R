@@ -18,7 +18,7 @@ mod_age_group_of_confirmed_measles_cases_by_vaccination_status_ui <- function(id
         div(class ="column-icon-div measles-column-icon-div",
             img(class = "column-icon", src = "www/age-group-vaccination-icon.svg",  height = 40, width = 80, alt="nigeria coat of arms", role="img")),
 
-        HTML("<h6 class = 'column-title'> Chart 2: Age Group of Confirmed <span class = 'measles-span'>Measles</span> Cases by Vaccination Status</h6>"),
+        HTML("<h6 class = 'column-title'> Chart 2: Age group of confirmed Measles cases by vaccination status</h6>"),
 
        HTML(paste0('<a id="', ns("downloadData"), '" class="btn btn-default shiny-download-link download-data-btn" href="" target="_blank" download>
                       <i class="fa fa-download" aria-hidden="true"></i>
@@ -61,7 +61,7 @@ mod_age_group_of_confirmed_measles_cases_by_vaccination_status_server <-  functi
 
     chart_data <- reactive({
 
-      dplyr::tbl(stream2_pool, "measles_age_group")%>%
+      dplyr::tbl(connection, "measles_age_group")%>%
         filter(Year %in% !!picker_year_var() &
                  State %in% !!picker_state_var() &
                  Months %in%  !!picker_month_var() &
@@ -93,7 +93,9 @@ mod_age_group_of_confirmed_measles_cases_by_vaccination_status_server <-  functi
                                         '<br><b style="text-align:left;">Age group</b>: %{x}<br>'),
                   color = I("#edb952"),
                   name = "Vaccinated") %>%
-        layout(title = paste(picker_state_var(), "," ,picker_lga_var()),
+
+        layout(title = chart_label(picker_state_var = picker_state_var(),
+                                   picker_lga_var = picker_lga_var()),
                barmode = 'stack',
                xaxis = list(tickfont = font_plot(),
                             title = "Age group (in Months)",
@@ -140,7 +142,7 @@ mod_age_group_of_confirmed_measles_cases_by_vaccination_status_server <-  functi
     output$downloadData <- downloadHandler(
 
       filename = function() {
-        paste0("Chart 2-", picker_state_var(), picker_year_var(), picker_month_var()[1] ," - ", picker_month_var()[length(picker_month_var())] ,".csv")
+        paste0("Chart 2- Measles", picker_state_var(), picker_lga_var(), picker_year_var(), picker_month_var()[1] ," - ", picker_month_var()[length(picker_month_var())] ,".csv")
       },
       content = function(file) {
         readr::write_csv(chart_data(), file)
@@ -150,7 +152,7 @@ mod_age_group_of_confirmed_measles_cases_by_vaccination_status_server <-  functi
 
     output$downloadChart <- downloadHandler(
       filename = function() {
-        paste0("Chart 2-", picker_state_var(), picker_year_var(),  picker_month_var()[1] ," - ", picker_month_var()[length(picker_month_var())] ,".png")
+        paste0("Chart 2- Measles", picker_state_var(),picker_lga_var(), picker_year_var(),  picker_month_var()[1] ," - ", picker_month_var()[length(picker_month_var())] ,".png")
       },
       content = function(file) {
         owd <- setwd(tempdir())

@@ -57,7 +57,7 @@ mod_age_group_of_confirmed_yellow_fever_cases_by_vaccination_status_server <- fu
 
     chart_data <- reactive({
 
-      dplyr::tbl(stream2_pool, "yf_age_group")%>%
+      dplyr::tbl(connection, "yf_age_group")%>%
         filter(Year %in% !!picker_year_var() &
                  State %in% !!picker_state_var() &
                  Months %in%  !!picker_month_var() &
@@ -91,7 +91,9 @@ mod_age_group_of_confirmed_yellow_fever_cases_by_vaccination_status_server <- fu
                   hovertemplate = paste('<b>Cases</b>: %{y:.0f}',
                                         '<br><b style="text-align:left;">Age group</b>: %{x}<br>'),
                   name = "Vaccinated") %>%
-        layout( title = paste(picker_state_var(), "," ,picker_lga_var()),
+
+        layout( title = chart_label(picker_state_var = picker_state_var(),
+                                    picker_lga_var = picker_lga_var()),
                  barmode = 'stack',
                  xaxis = list(tickfont = font_plot(),
                               title = "Age group (in Months)",
@@ -136,7 +138,7 @@ mod_age_group_of_confirmed_yellow_fever_cases_by_vaccination_status_server <- fu
     output$downloadData <- downloadHandler(
 
       filename = function() {
-        paste0("Chart 2-", picker_state_var(), picker_year_var(), picker_month_var()[1] ," - ", picker_month_var()[length(picker_month_var())] ,".csv")
+        paste0("Chart 2- Yellow Fever", picker_state_var(), picker_lga_var(), picker_year_var(), picker_month_var()[1] ," - ", picker_month_var()[length(picker_month_var())] ,".csv")
       },
       content = function(file) {
         readr::write_csv(chart_data(), file)
@@ -146,7 +148,7 @@ mod_age_group_of_confirmed_yellow_fever_cases_by_vaccination_status_server <- fu
 
     output$downloadChart <- downloadHandler(
       filename = function() {
-        paste0("Chart 2-", picker_state_var(), picker_year_var(),  picker_month_var()[1] ," - ", picker_month_var()[length(picker_month_var())] ,".png")
+        paste0("Chart 2- Yellow Fever", picker_state_var(), picker_lga_var(), picker_year_var(),  picker_month_var()[1] ," - ", picker_month_var()[length(picker_month_var())] ,".png")
       },
       content = function(file) {
         owd <- setwd(tempdir())

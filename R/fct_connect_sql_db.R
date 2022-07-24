@@ -11,7 +11,7 @@
 
   dw <- config::get(file = "./inst/app/www/config.yml", "development_stream2")
 
-  stream2_pool <- pool::dbPool(
+  connection <- pool::dbPool(
     drv = RMariaDB::MariaDB(),
     host     = dw$host,
     username = dw$user,
@@ -26,7 +26,7 @@
 
 
   shiny::onStop(function() {
-    pool::poolClose(stream2_pool)
+    pool::poolClose(connection)
   })
 
 

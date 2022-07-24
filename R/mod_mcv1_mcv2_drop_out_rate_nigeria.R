@@ -17,7 +17,7 @@ mod_mcv1_mcv2_drop_out_rate_nigeria_ui <- function(id){
         div(class ="column-icon-div measles-column-icon-div",
             img(class = "column-icon", src = "www/total-registrations-icon.svg",  height = 40, width = 80, alt="nigeria coat of arms", role="img")),
 
-        HTML("<h6 class = 'column-title'>Chart 5: MCV 1, MCV 2 Coverage & Drop Out Rate</h6>"),
+        HTML("<h6 class = 'column-title'>Chart 5: MCV 1, MCV 2 coverage & drop out rate</h6>"),
 
         HTML(paste0('<a id="', ns("downloadData"), '" class="btn btn-default shiny-download-link download-data-btn" href="" target="_blank" download>
                       <i class="fa fa-download" aria-hidden="true"></i>
@@ -55,7 +55,7 @@ mod_mcv1_mcv2_drop_out_rate_nigeria_server <- function(id,
 
     chart_data <- reactive({
 
-        dplyr::tbl(stream2_pool, "mcv1_mcv2_dropout_rate") %>%
+        dplyr::tbl(connection, "mcv1_mcv2_dropout_rate") %>%
         dplyr::filter(Year %in% !!picker_year_var() &
                       Months %in%  !!picker_month_var() &
                       State %in% !!picker_state_var() &
@@ -103,7 +103,9 @@ mod_mcv1_mcv2_drop_out_rate_nigeria_server <- function(id,
                                                      hovertemplate = paste('<b>Coverage %</b>: %{y:.1f}',
                                                                            '<br><b style="text-align:left;">Month </b>: %{x}<br>'))
 
-      plotM12Dropout <- plotM12Dropout %>% layout( title = paste(picker_state_var(), "," ,picker_lga_var()),
+      plotM12Dropout <- plotM12Dropout %>% layout( title = chart_label(picker_state_var = picker_state_var(),
+                                                                       picker_lga_var = picker_lga_var()),
+
                                                    xaxis = list(tickfont = font_plot(),
                                                                 title = "Month",
                                                                 fixedrange = TRUE,
@@ -156,7 +158,7 @@ mod_mcv1_mcv2_drop_out_rate_nigeria_server <- function(id,
     output$downloadData <- downloadHandler(
 
       filename = function() {
-        paste0("Chart 5-",  picker_year_var(), picker_month_var()[1] ," - ", picker_month_var()[length(picker_month_var())] ,".csv")
+        paste0("Chart 5- Measles",  picker_state_var(), picker_lga_var(),".csv")
       },
       content = function(file) {
         readr::write_csv(chart_data(), file)
@@ -166,7 +168,7 @@ mod_mcv1_mcv2_drop_out_rate_nigeria_server <- function(id,
 
     output$downloadChart <- downloadHandler(
       filename = function() {
-        paste0("Chart 5-",  picker_year_var(),  picker_month_var()[1] ," - ", picker_month_var()[length(picker_month_var())] ,".png")
+        paste0("Chart 5- Measles",   picker_state_var(), picker_lga_var(),".png")
       },
       content = function(file) {
         owd <- setwd(tempdir())

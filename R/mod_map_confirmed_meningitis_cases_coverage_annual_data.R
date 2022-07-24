@@ -28,7 +28,7 @@ mod_map_confirmed_meningitis_cases_coverage_annual_data_ui <- function(id){
         div(class ="column-icon-div measles-column-icon-div",
             img(class = "column-icon", src = "www/partially-vaccinated-today-icon.svg",  height = 40, width = 80, alt="nigeria coat of arms", role="img")),
 
-        HTML("<h6 class = 'column-title column-title-map'>Chart 5: Confirmed <span class = 'measles-span'>Meningitis</span> cases, <span class = 'measles-span'>Meningitis</span> coverage </h6>"),
+        HTML("<h6 class = 'column-title column-title-map'>Chart 5: Confirmed Meningitis cases,Meningitis coverage </h6>"),
 
 
         div(class = "map_charts_inputs",
@@ -92,14 +92,14 @@ mod_map_confirmed_meningitis_cases_coverage_annual_data_server <- function(id){
 
         if(sum(picker_month_var() == "Year Data") == 1){
 
-          stream2_data$dhis2_data <- dplyr::tbl(stream2_pool, "men_A_coverage_map") %>%
+          stream2_data$dhis2_data <- dplyr::tbl(connection, "men_A_coverage_map") %>%
             filter(Year %in% !!picker_year_var() & Months %in% "Ann" & LGA  %in% "State level data") %>% dplyr::collect() %>%
             dplyr::mutate(dplyr::across(.col = c(Year,State,`Coverage %`), as.factor),
                           State = str_replace(State,pattern = "Federal Capital Territory",replacement = "Fct"))
 
         }else{
 
-          stream2_data$dhis2_data <- dplyr::tbl(stream2_pool, "men_A_coverage_map") %>%
+          stream2_data$dhis2_data <- dplyr::tbl(connection, "men_A_coverage_map") %>%
             filter(Year %in% !!picker_year_var() & Months  %in% !!picker_month_var() & LGA  %in% !!"State level data") %>% dplyr::collect() %>%
             dplyr::mutate(dplyr::across(.col = c(Year,State,`Coverage %`), as.factor),
                           State = str_replace(State,pattern = "Federal Capital Territory",replacement = "Fct"))
@@ -110,7 +110,7 @@ mod_map_confirmed_meningitis_cases_coverage_annual_data_server <- function(id){
 
         if(sum(picker_month_var() == "Year Data") == 1){
 
-          stream2_data$dhis2_data <- dplyr::tbl(stream2_pool, "men_A_coverage_map") %>%
+          stream2_data$dhis2_data <- dplyr::tbl(connection, "men_A_coverage_map") %>%
             filter(Year %in% !!picker_year_var() &
                      State %in% !!picker_state_var() & Months %in% "Ann" & LGA %in% "State level data")%>%dplyr::collect() %>%
             dplyr::mutate(dplyr::across(.col = c(Year,State,`Coverage %`), as.factor),
@@ -118,7 +118,7 @@ mod_map_confirmed_meningitis_cases_coverage_annual_data_server <- function(id){
 
         }else{
 
-          stream2_data$dhis2_data <- dplyr::tbl(stream2_pool, "men_A_coverage_map") %>%
+          stream2_data$dhis2_data <- dplyr::tbl(connection, "men_A_coverage_map") %>%
             filter(Year %in% !!picker_year_var() &
                      State %in% !!picker_state_var() & Months %in% !!picker_month_var() & LGA %in% "State level data")%>%dplyr::collect() %>%
             dplyr::mutate(dplyr::across(.col = c(Year,State,`Coverage %`), as.factor),
@@ -138,14 +138,14 @@ mod_map_confirmed_meningitis_cases_coverage_annual_data_server <- function(id){
 
         if(sum(picker_month_var() == "Year Data") == 1){
 
-          stream2_data$sormas_mvc <- dplyr::tbl(stream2_pool, "meningitis_cases_map") %>%
+          stream2_data$sormas_mvc <- dplyr::tbl(connection, "meningitis_cases_map") %>%
             filter(Year %in% !!picker_year_var()) %>% dplyr::collect()%>%
             dplyr::mutate(dplyr::across(.col = c(Year,State, Months, LGA), as.factor),
                           State = str_replace(State,pattern = "Federal Capital Territory",replacement = "Fct"))
 
         }else{
 
-          stream2_data$sormas_mvc <- dplyr::tbl(stream2_pool, "meningitis_cases_map") %>%
+          stream2_data$sormas_mvc <- dplyr::tbl(connection, "meningitis_cases_map") %>%
             filter(Year %in% !!picker_year_var() & Months %in% !!picker_month_var()) %>%
             dplyr::collect()%>%
             dplyr::mutate(dplyr::across(.col = c(Year,State, Months, LGA), as.factor),
@@ -158,7 +158,7 @@ mod_map_confirmed_meningitis_cases_coverage_annual_data_server <- function(id){
 
         if(sum(picker_month_var() == "Year Data") == 1){
 
-          stream2_data$sormas_mvc <- dplyr::tbl(stream2_pool, "meningitis_cases_map") %>%
+          stream2_data$sormas_mvc <- dplyr::tbl(connection, "meningitis_cases_map") %>%
             filter(Year == !!picker_year_var()&
                      State %in% !!picker_state_var() ) %>% dplyr::collect()%>%
             dplyr::mutate(dplyr::across(.col = c(Year,State, LGA), as.factor),
@@ -166,7 +166,7 @@ mod_map_confirmed_meningitis_cases_coverage_annual_data_server <- function(id){
 
         }else{
 
-          stream2_data$sormas_mvc <- dplyr::tbl(stream2_pool, "meningitis_cases_map") %>%
+          stream2_data$sormas_mvc <- dplyr::tbl(connection, "meningitis_cases_map") %>%
             filter(Year == !!picker_year_var()&
                      State %in% !!picker_state_var()  & Months %in% !!picker_month_var()) %>% dplyr::collect()%>%
             dplyr::mutate(dplyr::across(.col = c(Year,State, LGA), as.factor),
@@ -181,7 +181,22 @@ mod_map_confirmed_meningitis_cases_coverage_annual_data_server <- function(id){
     })
 
 
-    mvc_map_leaflet <-  reactive({
+    output$mvcMap <-  renderLeaflet({
+
+
+      leaflet() %>%
+        addProviderTiles("TomTom.Basic") %>%
+        addResetMapButton()%>%
+        addLegend(colors = make_shapes(colors = colors(), sizes = sizes() , borders = borders() , shapes = shapes()),
+                  labels = make_labels(sizes = sizes(), labels = labels()),
+                  opacity =  0.6, title = "Coverage %", position = "bottomright")
+
+      })
+
+    map_objects <- reactiveValues()
+
+
+    observe({
 
       req(picker_state_var(), cancelOutput = T)
 
@@ -194,9 +209,10 @@ mod_map_confirmed_meningitis_cases_coverage_annual_data_server <- function(id){
         states_gadm_sp_data$spdf@data <- states_gadm_sp_data$spdf@data %>%
           left_join(as.data.frame(stream2_data$dhis2_data), by = c("NAME_1" = "State"))
 
-        mvc_map <-  leaflet() %>%
-         addProviderTiles("TomTom.Basic") %>%
-          setView(lat =  9.077751,lng = 8.6774567, zoom = 6)  %>%
+        mvc_map <-   leafletProxy(mapId = "mvcMap") %>%
+          leaflet::clearShapes() %>%
+          leaflet::clearMarkerClusters() %>%
+          setView(lat =  9.077751,lng = 8.6774567, zoom = 6)%>%
           addPolygons(data = states_gadm_sp_data$spdf,
                       fillColor = ~pal_mvc(states_gadm_sp_data$spdf@data$`Coverage %`),
                       stroke = TRUE,
@@ -211,13 +227,9 @@ mod_map_confirmed_meningitis_cases_coverage_annual_data_server <- function(id){
                       labelOptions = labelOptions(
                         textsize = "10px",
                         direction = "auto", noHide = T,textOnly = T
-                      )) %>%
-          addLegend(colors = make_shapes(colors = colors(), sizes = sizes() , borders = borders() , shapes = shapes()),
-                    labels = make_labels(sizes = sizes(), labels = labels()),
-                    opacity =  0.6, title = "Coverage %", position = "bottomright") %>%
-          addResetMapButton()
+                      ))
 
-        mvc_map <- add_state_clusters(leaflet_map =  mvc_map,
+        map_objects$mvc_map <- add_state_clusters(leaflet_map =  mvc_map,
                                       states = str_replace(states_vector_util(),pattern = "Federal Capital Territory",replacement = "Fct"),
                                       data =  stream2_data$sormas_mvc)
 
@@ -230,10 +242,9 @@ mod_map_confirmed_meningitis_cases_coverage_annual_data_server <- function(id){
         states_gadm_sp_data_state$spdf@data <- states_gadm_sp_data_state$spdf@data %>%
           left_join(as.data.frame(stream2_data$dhis2_data), by = c("NAME_1" = "State"))
 
-        mvc_map <-  leaflet() %>%
-         addProviderTiles("TomTom.Basic") %>%
-          # setView(lat =  states_gadm_sp_data_state$spdf@data$Lat,
-          #         lng = states_gadm_sp_data_state$spdf@data$Long, zoom = 6)  %>%
+        map_objects$mvc_map  <-  leaflet::leafletProxy(mapId = "mvcMap")  %>%
+          leaflet::clearShapes() %>%
+          leaflet::clearMarkerClusters() %>%
           addPolygons(data = states_gadm_sp_data_state$spdf,
                       fillColor = ~pal_mvc(states_gadm_sp_data_state$spdf@data$`Coverage %`),
                       stroke = TRUE,
@@ -261,26 +272,21 @@ mod_map_confirmed_meningitis_cases_coverage_annual_data_server <- function(id){
                                                html: '<div style=\"background-color:rgba(78, 224, 237, 0.7)\"><span>' + cluster.getChildCount() + '</div><span>',
                                                className: 'marker-cluster'
                                              });
-                                           }"))) %>%
-          addLegend(colors = make_shapes(colors = colors(), sizes = sizes() , borders = borders() , shapes = shapes()),
-                    labels = make_labels(sizes = sizes(), labels = labels()),
-                    opacity =  0.6, title = "Coverage %", position = "bottomright")%>%
-          addResetMapButton()
-
+                                           }")))
       }
 
-      mvc_map
+      map_objects$mvc_map
 
     })
 
 
-    output$mvcMap <-  renderLeaflet({mvc_map_leaflet()})
+
 
 
     output$downloadData <- downloadHandler(
 
       filename = function() {
-        paste0("Chart 10-", picker_state_var(), picker_year_var() ,".zip")
+        paste0("Chart 5- Meningitis", picker_state_var(), picker_year_var(), picker_month_var() ,".zip")
       },
       content = function(fname) {
 
@@ -295,12 +301,12 @@ mod_map_confirmed_meningitis_cases_coverage_annual_data_server <- function(id){
 
     output$downloadChart <- downloadHandler(
       filename = function() {
-        paste0("Chart 10-", picker_state_var(), picker_year_var() ,".png")
+        paste0("Chart 5- Meningitis", picker_state_var(), picker_year_var() , picker_month_var(), ".png")
       },
       content = function(file) {
         owd <- setwd(tempdir())
         on.exit(setwd(owd))
-        saveWidget(mvc_map_leaflet(), "temp.html", selfcontained = FALSE)
+        saveWidget(  map_objects$mvc_map , "temp.html", selfcontained = FALSE)
         webshot("temp.html", file = file, cliprect = "viewport")
         #export(indicator_plot(), file=file)
       }

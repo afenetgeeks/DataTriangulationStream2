@@ -19,7 +19,7 @@ library(DataTriangulationStream2)
 ```
 
 ```{r}
-chart_data <- dplyr::tbl(stream2_pool, "meningitis_coverage_cases_data")%>%
+chart_data <- dplyr::tbl(connection, "meningitis_coverage_cases_data")%>%
               dplyr::filter(Year %in% !!"2021" & Months %in% !!months_vector_util() & State %in% !!"Federal Government")%>%
               collect() %>%
               mutate(Months = lubridate::month(as.Date(str_c(Year, Months, 01,sep = "-"), "%Y-%b-%d"),
@@ -116,7 +116,7 @@ plotmcac <- plotmcac %>% layout(
 
 ```{r}
 
-chart_data <- dplyr::tbl(stream2_pool, "meningitis_cases_age_combined")%>%
+chart_data <- dplyr::tbl(connection, "meningitis_cases_age_combined")%>%
               dplyr::filter(Year %in% !!"2021" & Months %in% !!months_vector_util() & State %in% !!"Federal Government")%>%
               collect() %>% group_by(`Age group`) %>%
         summarise(across(c(Vaccinated,Unvaccinated,Unknown), ~ sum(.x, na.rm = TRUE))) %>%  ungroup() %>% dplyr::collect() %>%

@@ -590,17 +590,3 @@ div.Quick-Tip{
 .leaflet-top {
     top: 318px;
 }
-
-
-.marker-cluster div {
-    width: 16px;!important;
-    height: 16px;!important;
-    margin-left: 5px;!important;
-    margin-top: -13px;!important;
-    text-align: center;!important;
-    border-radius: 15px;!important;
-    display: flex;!important;
-    align-items: center;!important;
-    justify-content: center;!important;
-    font: 8px "Helvetica Neue", Arial, Helvetica, sans-serif;!important;
-}

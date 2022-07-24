@@ -20,7 +20,7 @@ library(DataTriangulationStream2)
 
 
 ```{r}
- chart_data <- dplyr::tbl(stream2_pool, "s6_combined")%>%
+ chart_data <- dplyr::tbl(connection, "s6_combined")%>%
                 dplyr::filter(Year %in% !!"2021" & Months %in% !!months_vector_util() & State %in% !!"Federal Government") %>%
                 dplyr::collect() %>%
                 dplyr::mutate(`Measles coverage` = `Measles coverage`*100,

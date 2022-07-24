@@ -2,7 +2,7 @@
 
 library(DataTriangulationStream2)
 
-lga_from_dhis2 <- dplyr::tbl(stream2_pool, "measles_alt_denominator")  %>%
+lga_from_dhis2 <- dplyr::tbl(connection, "measles_alt_denominator")  %>%
   collect() %>%
   filter(State %in%  unique(State)) %>%
   group_by(State, LGA) %>%

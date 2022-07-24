@@ -102,7 +102,7 @@ mod_inputs_server <- function(id){
 
     observeEvent(input$update >=0,{
 
-      dropdown_inputs$picker_lga_var<- input$picker_lga
+      dropdown_inputs$picker_lga_var    <- input$picker_lga
       dropdown_inputs$picker_year_var   <- input$picker_year
       dropdown_inputs$picker_month_var  <- input$picker_month
       dropdown_inputs$picker_state_var  <- state_selected()

@@ -12,10 +12,10 @@ mod_age_group_of_confirmed_meningitis_cases_by_vaccination_status_ui <- function
   tagList(
 
     div(class = "col-6 col-6-t measles-col",
-        div(class ="column-icon-div measles-column-icon-div",
+        div(class ="column-icon-div meninigits-column-icon-div",
             img(class = "column-icon", src = "www/age-group-vaccination-icon.svg",  height = 40, width = 80, alt="nigeria coat of arms", role="img")),
 
-        HTML("<h6 class = 'column-title'> Chart 2: Age group of confirmed <span class = 'measles-span'>meningitis</span> cases by vaccination status</h6>"),
+        HTML("<h6 class = 'column-title'> Chart 2: Age group of confirmed Meningitis cases by vaccination status</h6>"),
 
         HTML(paste0('<a id="', ns("downloadData"), '" class="btn btn-default shiny-download-link download-data-btn" href="" target="_blank" download>
                       <i class="fa fa-download" aria-hidden="true"></i>

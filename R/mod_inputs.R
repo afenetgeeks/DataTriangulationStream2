@@ -27,14 +27,14 @@ mod_inputs_ui <- function(id, disease){
         div(class = "input-3 input-2-t",pickerInput( ns("picker_state"),label =  span(class = "info-icon-container", "States",
                                                                                       tags$a(class = "info-icon-link", href="#",
                                                                                              img(class = "info-icon", src = "www/info_icon.svg", alt="info-icon"),
-                                                                                             span(class="info-tooltiptext", "State information"))),
+                                                                                             span(class="info-tooltiptext", "You can select only one State at a time. Select 'Federal Government' for National level data."))),
                                                      choices = c(national_util(), sort(states_vector_util())), multiple = F, selected = national_util(),
                                                      options = list(title = "State",`actions-box` = TRUE,size = 10,`selected-text-format` = "count > 2"))),
 
         div(class = "input-3 input-2-t",   pickerInput(inputId = ns("picker_lga"), label = span(class = "info-icon-container", "LGA",
                                                                                                 tags$a(class = "info-icon-link", href="#",
                                                                                                        img(class = "info-icon", src = "www/info_icon.svg", alt="info-icon"),
-                                                                                                       span(class="info-tooltiptext", "LGA information"))),
+                                                                                                       span(class="info-tooltiptext", "You can select only one LGA at a time. Select 'State level data' for State level data."))),
                                                        choices = "State level data" , multiple = F,selected = "State level data",
                                                        options = list(title = "LGA",`actions-box` = TRUE,size = 10, `selected-text-format` = "count > 2"))),
 
@@ -42,7 +42,7 @@ mod_inputs_ui <- function(id, disease){
         div(class = "input-3 input-2-t", pickerInput(ns("picker_year"), label =  span(class = "info-icon-container", "Years",
                                                                                       tags$a(class = "info-icon-link", href="#",
                                                                                              img(class = "info-icon", src = "www/info_icon.svg", alt="info-icon"),
-                                                                                             span(class="info-tooltiptext", "Years information"))),
+                                                                                             span(class="info-tooltiptext", "You can select one or more Years"))),
                                                      choices = years_vector_util(), multiple = T, selected = "2022",
                                                      options = list(title = "Years",`actions-box` = TRUE,size = 10,`selected-text-format` = "count > 2"))),
 
@@ -50,7 +50,7 @@ mod_inputs_ui <- function(id, disease){
         div(class = "input-3 input-2-t",pickerInput(inputId = ns("picker_month"), label = span(class = "info-icon-container", "Months",
                                                                                              tags$a(class = "info-icon-link", href="#",
                                                                                                  img(class = "info-icon", src = "www/info_icon.svg", alt="info-icon"),
-                                                                                                 span(class="info-tooltiptext", "Month information"))),
+                                                                                                 span(class="info-tooltiptext", "You can select one or more Months"))),
                                                         choices =  months_vector_util(), multiple = T, selected = months_vector_util(),
                                                         options = list(title = "Months",`actions-box` = TRUE,size = 10,`selected-text-format` = "count > 2"))),
 

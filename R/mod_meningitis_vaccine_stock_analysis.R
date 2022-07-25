@@ -12,7 +12,7 @@ mod_meningitis_vaccine_stock_analysis_ui <- function(id){
   tagList(
 
     div(class = "col-6 col-6-t measles-col",
-        div(class ="column-icon-div measles-column-icon-div",
+        div(class ="column-icon-div meninigits-column-icon-div",
             img(class = "column-icon", src = "www/vaccination-today-icon.svg",  height = 40, width = 80, alt="nigeria coat of arms", role="img")),
 
         HTML("<h6 class = 'column-title'>Chart 3: Men A vaccine stock analysis & vaccine given</h6>"),
@@ -78,7 +78,7 @@ mod_meningitis_vaccine_stock_analysis_server <- function(id,
       plotM <- plotM %>% add_trace(x = ~Months, y = ~`Doses Wastage Rate`,
                                    type = 'bar',
                                    color = I("#B37064"),
-                                   hovertemplate = paste('<b>Men A Doses Wastage Rate %</b>: %{y:.1f}',
+                                   hovertemplate = paste('<b>Rate %</b>: %{y:.1f}',
                                                          '<br><b style="text-align:left;">Month </b>: %{x}<br>'),
                                    name = 'Men A Doses Wastage Rate',
                                    hoverinfo = "text",
@@ -107,7 +107,7 @@ mod_meningitis_vaccine_stock_analysis_server <- function(id,
                                    marker = list(symbol = I("circle")),
                                    name = 'Men A given',
                                    yaxis = 'y2',
-                                   hovertemplate = paste('<b>Number</b>: %{y:.1f}',
+                                   hovertemplate = paste('<b>Number</b>: %{y:.0f}',
                                                          '<br><b style="text-align:left;">Month </b>: %{x}<br>'),
                                    text = ~scales::number(`doses_given`, big.mark = ",")
 

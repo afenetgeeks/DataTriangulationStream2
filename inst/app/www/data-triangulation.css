@@ -381,7 +381,7 @@ div.Quick-Tip{
 
 .download-chart-btn{
   right: 2px;
-   top: 5px;30
+   top: 5px;
 }
 
 
@@ -511,6 +511,11 @@ div.Quick-Tip{
    background-color: #69e8e1;
 }
 
+.meninigits-column-icon-div{
+  background-color: #d2d2d2;
+
+}
+
 .column-icon{
     width: 29px;
     height: 33px;
@@ -569,6 +574,7 @@ div.Quick-Tip{
     border-radius: 3px;
     text-align: center;
     text-decoration: none;
+    cursor:pointer;
 }
 
 
@@ -581,6 +587,7 @@ div.Quick-Tip{
 #nav a:hover {
   text-decoration: none;
   background-color: #fffff;
+  cursor:pointer;
 }
 
 .leaflet-left {

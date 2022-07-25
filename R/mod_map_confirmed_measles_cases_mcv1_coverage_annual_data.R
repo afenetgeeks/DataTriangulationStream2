@@ -66,7 +66,7 @@ mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_ui <- function(id){
 }
 
 #' map_confirmed_measles_cases_mcv1_coverage_annual_data Server Functions
-#' @importFrom leaflet leaflet renderLeaflet colorFactor addProviderTiles setView addPolygons addMarkers labelOptions addLegend markerClusterOptions leafletProxy
+#' @importFrom leaflet leaflet renderLeaflet colorFactor addProviderTiles setView addPolygons addMarkers labelOptions addLegend markerClusterOptions
 #' @importFrom GADMTools gadm_subset
 #' @importFrom dplyr left_join
 #' @importFrom leaflet.extras addResetMapButton
@@ -174,7 +174,14 @@ mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_server <- function(id)
     })
 
 
+    ###################
+
+
+
+
     mvc_map_leaflet <-  reactive({
+
+      req(picker_state_var(), cancelOutput = T)
 
       pal_mvc <- colorFactor(c('red','yellow','green','#424242'),
                              levels = c("0 - 50%","50 - 85%","85 - 100%", "> 100%"),
@@ -186,7 +193,7 @@ mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_server <- function(id)
           left_join(as.data.frame(stream2_data$dhis2_data), by = c("NAME_1" = "State"))
 
         mvc_map <-  leaflet() %>%
-          addProviderTiles("Stamen.Toner") %>%
+          addProviderTiles("TomTom.Basic") %>%
           setView(lat =  9.077751,lng = 8.6774567, zoom = 6)  %>%
           addPolygons(data = states_gadm_sp_data$spdf,
                       fillColor = ~pal_mvc(states_gadm_sp_data$spdf@data$`Coverage %`),
@@ -222,7 +229,7 @@ mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_server <- function(id)
           left_join(as.data.frame(stream2_data$dhis2_data), by = c("NAME_1" = "State"))
 
         mvc_map <-  leaflet() %>%
-          addProviderTiles("Stamen.Toner") %>%
+          addProviderTiles("TomTom.Basic") %>%
           # setView(lat =  states_gadm_sp_data_state$spdf@data$Lat,
           #         lng = states_gadm_sp_data_state$spdf@data$Long, zoom = 6)  %>%
           addPolygons(data = states_gadm_sp_data_state$spdf,
@@ -266,6 +273,8 @@ mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_server <- function(id)
 
 
     output$mvcMap <-  renderLeaflet({mvc_map_leaflet()})
+
+
 
 
 

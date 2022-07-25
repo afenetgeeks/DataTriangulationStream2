@@ -25,7 +25,7 @@ mod_map_confirmed_meningitis_cases_coverage_annual_data_ui <- function(id){
 
 
 
-        div(class ="column-icon-div measles-column-icon-div",
+        div(class ="column-icon-div meninigits-column-icon-div",
             img(class = "column-icon", src = "www/partially-vaccinated-today-icon.svg",  height = 40, width = 80, alt="nigeria coat of arms", role="img")),
 
         HTML("<h6 class = 'column-title column-title-map'>Chart 5: Confirmed Meningitis cases,Meningitis coverage </h6>"),
@@ -181,22 +181,9 @@ mod_map_confirmed_meningitis_cases_coverage_annual_data_server <- function(id){
     })
 
 
-    output$mvcMap <-  renderLeaflet({
 
 
-      leaflet() %>%
-        addProviderTiles("TomTom.Basic") %>%
-        addResetMapButton()%>%
-        addLegend(colors = make_shapes(colors = colors(), sizes = sizes() , borders = borders() , shapes = shapes()),
-                  labels = make_labels(sizes = sizes(), labels = labels()),
-                  opacity =  0.6, title = "Coverage %", position = "bottomright")
-
-      })
-
-    map_objects <- reactiveValues()
-
-
-    observe({
+    mvc_map_leaflet <-  reactive({
 
       req(picker_state_var(), cancelOutput = T)
 
@@ -209,10 +196,9 @@ mod_map_confirmed_meningitis_cases_coverage_annual_data_server <- function(id){
         states_gadm_sp_data$spdf@data <- states_gadm_sp_data$spdf@data %>%
           left_join(as.data.frame(stream2_data$dhis2_data), by = c("NAME_1" = "State"))
 
-        mvc_map <-   leafletProxy(mapId = "mvcMap") %>%
-          leaflet::clearShapes() %>%
-          leaflet::clearMarkerClusters() %>%
-          setView(lat =  9.077751,lng = 8.6774567, zoom = 6)%>%
+        mvc_map <-  leaflet() %>%
+          addProviderTiles("TomTom.Basic") %>%
+          setView(lat =  9.077751,lng = 8.6774567, zoom = 6)  %>%
           addPolygons(data = states_gadm_sp_data$spdf,
                       fillColor = ~pal_mvc(states_gadm_sp_data$spdf@data$`Coverage %`),
                       stroke = TRUE,
@@ -227,9 +213,13 @@ mod_map_confirmed_meningitis_cases_coverage_annual_data_server <- function(id){
                       labelOptions = labelOptions(
                         textsize = "10px",
                         direction = "auto", noHide = T,textOnly = T
-                      ))
+                      )) %>%
+          addLegend(colors = make_shapes(colors = colors(), sizes = sizes() , borders = borders() , shapes = shapes()),
+                    labels = make_labels(sizes = sizes(), labels = labels()),
+                    opacity =  0.6, title = "Coverage %", position = "bottomright") %>%
+          addResetMapButton()
 
-        map_objects$mvc_map <- add_state_clusters(leaflet_map =  mvc_map,
+        mvc_map <- add_state_clusters(leaflet_map =  mvc_map,
                                       states = str_replace(states_vector_util(),pattern = "Federal Capital Territory",replacement = "Fct"),
                                       data =  stream2_data$sormas_mvc)
 
@@ -242,9 +232,10 @@ mod_map_confirmed_meningitis_cases_coverage_annual_data_server <- function(id){
         states_gadm_sp_data_state$spdf@data <- states_gadm_sp_data_state$spdf@data %>%
           left_join(as.data.frame(stream2_data$dhis2_data), by = c("NAME_1" = "State"))
 
-        map_objects$mvc_map  <-  leaflet::leafletProxy(mapId = "mvcMap")  %>%
-          leaflet::clearShapes() %>%
-          leaflet::clearMarkerClusters() %>%
+        mvc_map <-  leaflet() %>%
+          addProviderTiles("TomTom.Basic") %>%
+          # setView(lat =  states_gadm_sp_data_state$spdf@data$Lat,
+          #         lng = states_gadm_sp_data_state$spdf@data$Long, zoom = 6)  %>%
           addPolygons(data = states_gadm_sp_data_state$spdf,
                       fillColor = ~pal_mvc(states_gadm_sp_data_state$spdf@data$`Coverage %`),
                       stroke = TRUE,
@@ -272,15 +263,20 @@ mod_map_confirmed_meningitis_cases_coverage_annual_data_server <- function(id){
                                                html: '<div style=\"background-color:rgba(78, 224, 237, 0.7)\"><span>' + cluster.getChildCount() + '</div><span>',
                                                className: 'marker-cluster'
                                              });
-                                           }")))
+                                           }"))) %>%
+          addLegend(colors = make_shapes(colors = colors(), sizes = sizes() , borders = borders() , shapes = shapes()),
+                    labels = make_labels(sizes = sizes(), labels = labels()),
+                    opacity =  0.6, title = "Coverage %", position = "bottomright")%>%
+          addResetMapButton()
+
       }
 
-      map_objects$mvc_map
+      mvc_map
 
     })
 
 
-
+    output$mvcMap <-  renderLeaflet({mvc_map_leaflet()})
 
 
     output$downloadData <- downloadHandler(
@@ -306,7 +302,7 @@ mod_map_confirmed_meningitis_cases_coverage_annual_data_server <- function(id){
       content = function(file) {
         owd <- setwd(tempdir())
         on.exit(setwd(owd))
-        saveWidget(  map_objects$mvc_map , "temp.html", selfcontained = FALSE)
+        saveWidget(  mvc_map_leaflet() , "temp.html", selfcontained = FALSE)
         webshot("temp.html", file = file, cliprect = "viewport")
         #export(indicator_plot(), file=file)
       }

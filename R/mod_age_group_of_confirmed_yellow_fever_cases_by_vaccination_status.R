@@ -18,7 +18,7 @@ mod_age_group_of_confirmed_yellow_fever_cases_by_vaccination_status_ui <- functi
         div(class ="column-icon-div yf-column-icon-div",
             img(class = "column-icon", src = "www/age-group-vaccination-icon.svg",  height = 40, width = 80, alt="nigeria coat of arms", role="img")),
 
-        HTML("<h6 class = 'column-title'>Chart 2: Age Group of Confirmed <span class = 'yf-span'>Yellow Fever</span> Cases by Vaccination Status</h6>"),
+        HTML("<h6 class = 'column-title'>Chart 2: Age group of confirmed Yellow Fever cases by vaccination status</h6>"),
 
         HTML(paste0('<a id="', ns("downloadData"), '" class="btn btn-default shiny-download-link download-data-btn" href="" target="_blank" download>
                       <i class="fa fa-download" aria-hidden="true"></i>

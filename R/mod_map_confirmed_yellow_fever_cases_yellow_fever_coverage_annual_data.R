@@ -182,22 +182,7 @@ mod_map_confirmed_yellow_fever_cases_yellow_fever_coverage_annual_data_server <-
 
 
 
-    output$yfcMap = renderLeaflet({
-
-
-      leaflet() %>%
-        addProviderTiles("TomTom.Basic") %>%
-        addResetMapButton()%>%
-        addLegend(colors = make_shapes(colors = colors(), sizes = sizes() , borders = borders() , shapes = shapes()),
-                  labels = make_labels(sizes = sizes(), labels = labels()),
-                  opacity =  0.6, title = "Coverage %", position = "bottomright")
-
-    })
-
-    map_objects <- reactiveValues()
-
-
-    observe({
+    yfc_map_leaflef <-  reactive({
 
       req(picker_state_var(), cancelOutput = T)
 
@@ -206,16 +191,13 @@ mod_map_confirmed_yellow_fever_cases_yellow_fever_coverage_annual_data_server <-
                             na.color = 'red')
 
       if(sum(picker_state_var() == "Federal Government") == 1){
-
-
         states_gadm_sp_data$spdf@data <- states_gadm_sp_data$spdf@data %>%
           left_join(as.data.frame(stream2_data$dhis2_data),
                     by = c("NAME_1" = "State"))
 
-        yfc_map <-   leafletProxy(mapId = "yfcMap") %>%
-          leaflet::clearShapes() %>%
-          leaflet::clearMarkerClusters() %>%
-          setView(lat =  9.077751,lng = 8.6774567, zoom = 6)%>%
+        yfc_map <-  leaflet() %>%
+          addProviderTiles("TomTom.Basic") %>%
+          setView(lat =  9.077751,lng = 8.6774567, zoom = 6) %>%
           addPolygons( data = states_gadm_sp_data$spdf,
                        fillColor = ~pal_yf(states_gadm_sp_data$spdf@data$`Coverage %`),
                        stroke = TRUE,
@@ -229,25 +211,30 @@ mod_map_confirmed_yellow_fever_cases_yellow_fever_coverage_annual_data_server <-
                          textsize = "10px",
                          direction = "auto", noHide = T,textOnly = T
                        )
-          )
+          ) %>%
+          addLegend(colors = make_shapes(colors = colors(), sizes = sizes() , borders = borders() , shapes = shapes()),
+                    labels = make_labels(sizes = sizes(), labels = labels()),
+                    opacity =  0.6, title = "Coverage %", position = "bottomright")%>%
+          addResetMapButton()
 
-        map_objects$yfc_map  <- add_state_clusters(leaflet_map =   yfc_map ,
+        yfc_map  <- add_state_clusters(leaflet_map =   yfc_map ,
                                        states = str_replace(states_vector_util(),pattern = "Federal Capital Territory",replacement = "Fct"),
                                        data =  stream2_data$sormas_yfc)
 
       }
       else{
         states_gadm_sp_data_state <- gadm_subset(states_gadm_sp_data,
-                                           level = 1,
-                                           regions = picker_state_var())
+                                                 level = 1,
+                                                 regions = picker_state_var())
 
         states_gadm_sp_data_state$spdf@data <- states_gadm_sp_data_state$spdf@data %>%
           left_join(as.data.frame(stream2_data$dhis2_data),
                     by = c("NAME_1" = "State"))
 
-        map_objects$yfc_map <-   leafletProxy(mapId = "yfcMap") %>%
-          leaflet::clearShapes() %>%
-          leaflet::clearMarkerClusters() %>%
+        yfc_map <-  leaflet() %>%
+          addProviderTiles("TomTom.Basic") %>%
+          # setView(lat =  states_gadm_sp_data_state$spdf@data$Lat,
+          #         lng = states_gadm_sp_data_state$spdf@data$Long, zoom = 6) %>%
           addPolygons( data = states_gadm_sp_data_state$spdf,
                        fillColor = ~pal_yf(states_gadm_sp_data_state$spdf@data$`Coverage %`),
                        stroke = TRUE,
@@ -256,32 +243,39 @@ mod_map_confirmed_yellow_fever_cases_yellow_fever_coverage_annual_data_server <-
                        fillOpacity = 0.5,
                        fill = T,
                        label = ~paste0("<span>", states_gadm_sp_data_state$spdf@data$NAME_1,"</span>"
-                                       )%>%
+                       )%>%
                          lapply(htmltools::HTML),
-                         labelOptions = labelOptions(
+                       labelOptions = labelOptions(
                          textsize = "10px",
                          direction = "auto", noHide = T,textOnly = T
                        )) %>%
           leaflet::addMarkers(data = stream2_data$sormas_yfc,
-                     lat = ~Lat, lng = ~Long,
+                              lat = ~Lat, lng = ~Long,
 
-                     clusterOptions = markerClusterOptions(maxClusterRadius = 40,
-                                                           showCoverageOnHover = FALSE,
-                                                           singleMarkerMode = TRUE,
-                                                           iconCreateFunction =
-                                                             htmlwidgets::JS("function(cluster) {
+                              clusterOptions = markerClusterOptions(maxClusterRadius = 40,
+                                                                    showCoverageOnHover = FALSE,
+                                                                    singleMarkerMode = TRUE,
+                                                                    iconCreateFunction =
+                                                                      htmlwidgets::JS("function(cluster) {
                                              return new L.DivIcon({
                                                html: '<div style=\"background-color:rgba(78, 224, 237, 0.7)\"><span>' + cluster.getChildCount() + '</div><span>',
                                                className: 'marker-cluster'
                                              });
-                                           }")))
+                                           }"))) %>%
+          addLegend(colors = make_shapes(colors = colors(), sizes = sizes() , borders = borders() , shapes = shapes()),
+                    labels = make_labels(sizes = sizes(), labels = labels()),
+                    opacity =  0.6, title = "Coverage %", position = "bottomright")%>%
+          addResetMapButton()
 
       }
 
-      map_objects$yfc_map
+      yfc_map
 
     })
 
+
+
+    output$yfcMap = renderLeaflet({yfc_map_leaflef()})
 
 
 
@@ -308,7 +302,7 @@ mod_map_confirmed_yellow_fever_cases_yellow_fever_coverage_annual_data_server <-
       content = function(file) {
         owd <- setwd(tempdir())
         on.exit(setwd(owd))
-        saveWidget(map_objects$yfc_map, "temp.html", selfcontained = FALSE)
+        saveWidget(yfc_map_leaflef(), "temp.html", selfcontained = FALSE)
         webshot("temp.html", file = file, cliprect = "viewport")
 
       }

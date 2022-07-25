@@ -13,7 +13,7 @@ mod_meningitis_coverage_confirmed_cases_ui <- function(id){
 
 
     div(class = "col-6 col-6-t yf-col",
-        div(class ="column-icon-div yf-column-icon-div",
+        div(class ="column-icon-div meninigits-column-icon-div",
             img(class = "column-icon", src = "www/partially-vaccinated-today-icon.svg",  height = 40, width = 80, alt="nigeria coat of arms", role="img")),
 
 
@@ -83,7 +83,7 @@ mod_meningitis_coverage_confirmed_cases_server <- function(id,
                                          line = list(shape = 'spline', linetype = I("solid")),
                                          marker = list(symbol = I("circle")),
                                          name = 'Meningitis Coverage (DHIS2)',
-                                         hovertemplate = paste('<b>Meningitis Coverage</b>: %{y:.1f}',
+                                         hovertemplate = paste('<b>Coverage %</b>: %{y:.1f}',
                                                                '<br><b style="text-align:left;">Month </b>: %{x}<br>')
       )
 
@@ -95,7 +95,7 @@ mod_meningitis_coverage_confirmed_cases_server <- function(id,
                                          line = list(shape = 'spline', linetype = I("solid")),
                                          marker = list(symbol = I("circle")),
                                          mode = 'lines+markers', type = 'scatter',
-                                         hovertemplate = paste('<b>Meningitis Alt Denominator %</b>: %{y:.1f}',
+                                         hovertemplate = paste('<b>Coverage %</b>: %{y:.1f}',
                                                                '<br><b style="text-align:left;">Month </b>: %{x}<br>'),
                                          name = 'Meningitis Alt Denominator')
 
@@ -134,8 +134,7 @@ mod_meningitis_coverage_confirmed_cases_server <- function(id,
                                                     fixedrange = TRUE,
                                                     side = 'left',
                                                     title = 'Coverage (%)',
-
-
+                                                    overlaying = "y",
                                                     showgrid = FALSE,
                                                     ticks = "outside",
                                                     zeroline = T,

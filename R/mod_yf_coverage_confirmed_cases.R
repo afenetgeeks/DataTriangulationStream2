@@ -16,7 +16,7 @@ mod_yf_coverage_confirmed_cases_ui <- function(id){
             img(class = "column-icon", src = "www/partially-vaccinated-today-icon.svg",  height = 40, width = 80, alt="nigeria coat of arms", role="img")),
 
 
-        HTML("<h6 class = 'column-title'> Chart 1: Confirmed yellow fever cases, Coverage, Alt denominator</h6>"),
+        HTML("<h6 class = 'column-title'> Chart 1: Confirmed Yellow Fever cases, Coverage, Alt denominator</h6>"),
 
         HTML(paste0('<a id="', ns("downloadData"), '" class="btn btn-default shiny-download-link download-data-btn" href="" target="_blank" download>
                       <i class="fa fa-download" aria-hidden="true"></i>
@@ -80,7 +80,7 @@ mod_yf_coverage_confirmed_cases_server <- function(id,
                                          line = list(shape = 'spline', linetype = I("solid")),
                                          marker = list(symbol = I("circle")),
                                          name = 'Yellow Fever Coverage (DHIS2)',
-                                         hovertemplate = paste('<b>Yellow Fever Coverage</b>: %{y:.1f}',
+                                         hovertemplate = paste('<b>Coverage %</b>: %{y:.1f}',
                                                                '<br><b style="text-align:left;">Month </b>: %{x}<br>')
       )
 
@@ -92,7 +92,7 @@ mod_yf_coverage_confirmed_cases_server <- function(id,
                                          line = list(shape = 'spline', linetype = I("solid")),
                                          marker = list(symbol = I("circle")),
                                          mode = 'lines+markers', type = 'scatter',
-                                         hovertemplate = paste('<b>Yellow Fever Alt Denominator %</b>: %{y:.1f}',
+                                         hovertemplate = paste('<b>Coverage %</b>: %{y:.1f}',
                                                                '<br><b style="text-align:left;">Month </b>: %{x}<br>'),
                                          name = 'Yellow Fever Alt Denominator')
 
@@ -131,9 +131,8 @@ mod_yf_coverage_confirmed_cases_server <- function(id,
                                                     fixedrange = TRUE,
                                                     side = 'left',
                                                     title = 'Coverage (%)',
-
-
-                                                    showgrid = FALSE,
+                                                    overlaying = "y",
+                                                   showgrid = FALSE,
                                                     ticks = "outside",
                                                     zeroline = T,
                                                     showline = TRUE,

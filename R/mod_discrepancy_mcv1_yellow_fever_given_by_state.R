@@ -87,7 +87,7 @@ mod_discrepancy_mcv1_yellow_fever_given_by_state_server <- function(id,
                                          type = 'bar',
                                          color =  I("#00a5cf"),
                                          name = 'Discrepancy %',
-                                         hovertemplate = paste('<b style="text-align:left;>Value</b>: %{y:.0f}',
+                                         hovertemplate = paste('<b>Rate %</b>: %{y:.1f}',
                                                                '<br><b style="text-align:left;">Month </b>: %{x}<br>'))
 
       #
@@ -99,8 +99,8 @@ mod_discrepancy_mcv1_yellow_fever_given_by_state_server <- function(id,
                                          line = list(shape = 'spline', linetype = I("solid")),
                                          marker = list(symbol = I("circle")),
                                          name = 'MCV 1 given',
-                                         hovertemplate = paste('<b>MCV 1 given/b>: %{y:.1f}',
-                                                               '<br><b style="text-align:left;">Months </b>: %{x}<br>'),
+                                         hovertemplate = paste('<b>Number</b>: %{y:.0f}',
+                                                               '<br><b style="text-align:left;">Month </b>: %{x}<br>'),
                                          yaxis = 'y2')
 
       plotmcac <- plotmcac %>% add_trace(x = ~Months,
@@ -110,8 +110,8 @@ mod_discrepancy_mcv1_yellow_fever_given_by_state_server <- function(id,
                                          marker = list(symbol = I("circle")),
                                          mode = 'lines+markers',
                                          type = 'scatter',
-                                         hovertemplate = paste('<b>Yellow Fever given</b>: %{y:.1f}',
-                                                               '<br><b style="text-align:left;">Months </b>: %{x}<br>'),
+                                         hovertemplate = paste('<b>Number</b>: %{y:.0f}',
+                                                               '<br><b style="text-align:left;">Month </b>: %{x}<br>'),
                                          name = 'Yellow Fever given',
                                          yaxis = 'y2')
 
@@ -156,7 +156,7 @@ mod_discrepancy_mcv1_yellow_fever_given_by_state_server <- function(id,
                                                     xanchor = "center",  # use center of legend as anchor
                                                     x = 0.5,
                                                     y = -0.25),
-                                      hoverlabel = list(font = font_plot()),
+                                      hoverlabel = list(font = font_hoverlabel()),
                                       font = font_plot())%>%
         config(displayModeBar = FALSE)
 

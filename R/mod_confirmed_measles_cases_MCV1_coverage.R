@@ -88,7 +88,7 @@ mod_confirmed_measles_cases_MCV1_coverage_server <- function(id,
                                          line = list(shape = 'spline', linetype = I("solid")),
                                          marker = list(symbol = I("circle")),
                                          name = 'MCV 1(DHIS2)',
-                                         hovertemplate = paste('<b>MCV 1</b>: %{y:.1f}',
+                                         hovertemplate = paste('<b>Coverage %</b>: %{y:.1f}',
                                                                '<br><b style="text-align:left;">Month </b>: %{x}<br>')
       )
 
@@ -100,7 +100,7 @@ mod_confirmed_measles_cases_MCV1_coverage_server <- function(id,
                                          line = list(shape = 'spline', linetype = I("solid")),
                                          marker = list(symbol = I("circle")),
                                          name = 'MCV 2(DHIS2)',
-                                         hovertemplate = paste('<b>MCV 2</b>: %{y:.1f}',
+                                         hovertemplate = paste('<b>Coverage %</b>: %{y:.1f}',
                                                                '<br><b style="text-align:left;">Month </b>: %{x}<br>')
       )
 
@@ -111,7 +111,7 @@ mod_confirmed_measles_cases_MCV1_coverage_server <- function(id,
                                          line = list(shape = 'spline', linetype = I("solid")),
                                          marker = list(symbol = I("circle")),
                                          mode = 'lines+markers', type = 'scatter',
-                                         hovertemplate = paste('<b>MCV 1 Alt Denominator %</b>: %{y:.1f}',
+                                         hovertemplate = paste('<b>Coverage %</b>: %{y:.1f}',
                                                                '<br><b style="text-align:left;">Month </b>: %{x}<br>'),
                                          name = 'MCV 1 Alt Denominator')
 
@@ -122,7 +122,7 @@ mod_confirmed_measles_cases_MCV1_coverage_server <- function(id,
                                          line = list(shape = 'spline', linetype = I("solid")),
                                          marker = list(symbol = I("circle")),
                                          mode = 'lines+markers', type = 'scatter',
-                                         hovertemplate = paste('<b>MCV 2 Alt Denominator %</b>: %{y:.1f}',
+                                         hovertemplate = paste('<b>Coverage %</b>: %{y:.1f}',
                                                                '<br><b style="text-align:left;">Month </b>: %{x}<br>'),
                                          name = 'MCV 2 Alt Denominator')
 
@@ -160,9 +160,8 @@ mod_confirmed_measles_cases_MCV1_coverage_server <- function(id,
                                                    fixedrange = TRUE,
                                                    side = 'left',
                                                    title = 'Coverage (%)',
-
-
-                                                   showgrid = FALSE,
+                                                   overlaying = "y",
+                                                  showgrid = FALSE,
                                                    ticks = "outside",
                                                    zeroline = T,
                                                    showline = TRUE,

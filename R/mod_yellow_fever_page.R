@@ -22,8 +22,8 @@ yellow_fever_page <- function(id = "yellow_fever_page", href = "/yellow_fever_pa
                                              heading_font = bslib::font_google("Ubuntu"),
                                              base_font = bslib::font_google("Roboto")),
 
-                    HTML(
-                      "<html>
+        HTML(
+        "<html>
       <head>
       <!-- Place your kit's code here -->
 
@@ -32,8 +32,7 @@ yellow_fever_page <- function(id = "yellow_fever_page", href = "/yellow_fever_pa
       <meta name='viewport' content='width=device-width, initial-scale=1.0'>
 
       </head>
-    </html>"
-                    ),
+    </html>"),
 
         mod_dashboard_heading_ui("dashboard_heading_2"),
 

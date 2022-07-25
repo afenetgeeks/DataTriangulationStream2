@@ -14,7 +14,7 @@ mod_discrepancy_mcv1_men_A_ui <- function(id){
 
 
     div(class = "col-6 col-6-t measles-col",
-        div(class ="column-icon-div measles-column-icon-div",
+        div(class ="column-icon-div meninigits-column-icon-div",
             img(class = "column-icon", src = "www/total-registrations-icon.svg",  height = 40, width = 80, alt="nigeria coat of arms", role="img")),
 
         HTML("<h6 class = 'column-title'>Chart 4: Co-administered Antigen discrepancy: MCV 1 & Men A given</h6>"),
@@ -79,7 +79,7 @@ mod_discrepancy_mcv1_men_A_server <- function(id,
                                          type = 'bar',
                                          color =  I("#00a5cf"),
                                          name = 'Discrepancy %',
-                                         hovertemplate = paste('<b style="text-align:left;>Value</b>: %{y:.0f}',
+                                         hovertemplate = paste('<b>Rate %</b>: %{y:.1f}',
                                                                '<br><b style="text-align:left;">Month </b>: %{x}<br>'))
 
       #
@@ -91,8 +91,8 @@ mod_discrepancy_mcv1_men_A_server <- function(id,
                                          line = list(shape = 'spline', linetype = I("solid")),
                                          marker = list(symbol = I("circle")),
                                          name = 'MCV 1 given',
-                                         hovertemplate = paste('<b>MCV 1 given/b>: %{y:.1f}',
-                                                               '<br><b style="text-align:left;">Months </b>: %{x}<br>'),
+                                         hovertemplate = paste('<b>Number</b>: %{y:.0f}',
+                                                               '<br><b style="text-align:left;">Month </b>: %{x}<br>'),
                                          yaxis = 'y2')
 
       plotmcac <- plotmcac %>% add_trace(x = ~Months,
@@ -102,8 +102,8 @@ mod_discrepancy_mcv1_men_A_server <- function(id,
                                          marker = list(symbol = I("circle")),
                                          mode = 'lines+markers',
                                          type = 'scatter',
-                                         hovertemplate = paste('<b>Men A given</b>: %{y:.1f}',
-                                                               '<br><b style="text-align:left;">Months </b>: %{x}<br>'),
+                                         hovertemplate = paste('<b>Number</b>: %{y:.0f}',
+                                                               '<br><b style="text-align:left;">Month </b>: %{x}<br>'),
                                          name = 'Men A given',
                                          yaxis = 'y2')
 
@@ -148,7 +148,7 @@ mod_discrepancy_mcv1_men_A_server <- function(id,
                                                     xanchor = "center",  # use center of legend as anchor
                                                     x = 0.5,
                                                     y = -0.25),
-                                      hoverlabel = list(font = font_plot()),
+                                      hoverlabel = list(font = font_hoverlabel()),
                                       font = font_plot())%>%
         config(displayModeBar = FALSE)
 

@@ -81,7 +81,7 @@ mod_yellow_fever_vaccine_stock_analysis_yellow_fever_coverage_server <- function
                                      y = ~`Doses Wastage Rate`,
                                      type = 'bar',
                                    color = I("#B37064"),
-                                   hovertemplate = paste('<b>Yellow Fever Doses Wastage Rate %</b>: %{y:.1f}',
+                                   hovertemplate = paste('<b>Rate %</b>: %{y:.1f}',
                                                          '<br><b style="text-align:left;">Month </b>: %{x}<br>'),
                                    name = 'Yellow Fever Doses Wastage Rate',
                                    hoverinfo = "text",

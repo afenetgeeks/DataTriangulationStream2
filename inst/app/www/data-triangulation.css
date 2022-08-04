@@ -1,4 +1,3 @@
-
 .mainHeader {
     background-color: #045d5d;
     height: 50px;
@@ -21,7 +20,7 @@
    color: #ffffff;
    display: block;
    margin: 4px;
-   font: 900 14px/20px "Ubuntu", sans-serif;
+   font: 900 13px/20px "Ubuntu", sans-serif;
    text-align: center;
 }
 
@@ -69,6 +68,7 @@
   }
 
 
+
 .info-icon-container{
    position: relative;
    height: auto;
@@ -96,18 +96,25 @@
 /* Tooltip text */
 .info-icon-container .info-icon-link .info-tooltiptext{
  visibility: hidden;
-  width: 120px;
+ width: 154px;
   background-color: #535353;
   color: #fff;
   text-align: center;
   border-radius: 6px;
-  padding: 5px 0;
+  padding: 5px;
   position: absolute;
   z-index: 1;
   top: 150%;
   left: 78%;
-  margin-left: -60px;
+  margin-left: -76px;
 }
+
+.disease-info{
+    top: -222%;
+    left: 175%;
+    margin-left: -55px;
+}
+
 
 /* Show the tooltip text when you mouse over the tooltip container */
 .info-icon-container .info-icon-link:hover .info-tooltiptext {
@@ -125,7 +132,6 @@
   border-style: solid;
   border-color: transparent transparent #535353 transparent;
 }
-
 
 
 
@@ -195,7 +201,7 @@
 body {
   background-color: #f7f9f9; /* #DCDCDC */
   color: #191919;
-  font: 900 12px/20px "Roboto";
+  font: 12px/20px "Roboto";
   letter-spacing: normal;
   height: auto;
   margin: 0;
@@ -208,14 +214,16 @@ body {
        background-color:#fff;
        border-radius: 5px;
        margin: 35px 4.5px 5px 4.5px;
-       height: 550px;
+       height: 570px;
        width: 98.5%;
        box-shadow: 0 1px 30px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 rgba(0, 0, 0, 0.19);
 }
 
+.col-6 {
+    max-width: 100%;
+}
 
 .map_col {
-  height: 700px;
   padding: 5px;
 }
 
@@ -226,6 +234,11 @@ body {
   margin: 27px 0px 10px 20px;
   padding: 10px;
   font-size: 12px;
+}
+
+
+.column-title-map{
+   margin: 0px 0px 10px 20px;
 }
 
 
@@ -273,6 +286,10 @@ body {
 
 
 @media only screen and (min-width: 768px) {
+
+  #nav a {
+    width: 130px;
+  }
 
    .inputs-div{
     height: 97px;
@@ -363,11 +380,8 @@ div.Quick-Tip{
 
 
 .download-chart-btn{
-
   right: 2px;
    top: 5px;
-
-
 }
 
 
@@ -375,8 +389,7 @@ div.Quick-Tip{
 /* Tooltip text */
 .shiny-download-link .tooltiptext {
   visibility: hidden;
-  width: 180px;
-  height: 40px;
+  width: -webkit-fill-available;
   background-color: #535353;
   color: #fff;
   text-align: center;
@@ -436,7 +449,7 @@ div.Quick-Tip{
   color: #ffffff;
 }
 
-.abbreviations_div  p{
+.abbreviations_div p{
   position: relative;
   padding-left: 10px;
   font-style: italic;
@@ -498,6 +511,11 @@ div.Quick-Tip{
    background-color: #69e8e1;
 }
 
+.meninigits-column-icon-div{
+  background-color: #d2d2d2;
+
+}
+
 .column-icon{
     width: 29px;
     height: 33px;
@@ -506,7 +524,7 @@ div.Quick-Tip{
 }
 
 .measles-span{
-  color: #ff8600;
+  font-weight: bold;
 }
 
 .measles-col{
@@ -514,7 +532,7 @@ div.Quick-Tip{
 }
 
 .yf-span{
- color: #0D8C96;
+ font-weight: bold;
 }
 
 .yf-col{
@@ -543,26 +561,39 @@ div.Quick-Tip{
   margin: 1px;
 }
 
+
+
 #nav a {
     display: block;
     padding: 6px 10px 0 5px;
     font-weight: 700;
     background-color: #dce6f1;
     color: #373a3c;
-    width: 130px;
+    min-width: 70px;
     height: 30px;
     border-radius: 3px;
     text-align: center;
     text-decoration: none;
+    cursor:pointer;
 }
 
 
 #nav ul {
   padding: 0;
+  display: none;
 }
 
 
 #nav a:hover {
   text-decoration: none;
-  background-color: #208682;
+  background-color: #fffff;
+  cursor:pointer;
+}
+
+.leaflet-left {
+    left: 1px;
+}
+
+.leaflet-top {
+    top: 318px;
 }

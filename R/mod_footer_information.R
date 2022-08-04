@@ -13,7 +13,6 @@ mod_footer_information_ui <- function(id){
   tagList(
     div(class="row-page abbreviations_last_updated_div",
         div(class = "abbreviations_div",
-            p("*PMCCs – Post Measles Campaign Coverage Survey"),
             p("*WUENIC - WHO and UNICEF Estimates of National Immunization Coverage"),
             p("*MICS/ NICS - Multiple Indicator Cluster Survey/Nigeria Immunization Coverage Survey"),
             p("*NDHS - National Demographic and Health Survey"),
@@ -22,7 +21,7 @@ mod_footer_information_ui <- function(id){
 
         div(class = "last_updated_div",
             p("Last Updated:"),
-            p("-24/03/2022")
+            p("-15/07/2022")
         )
     ),
 

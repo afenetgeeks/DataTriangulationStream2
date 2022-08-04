@@ -15,46 +15,80 @@
 ##"sans-serif"
 
 
-nav_links <-  tags$ul(id="nav",
-
-                      tags$li( tags$a(href = "#", "Disease"),
-
-                               tags$ul(
-
-                                 tags$li(
-                                   tags$a(href = "/DataTriangulationStream2-disease-filter/", "Measles"),
-                                 ),
-                                 tags$li(
-                                   tags$a(href = "/DataTriangulationStream2-disease-filter/yellow_fever_page", "Yellow Fever"),
-                                 ),
-                                 tags$li(
-                                   tags$a(href = "/DataTriangulationStream2-disease-filter/meningitis_page", "Meningitis"),
-                                 )
-                               )
-                      )
-)
 
 
+nav_links <- function(disease){
+  tags$ul(id="nav",
 
-# nav_links <-  tags$ul(id="nav",
+          tags$li( tags$a(disease),
+
+                   tags$ul(
+
+                     tags$li(
+                       tags$a(href = "/DataTriangulationStream2-disease-filter/", "Measles"),
+                     ),
+                     tags$li(
+                       tags$a(href = "/DataTriangulationStream2-disease-filter/yellow_fever_page", "Yellow Fever"),
+                     ),
+                     tags$li(
+                       tags$a(href = "/DataTriangulationStream2-disease-filter/meningitis_page", "Meningitis"),
+                     )
+                   )
+          )
+  )
+}
+
+loading_screen  <-  function(){
+
+waiter::waiterPreloader(html =  div(waiter::spin_loaders(42, color = "#008686"),
+                                    p("Loading ...", style = "color:gray;"),
+                                    p("Hausa: Sannu da zuwa👋🏿 ..., Yoruba: E kaabọ🙋🏿‍♀ ...,Igbo: Nnọọ 🇳🇬️", style = "color:gray;"),
+
+                                    ),
+                  color = "#eff3f4",
+                  fadeout = 100)
+}
+
+
+
+
+
+# nav_links <- function(disease){
 #
-#                       tags$li( tags$a(href = "#", "Disease"),
 #
-#                                tags$ul(
+#   tags$ul(id="nav",
 #
-#                                  tags$li(
-#                                    tags$a(href = "/", "Measles"),
-#                                  ),
-#                                  tags$li(
-#                                    tags$a(href = "/yellow_fever_page", "Yellow Fever"),
-#                                  ),
-#                                  tags$li(
-#                                    tags$a(href = "/meningitis_page", "Meningitis"),
-#                                  )
-#                                )
-#                       )
-# )
+#           tags$li( tags$a(disease),
+#
+#                    tags$ul(
+#
+#                      tags$li(
+#                        tags$a(href = "/measles_page", "Measles"),
+#                      ),
+#                      tags$li(
+#                        tags$a(href = "/yellow_fever_page", "Yellow Fever"),
+#                      ),
+#                      tags$li(
+#                        tags$a(href = "/meningitis_page", "Meningitis"),
+#                      )
+#                    )
+#           )
+#   )
+# }
 
+
+
+
+chart_label <- function(picker_state_var,picker_lga_var ){
+  if(picker_state_var =="Federal Government"){
+
+    paste(picker_state_var)
+
+  }else{
+
+    paste( picker_state_var , "," ,picker_lga_var)
+  }
+}
 
 
 
@@ -115,6 +149,56 @@ plot_margin <- function(){
 
 plot_margin_one_side <- function(){
   list(r = 81, l = 81)
+}
+
+
+
+
+
+plot_rate_range <- function(min_rate, max_rate){
+
+
+  if(max_rate < 101 ){
+
+    if(min_rate > 0  ){
+      c(0, 100)
+
+    }else{
+
+        c(min_rate + (min_rate/2), 100)
+    }
+
+  }else{
+
+    if(  min_rate > 0 ){
+
+      c(0,  max_rate + (max_rate/ 2))
+
+    }else{
+
+      c( min_rate + (min_rate/2) , max_rate + (max_rate/ 2) )
+    }
+
+  }
+
+
+}
+
+
+
+
+plot_number_range <-  function( min_number, max_number){
+
+
+    if(min_number > 0){
+
+      c(0,  max_number + (max_number/ 2))
+
+      }
+    else{
+      c(min_number + ( min_number/2) , max_number + (max_number/ 2) )
+      }
+
 }
 
 

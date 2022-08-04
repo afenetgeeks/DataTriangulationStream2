@@ -31,7 +31,6 @@ Imports:
     htmlwidgets,
     leaflet,
     leaflet.extras,
-    lubridate,
     magrittr,
     plotly,
     pool,
@@ -44,18 +43,23 @@ Imports:
     shinyMobile,
     shinyWidgets,
     stringr,
+    waiter (>= 0.2.5.9000),
     webshot
 Suggests: 
     knitr,
+    lubridate,
     rmarkdown,
     spelling,
-    testthat
+    testthat (>= 3.0.0)
+VignetteBuilder: 
+    knitr
 Remotes: 
     ColinFay/brochure,
-    tidyverse/dplyr
+    tidyverse/dplyr,
+    JohnCoene/waiter
 Encoding: UTF-8
 Language: en-US
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
-VignetteBuilder: knitr
+Config/testthat/edition: 3

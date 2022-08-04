@@ -8,7 +8,6 @@
 #' @importFrom shiny shinyApp
 #' @importFrom golem with_golem_options
 #' @import brochure
-#'
 
 # run_app <- function(
 #     onStart = NULL,
@@ -45,6 +44,10 @@ run_app <- function(
       measles_page(),
       yellow_fever_page(),
       meningitis_page(),
+      redirect(
+        from = "/measles_page",
+        to = "/"
+      ),
       onStart = onStart,
       options = options,
       enableBookmarking = enableBookmarking,

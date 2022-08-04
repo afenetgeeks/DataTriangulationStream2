@@ -12,19 +12,34 @@ mod_map_confirmed_meningitis_cases_coverage_annual_data_ui <- function(id){
   tagList(
 
 
-    div(class = "col-6 col-6-t measles-col map_col",
-        div(class ="column-icon-div measles-column-icon-div",
+    div(class = "col-12 col-12-t yf-col map_col",
+
+        span(class = "info-icon-container",
+             tags$a(class = "info-icon-link", href="#",
+                    img(class = "info-icon", src = "www/info_icon.svg", alt="info-icon"),
+                    span(class="info-tooltiptext",
+                         p(style="color:#ffffff;font-size:10px;algin:left;", "The blue bubbles represent clusters of meningitis cases in a State. The numbers in each bubble are cases in that cluster"),
+
+                         p(style="color:#ffffff;font-size:10px;algin:left;","Click on a cluster bubble to zoom in a cluster")))),
+
+
+
+
+        div(class ="column-icon-div meninigits-column-icon-div",
             img(class = "column-icon", src = "www/partially-vaccinated-today-icon.svg",  height = 40, width = 80, alt="nigeria coat of arms", role="img")),
 
-        # h6("Chart 10: Confirmed meningitis cases, meningitis 1 coverage (Annual data)", class = "column-title"),
-        HTML("<h6 class = 'column-title'>Chart 10: Confirmed <span class = 'measles-span'>Meningitis</span> cases, <span class = 'measles-span'>Meningitis</span> coverage (Annual data)</h6>"),
+        HTML("<h6 class = 'column-title column-title-map'>Chart 5: Confirmed Meningitis cases,Meningitis coverage </h6>"),
 
 
         div(class = "map_charts_inputs",
 
             pickerInput(inputId = ns("picker_year"), label =  NULL,
-                        choices = years_vector_util(), multiple = F, selected = "2021",
+                        choices = years_vector_util(), multiple = F, selected = "2022",
                         options = list(title = "Years",`actions-box` = TRUE,size = 10,`selected-text-format` = "count > 2")),
+
+            pickerInput(inputId = ns("picker_month"), label =  NULL,
+                        choices = c("Year Data", months_vector_util()), multiple = F, selected = "Year Data",
+                        options = list(title = "Months",`actions-box` = TRUE,size = 10,`selected-text-format` = "count > 2")),
 
             pickerInput(ns("picker_state"),label = NULL,
                         choices = c(national_util(),sort(states_vector_util())), multiple = T,selected = national_util(),
@@ -47,12 +62,7 @@ mod_map_confirmed_meningitis_cases_coverage_annual_data_ui <- function(id){
                       </div>
                      </a>')),
 
-        withSpinner(leafletOutput(ns("mvcMap"), height=440),type = 6, size = 0.4,hide.ui = F),
-        p("Quick guide!!"),
-        tags$i(style="color:#0e7290;font-size:10px", "The blue bubbles represent clusters of meningitis cases in a State. The numbers in each bubble are cases in that cluster"),
-        br(),
-        tags$i(style="color:#0e7290;font-size:10px","Click on a cluster bubble to zoom in a cluster")
-
+        withSpinner(leafletOutput(ns("mvcMap"), height=440),type = 6, size = 0.4,hide.ui = F)
 
     )
   )
@@ -66,55 +76,116 @@ mod_map_confirmed_meningitis_cases_coverage_annual_data_server <- function(id){
 
     ns <- session$ns
 
-    # Map 11 MVC
-
     picker_state_var <- reactive({input$picker_state})
     picker_year_var <- reactive({ input$picker_year})
+    picker_month_var <- reactive({input$picker_month})
+
 
 
     stream2_data<- reactiveValues()
 
     observe({
 
-      if(sum(picker_state_var() == "Federal Government") == 1){
-
-        stream2_data$dhis2_data <- dplyr::tbl(stream2_pool, "meningitis_covarage_annaully_states") %>%
-          filter(Year %in% !!picker_year_var())%>%dplyr::collect() %>%
-          dplyr::mutate(dplyr::across(.col = c(Year,State,`Coverage %`), as.factor),
-                        State = str_replace(State,pattern = "Federal Capital Territory",replacement = "Fct"))
-
-      }
-      else{
-        stream2_data$dhis2_data <- dplyr::tbl(stream2_pool, "meningitis_covarage_annaully_states") %>%
-          filter(Year %in% !!picker_year_var() &
-                   State %in% !!picker_state_var())%>%dplyr::collect() %>%
-          dplyr::mutate(dplyr::across(.col = c(Year,State,`Coverage %`), as.factor),
-                        State = str_replace(State,pattern = "Federal Capital Territory",replacement = "Fct"))
-      }
-
-
-
-
+      req(picker_state_var(), cancelOutput = T)
 
       if(sum(picker_state_var() == "Federal Government") == 1){
-        stream2_data$sormas_mvc <- dplyr::tbl(stream2_pool, "meningitis_plus_lga_latlon_cleaned_final") %>%
-          filter(Year %in% !!picker_year_var()) %>% dplyr::collect()%>%
-          dplyr::mutate(dplyr::across(.col = c(Year,State, LGA), as.factor),
-                        State = str_replace(State,pattern = "Federal Capital Territory",replacement = "Fct"))
+
+        if(sum(picker_month_var() == "Year Data") == 1){
+
+          stream2_data$dhis2_data <- dplyr::tbl(connection, "men_A_coverage_map") %>%
+            filter(Year %in% !!picker_year_var() & Months %in% "Ann" & LGA  %in% "State level data") %>% dplyr::collect() %>%
+            dplyr::mutate(dplyr::across(.col = c(Year,State,`Coverage %`), as.factor),
+                          State = str_replace(State,pattern = "Federal Capital Territory",replacement = "Fct"))
+
+        }else{
+
+          stream2_data$dhis2_data <- dplyr::tbl(connection, "men_A_coverage_map") %>%
+            filter(Year %in% !!picker_year_var() & Months  %in% !!picker_month_var() & LGA  %in% !!"State level data") %>% dplyr::collect() %>%
+            dplyr::mutate(dplyr::across(.col = c(Year,State,`Coverage %`), as.factor),
+                          State = str_replace(State,pattern = "Federal Capital Territory",replacement = "Fct"))
+
+        }
 
       }else{
 
-        stream2_data$sormas_mvc <- dplyr::tbl(stream2_pool, "meningitis_plus_lga_latlon_cleaned_final") %>%
-          filter(Year == !!picker_year_var()&
-                   State %in% !!picker_state_var()) %>% dplyr::collect()%>%
-          dplyr::mutate(dplyr::across(.col = c(Year,State, LGA), as.factor),
-                        State = str_replace(State,pattern = "Federal Capital Territory",replacement = "Fct"))
+        if(sum(picker_month_var() == "Year Data") == 1){
+
+          stream2_data$dhis2_data <- dplyr::tbl(connection, "men_A_coverage_map") %>%
+            filter(Year %in% !!picker_year_var() &
+                     State %in% !!picker_state_var() & Months %in% "Ann" & LGA %in% "State level data")%>%dplyr::collect() %>%
+            dplyr::mutate(dplyr::across(.col = c(Year,State,`Coverage %`), as.factor),
+                          State = str_replace(State,pattern = "Federal Capital Territory",replacement = "Fct"))
+
+        }else{
+
+          stream2_data$dhis2_data <- dplyr::tbl(connection, "men_A_coverage_map") %>%
+            filter(Year %in% !!picker_year_var() &
+                     State %in% !!picker_state_var() & Months %in% !!picker_month_var() & LGA %in% "State level data")%>%dplyr::collect() %>%
+            dplyr::mutate(dplyr::across(.col = c(Year,State,`Coverage %`), as.factor),
+                          State = str_replace(State,pattern = "Federal Capital Territory",replacement = "Fct"))
+
+        }
+
+
 
       }
+
+
+
+      ################
+
+      if(sum(picker_state_var() == "Federal Government") == 1){
+
+        if(sum(picker_month_var() == "Year Data") == 1){
+
+          stream2_data$sormas_mvc <- dplyr::tbl(connection, "meningitis_cases_map") %>%
+            filter(Year %in% !!picker_year_var()) %>% dplyr::collect()%>%
+            dplyr::mutate(dplyr::across(.col = c(Year,State, Months, LGA), as.factor),
+                          State = str_replace(State,pattern = "Federal Capital Territory",replacement = "Fct"))
+
+        }else{
+
+          stream2_data$sormas_mvc <- dplyr::tbl(connection, "meningitis_cases_map") %>%
+            filter(Year %in% !!picker_year_var() & Months %in% !!picker_month_var()) %>%
+            dplyr::collect()%>%
+            dplyr::mutate(dplyr::across(.col = c(Year,State, Months, LGA), as.factor),
+                          State = str_replace(State,pattern = "Federal Capital Territory",replacement = "Fct"))
+
+        }
+
+      }else{
+
+
+        if(sum(picker_month_var() == "Year Data") == 1){
+
+          stream2_data$sormas_mvc <- dplyr::tbl(connection, "meningitis_cases_map") %>%
+            filter(Year == !!picker_year_var()&
+                     State %in% !!picker_state_var() ) %>% dplyr::collect()%>%
+            dplyr::mutate(dplyr::across(.col = c(Year,State, LGA), as.factor),
+                          State = str_replace(State,pattern = "Federal Capital Territory",replacement = "Fct"))
+
+        }else{
+
+          stream2_data$sormas_mvc <- dplyr::tbl(connection, "meningitis_cases_map") %>%
+            filter(Year == !!picker_year_var()&
+                     State %in% !!picker_state_var()  & Months %in% !!picker_month_var()) %>% dplyr::collect()%>%
+            dplyr::mutate(dplyr::across(.col = c(Year,State, LGA), as.factor),
+                          State = str_replace(State,pattern = "Federal Capital Territory",replacement = "Fct"))
+
+        }
+
+
+
+      }
+
     })
 
 
+
+
     mvc_map_leaflet <-  reactive({
+
+      req(picker_state_var(), cancelOutput = T)
 
       pal_mvc <- colorFactor(c('red','yellow','green','#424242'),
                              levels = c("0 - 50%","50 - 85%","85 - 100%", "> 100%"),
@@ -126,7 +197,7 @@ mod_map_confirmed_meningitis_cases_coverage_annual_data_server <- function(id){
           left_join(as.data.frame(stream2_data$dhis2_data), by = c("NAME_1" = "State"))
 
         mvc_map <-  leaflet() %>%
-          addProviderTiles("Stamen.Toner") %>%
+          addProviderTiles("TomTom.Basic") %>%
           setView(lat =  9.077751,lng = 8.6774567, zoom = 6)  %>%
           addPolygons(data = states_gadm_sp_data$spdf,
                       fillColor = ~pal_mvc(states_gadm_sp_data$spdf@data$`Coverage %`),
@@ -162,7 +233,7 @@ mod_map_confirmed_meningitis_cases_coverage_annual_data_server <- function(id){
           left_join(as.data.frame(stream2_data$dhis2_data), by = c("NAME_1" = "State"))
 
         mvc_map <-  leaflet() %>%
-          addProviderTiles("Stamen.Toner") %>%
+          addProviderTiles("TomTom.Basic") %>%
           # setView(lat =  states_gadm_sp_data_state$spdf@data$Lat,
           #         lng = states_gadm_sp_data_state$spdf@data$Long, zoom = 6)  %>%
           addPolygons(data = states_gadm_sp_data_state$spdf,
@@ -211,7 +282,7 @@ mod_map_confirmed_meningitis_cases_coverage_annual_data_server <- function(id){
     output$downloadData <- downloadHandler(
 
       filename = function() {
-        paste0("Chart 10-", picker_state_var(), picker_year_var() ,".zip")
+        paste0("Chart 5- Meningitis", picker_state_var(), picker_year_var(), picker_month_var() ,".zip")
       },
       content = function(fname) {
 
@@ -226,29 +297,17 @@ mod_map_confirmed_meningitis_cases_coverage_annual_data_server <- function(id){
 
     output$downloadChart <- downloadHandler(
       filename = function() {
-        paste0("Chart 10-", picker_state_var(), picker_year_var() ,".png")
+        paste0("Chart 5- Meningitis", picker_state_var(), picker_year_var() , picker_month_var(), ".png")
       },
       content = function(file) {
         owd <- setwd(tempdir())
         on.exit(setwd(owd))
-        saveWidget(mvc_map_leaflet(), "temp.html", selfcontained = FALSE)
+        saveWidget(  mvc_map_leaflet() , "temp.html", selfcontained = FALSE)
         webshot("temp.html", file = file, cliprect = "viewport")
         #export(indicator_plot(), file=file)
       }
     )
 
-
-    # output$download_chart_data <- downloadHandler(
-    #   filename = 'mvc_csvs.zip',
-    #   content = function(fname) {
-    #
-    #     write.csv(stream2_data$dhis2_data, file = "mvc_admin.csv", sep =",")
-    #     write.csv(stream2_data$sormas_mvc, file = "mvc_sormas.csv", sep =",")
-    #
-    #     zip(zipfile=fname, files=c("mvc_admin.csv","mvc_sormas.csv"))
-    #   },
-    #   contentType = "application/zip"
-    # )
 
 
   })

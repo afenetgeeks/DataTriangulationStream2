@@ -18,9 +18,8 @@ mod_age_group_of_confirmed_measles_cases_by_vaccination_status_ui <- function(id
         div(class ="column-icon-div measles-column-icon-div",
             img(class = "column-icon", src = "www/age-group-vaccination-icon.svg",  height = 40, width = 80, alt="nigeria coat of arms", role="img")),
 
-        HTML("<h6 class = 'column-title'> Chart 3: Age Group of Confirmed <span class = 'measles-span'>Measles</span> Cases by Vaccination Status</h6>"),
+        HTML("<h6 class = 'column-title'> Chart 2: Age group of confirmed Measles cases by vaccination status</h6>"),
 
-       #  h6("Chart 3: Age Group of Confirmed Measles Cases by Vaccination Status", class = "column-title"),
        HTML(paste0('<a id="', ns("downloadData"), '" class="btn btn-default shiny-download-link download-data-btn" href="" target="_blank" download>
                       <i class="fa fa-download" aria-hidden="true"></i>
                       <div class = tooltipdiv> <p class="tooltiptext">Download the data for this Chart</p> </div>
@@ -34,7 +33,10 @@ mod_age_group_of_confirmed_measles_cases_by_vaccination_status_ui <- function(id
                           </p>
                       </div>
                      </a>')),
-       withSpinner(plotlyOutput(ns("plot")),type = 6, size = 0.3,hide.ui = F)
+
+       withSpinner(
+         plotlyOutput(ns("plot")),
+         type = 6, size = 0.3,hide.ui = F)
 
     )
 
@@ -49,27 +51,35 @@ mod_age_group_of_confirmed_measles_cases_by_vaccination_status_ui <- function(id
 mod_age_group_of_confirmed_measles_cases_by_vaccination_status_server <-  function(id,
                                                                                    picker_year_var,
                                                                                    picker_month_var,
-                                                                                   picker_state_var){
+                                                                                   picker_state_var,
+                                                                                   picker_lga_var
+                                                                                   ){
+
+  stopifnot(is.reactive(picker_year_var))
+  stopifnot(is.reactive(picker_month_var))
+  stopifnot(is.reactive(picker_state_var))
+  stopifnot(is.reactive(picker_lga_var))
+
+
   moduleServer( id, function(input, output, session){
     ns <- session$ns
 
-    # slide 4
-
     chart_data <- reactive({
 
-      dplyr::tbl(stream2_pool, "mvc_by_age_group")%>%
+      dplyr::tbl(connection, "measles_age_group")%>%
         filter(Year %in% !!picker_year_var() &
                  State %in% !!picker_state_var() &
-                 Months %in%  !!picker_month_var()) %>%group_by(`Age group`) %>%
+                 Months %in%  !!picker_month_var() &
+                 LGA %in% !!picker_lga_var()) %>%group_by(`Age group`) %>%
         summarise(across(c(Vaccinated,Unvaccinated,Unknown), ~ sum(.x, na.rm = TRUE))) %>%  ungroup() %>% dplyr::collect() %>%
-        dplyr::mutate(`Age group` = factor(`Age group`, labels = c("0-8 M", "9-23 M", "24-48 M", "5-9", "10-14", "15-19", "20-24", "25-29", "30-34", ">=35"),
-                                           levels = c("0-8 M", "9-23 M", "24-48 M", "5-9", "10-14", "15-19", "20-24", "25-29", "30-34", ">=35")))
-
+        dplyr::mutate(`Age group` = factor(`Age group`, labels = c("< 9","9 - 59" , "60 - 180","> 180"),
+                                           levels = c("< 9","9 - 59" , "60 - 180","> 180")))
       })
 
 
     indicator_plot <- reactive({
-      p4 <- plot_ly(chart_data(),
+
+      plot <- plot_ly(chart_data(),
                     x = ~`Age group`,
                     y = ~Unknown,
                     hovertemplate = paste('<b>Cases</b>: %{y:.0f}',
@@ -86,23 +96,19 @@ mod_age_group_of_confirmed_measles_cases_by_vaccination_status_server <-  functi
         add_trace(y = ~Vaccinated,
                   hovertemplate = paste('<b>Cases</b>: %{y:.0f}',
                                         '<br><b style="text-align:left;">Age group</b>: %{x}<br>'),
-
                   color = I("#edb952"),
                   name = "Vaccinated") %>%
-        layout(title = list(text = paste(paste0("State: ", picker_state_var()),paste0("Year: ", picker_year_var()), sep = "     "),
-                            font = font_plot_title()),
+
+        layout(title = chart_label(picker_state_var = picker_state_var(),
+                                   picker_lga_var = picker_lga_var()),
                barmode = 'stack',
                xaxis = list(tickfont = font_plot(),
-                            title = "Age group (M- months)",
+                            title = "Age group (in Months)",
                             fixedrange = TRUE,
                             title= font_axis_title(),
                             ticks = "outside",
                             showline = TRUE
                ),
-
-               #width = "auto",
-               # autosize = F,
-
                plot_bgcolor = measles_plot_bgcolor(),
                paper_bgcolor = measles_paper_bgcolor(),
 
@@ -126,10 +132,9 @@ mod_age_group_of_confirmed_measles_cases_by_vaccination_status_server <-  functi
                hoverlabel = list(font = font_hoverlabel()),
                font = font_plot())%>%
         config(displayModeBar = FALSE)
-      # config(modeBarButtons = list(list("toImage", "resetScale2d", "zoomIn2d", "zoomOut2d")),
-      #                              displaylogo = FALSE, toImageButtonOptions = list(filename = "Chart 3- Age Group of Confirmed Measles Cases by Vaccination Status.png"))
 
-      p4
+
+      plot
 
     })
 
@@ -142,7 +147,7 @@ mod_age_group_of_confirmed_measles_cases_by_vaccination_status_server <-  functi
     output$downloadData <- downloadHandler(
 
       filename = function() {
-        paste0("Chart 3-", picker_state_var(), picker_year_var(), picker_month_var()[1] ," - ", picker_month_var()[length(picker_month_var())] ,".csv")
+        paste0("Chart 2- Measles", picker_state_var(), picker_lga_var(), picker_year_var(), picker_month_var()[1] ," - ", picker_month_var()[length(picker_month_var())] ,".csv")
       },
       content = function(file) {
         readr::write_csv(chart_data(), file)
@@ -152,14 +157,14 @@ mod_age_group_of_confirmed_measles_cases_by_vaccination_status_server <-  functi
 
     output$downloadChart <- downloadHandler(
       filename = function() {
-        paste0("Chart 3-", picker_state_var(), picker_year_var(),  picker_month_var()[1] ," - ", picker_month_var()[length(picker_month_var())] ,".png")
+        paste0("Chart 2- Measles", picker_state_var(),picker_lga_var(), picker_year_var(),  picker_month_var()[1] ," - ", picker_month_var()[length(picker_month_var())] ,".png")
       },
       content = function(file) {
         owd <- setwd(tempdir())
         on.exit(setwd(owd))
         saveWidget(indicator_plot(), "temp.html", selfcontained = FALSE)
         webshot("temp.html", file = file, cliprect = "viewport")
-        #export(indicator_plot(), file=file)
+
       }
     )
 

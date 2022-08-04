@@ -1,0 +1,14 @@
+name: DataTriangulationStream2-dev
+title: DataTriangulationStream2-dev
+username:
+account: afenetgeeks
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 6685808
+bundleId: 6138755
+url: https://afenetgeeks.shinyapps.io/DataTriangulationStream2-dev/
+when: 1658934533.71347
+lastSyncTime: 1658934533.71349
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: tests/spelling.R|tests/testthat/test-golem-recommended.R|tests/testthat.R|vignettes/maps.Rmd|vignettes/meningitis-backend.Rmd|vignettes/wastage-rate.Rmd|vignettes/year-filter.Rmd

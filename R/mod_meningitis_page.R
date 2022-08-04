@@ -23,6 +23,10 @@ meningitis_page <- function(id = "meningitis_page", href = "/meningitis_page") {
               </html>"
             ),
 
+            loading_screen(),
+
+
+
         mod_dashboard_heading_ui("dashboard_heading_3"),
 
         mod_inputs_ui("inputs_3", disease = "Meningitis"),

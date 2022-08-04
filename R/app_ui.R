@@ -1,6 +1,6 @@
 #' The application User-Interface
 
-webshot::install_phantomjs(version = "2.1.1", force = FALSE)
+#webshot::install_phantomjs(version = "2.1.1", force = FALSE)
 
 
 #' Add external Resources to the Application
@@ -23,9 +23,12 @@ golem_add_external_resources <- function(){
     bundle_resources(
       path = app_sys('app/www'),
       app_title = 'DataTriangulationStream2'
-    )
+    ),
+    waiter::useWaiter()
+
     # Add here other external resources
     # for example, you can add shinyalert::useShinyalert()
+
   )
 }
 

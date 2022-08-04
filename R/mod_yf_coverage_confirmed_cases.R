@@ -46,6 +46,12 @@ mod_yf_coverage_confirmed_cases_server <- function(id,
                                                    picker_month_var,
                                                    picker_state_var,
                                                    picker_lga_var){
+
+  stopifnot(is.reactive(picker_year_var))
+  stopifnot(is.reactive(picker_month_var))
+  stopifnot(is.reactive(picker_state_var))
+  stopifnot(is.reactive(picker_lga_var))
+
   moduleServer( id, function(input, output, session){
 
     ns <- session$ns
@@ -65,7 +71,7 @@ mod_yf_coverage_confirmed_cases_server <- function(id,
 
     indicator_plot <- reactive({
 
-      min_max_rate <- range(chart_data()$`Disease Coverage`,na.rm = T)
+      min_max_rate <- range(chart_data()$`Disease Alt Denominator`,na.rm = T)
 
       min_max_number <-  range(chart_data()$`Disease Cases`,na.rm = T)
 

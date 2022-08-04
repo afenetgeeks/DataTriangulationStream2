@@ -54,10 +54,15 @@ mod_age_group_of_confirmed_measles_cases_by_vaccination_status_server <-  functi
                                                                                    picker_state_var,
                                                                                    picker_lga_var
                                                                                    ){
+
+  stopifnot(is.reactive(picker_year_var))
+  stopifnot(is.reactive(picker_month_var))
+  stopifnot(is.reactive(picker_state_var))
+  stopifnot(is.reactive(picker_lga_var))
+
+
   moduleServer( id, function(input, output, session){
     ns <- session$ns
-
-    # slide 4
 
     chart_data <- reactive({
 

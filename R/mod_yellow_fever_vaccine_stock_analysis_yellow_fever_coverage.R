@@ -49,6 +49,13 @@ mod_yellow_fever_vaccine_stock_analysis_yellow_fever_coverage_server <- function
                                                                                  picker_state_var,
                                                                                  picker_lga_var
                                                                                  ){
+
+  stopifnot(is.reactive(picker_year_var))
+  stopifnot(is.reactive(picker_month_var))
+  stopifnot(is.reactive(picker_state_var))
+  stopifnot(is.reactive(picker_lga_var))
+
+
   moduleServer( id, function(input, output, session){
     ns <- session$ns
 

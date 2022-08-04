@@ -59,11 +59,7 @@ mod_national_measles_coverage_different_sources_ui <- function(id){
 #' @importFrom webshot webshot
 #'
 #' @noRd
-mod_national_measles_coverage_different_sources_server <- function(id,
-                                                                   picker_year_var,
-                                                                   picker_month_var,
-                                                                   picker_state_var
-                                                                   ){
+mod_national_measles_coverage_different_sources_server <- function(id){
 
 
   moduleServer( id, function(input, output, session){
@@ -75,7 +71,7 @@ mod_national_measles_coverage_different_sources_server <- function(id,
     chart_data <- reactive({
         dplyr::tbl(connection, "mcv_different_sources") %>%
         dplyr::collect() %>%
-        mutate(as.numeric(Year))
+        mutate(Year = as.numeric(Year))
 
       })
 

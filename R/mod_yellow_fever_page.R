@@ -34,6 +34,11 @@ yellow_fever_page <- function(id = "yellow_fever_page", href = "/yellow_fever_pa
       </head>
     </html>"),
 
+        loading_screen(),
+
+
+
+
         mod_dashboard_heading_ui("dashboard_heading_2"),
 
         mod_inputs_ui("inputs_2",disease = "Yellow Fever"),
@@ -52,12 +57,7 @@ yellow_fever_page <- function(id = "yellow_fever_page", href = "/yellow_fever_pa
 
         mod_map_confirmed_yellow_fever_cases_yellow_fever_coverage_annual_data_ui("map_confirmed_yellow_fever_cases_yellow_fever_coverage_annual_data_1"),
 
-
-
-
-        mod_footer_information_ui("footer_information_2")
-
-        ),
+        mod_footer_information_ui("footer_information_2") ),
         # mod_home_ui(id = id),
         # nav_links,
         # mod_simple_plot_ui(id)

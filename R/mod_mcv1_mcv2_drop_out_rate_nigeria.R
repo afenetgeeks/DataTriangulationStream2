@@ -48,6 +48,12 @@ mod_mcv1_mcv2_drop_out_rate_nigeria_server <- function(id,
                                                        picker_state_var,
                                                        picker_lga_var
                                                        ){
+
+  stopifnot(is.reactive(picker_year_var))
+  stopifnot(is.reactive(picker_month_var))
+  stopifnot(is.reactive(picker_state_var))
+  stopifnot(is.reactive(picker_lga_var))
+
   moduleServer( id, function(input, output, session){
 
     ns <- session$ns

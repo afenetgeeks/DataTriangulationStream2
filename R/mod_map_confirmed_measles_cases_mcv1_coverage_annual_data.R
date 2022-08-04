@@ -41,7 +41,7 @@ mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_ui <- function(id){
 
             pickerInput(ns("picker_state"),label = NULL,
                         choices = c(national_util(),sort(states_vector_util())), multiple = T,selected = national_util(),
-                        options = list(title = "State",`actions-box` = TRUE,size = 10,`selected-text-format` = "count > 2")),
+                        options = list(title = "State",`actions-box` = TRUE,size = 10,`selected-text-format` = "count > 2"))
 
         ),
 
@@ -146,7 +146,6 @@ mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_server <- function(id)
           dplyr::collect()%>%
           dplyr::mutate(dplyr::across(.col = c(Year,State, Months, LGA), as.factor),
                         State = str_replace(State,pattern = "Federal Capital Territory",replacement = "Fct"))
-
         }
 
       }else{
@@ -175,8 +174,6 @@ mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_server <- function(id)
 
 
     ###################
-
-
 
 
     mvc_map_leaflet <-  reactive({

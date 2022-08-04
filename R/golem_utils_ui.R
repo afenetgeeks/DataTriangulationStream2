@@ -38,6 +38,16 @@ nav_links <- function(disease){
   )
 }
 
+loading_screen  <-  function(){
+
+waiter::waiterPreloader(html =  div(waiter::spin_loaders(42, color = "#008686"),
+                                    p("Loading ...", style = "color:gray;"),
+                                    p("Hausa: Sannu da zuwa👋🏿 ..., Yoruba: E kaabọ🙋🏿‍♀ ...,Igbo: Nnọọ 🇳🇬️", style = "color:gray;"),
+
+                                    ),
+                  color = "#eff3f4",
+                  fadeout = 100)
+}
 
 
 

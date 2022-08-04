@@ -54,6 +54,12 @@ mod_confirmed_measles_cases_MCV1_coverage_server <- function(id,
                                                              picker_lga_var
                                                             ){
 
+  stopifnot(is.reactive(picker_year_var))
+  stopifnot(is.reactive(picker_month_var))
+  stopifnot(is.reactive(picker_state_var))
+  stopifnot(is.reactive(picker_lga_var))
+
+
   moduleServer( id, function(input, output, session){
 
     ns <- session$ns
@@ -73,7 +79,7 @@ mod_confirmed_measles_cases_MCV1_coverage_server <- function(id,
 
     indicator_plot <- reactive({
 
-       min_max_rate <- range(chart_data()$`MCV 1`,na.rm = T)
+       min_max_rate <- range(chart_data()$`MCV 1 Alt Denominator`,na.rm = T)
 
        min_max_number <-  range(chart_data()$`Measles Cases (CaseBased)`,na.rm = T)
 

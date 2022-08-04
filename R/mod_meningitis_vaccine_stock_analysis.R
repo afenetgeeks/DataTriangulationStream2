@@ -45,6 +45,12 @@ mod_meningitis_vaccine_stock_analysis_server <- function(id,
                                                          picker_month_var,
                                                          picker_state_var,
                                                          picker_lga_var){
+
+  stopifnot(is.reactive(picker_year_var))
+  stopifnot(is.reactive(picker_month_var))
+  stopifnot(is.reactive(picker_state_var))
+  stopifnot(is.reactive(picker_lga_var))
+
   moduleServer( id, function(input, output, session){
 
     ns <- session$ns

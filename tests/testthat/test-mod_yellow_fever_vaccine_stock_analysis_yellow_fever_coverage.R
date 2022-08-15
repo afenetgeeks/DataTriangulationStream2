@@ -1,5 +1,5 @@
 test_that("Data from database has constant column names", {
-  testServer(mod_yellow_fever_vaccine_stock_analysis_yellow_fever_coverage_server,
+  shiny::testServer(mod_yellow_fever_vaccine_stock_analysis_yellow_fever_coverage_server,
              args = list(picker_year_var = reactive("2022"),
                          picker_month_var = reactive(months_vector_util()),
                          picker_state_var = reactive(national_util()),

@@ -1,0 +1,21 @@
+---
+title: "Integrated systems"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Integrated systems}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+
+options(rmarkdown.html_vignette.check_title = FALSE)
+```
+
+```{r setup}
+library(DataTriangulationStream2)
+```

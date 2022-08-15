@@ -9,6 +9,7 @@
 
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+[![R-CMD-check](https://github.com/amanyiraho/DataTriangulationStream2/workflows/R-CMD-check/badge.svg)](https://github.com/amanyiraho/DataTriangulationStream2/actions)
 <!-- badges: end -->
 
 ## Overview

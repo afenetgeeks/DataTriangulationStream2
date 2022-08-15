@@ -1,15 +1,11 @@
-#' measles_vaccine_stock_analysis_measles_coverage UI Function
+#' Create shiny module UI side for chart 3
 #'
-#' @description A shiny Module slide 6
+#' @description `mod_measles_vaccine_stock_analysis_measles_coverage_ui()`
+#' Creates a shiny Module UI of MCV stock analysis & MCV (1 & 2) given
+#'  currently chart 3
 #'
-#' @param id,input,output,session Internal parameters for {shiny}.
+#' @inherit mod_confirmed_measles_cases_MCV1_coverage_ui return
 #'
-#' @noRd
-#'
-#' @importFrom shiny NS tagList
-#' @importFrom shinyMobile f7Shadow f7Col f7Card f7DownloadButton
-#' @importFrom plotly plotlyOutput
-#' @importFrom shinycssloaders withSpinner
 #'
 mod_measles_vaccine_stock_analysis_measles_coverage_ui <- function(id){
   ns <- NS(id)
@@ -41,11 +37,13 @@ mod_measles_vaccine_stock_analysis_measles_coverage_ui <- function(id){
   )
 }
 
-#' measles_vaccine_stock_analysis_measles_coverage Server Functions
-#' @importFrom plotly renderPlotly plot_ly  add_trace layout config
-#' @importFrom dplyr collect tbl mutate arrange filter across
+#' Create shiny module server side for chart 3
 #'
-#' @noRd
+#' @description `mod_measles_vaccine_stock_analysis_measles_coverage_server()`
+#'  Creates a shiny Module for the server of MCV stock analysis & MCV (1 & 2) given
+#'  currently chart 3
+#'
+#' @inherit mod_confirmed_measles_cases_MCV1_coverage_server return params
 mod_measles_vaccine_stock_analysis_measles_coverage_server <- function(id,
                                                                        picker_year_var,
                                                                        picker_month_var,

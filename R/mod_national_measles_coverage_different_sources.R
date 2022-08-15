@@ -1,15 +1,11 @@
-#' national_measles_coverage_different_sources UI Function
+#' Create shiny module UI side for chart 6
 #'
-#' @description A shiny Module. slide 1
+#' @description `mod_national_measles_coverage_different_sources_ui()`
+#' Creates a shiny Module UI of National MCV coverage (%) by different sources
+#'  currently chart 6
 #'
-#' @param id,input,output,session Internal parameters for {shiny}.
+#' @inherit mod_confirmed_measles_cases_MCV1_coverage_ui return
 #'
-#' @noRd
-#'
-#' @importFrom shiny NS tagList
-#' @importFrom plotly plotlyOutput
-#' @importFrom shinycssloaders withSpinner
-#' @importFrom htmlwidgets saveWidget
 mod_national_measles_coverage_different_sources_ui <- function(id){
   ns <- NS(id)
   tagList(
@@ -49,24 +45,23 @@ mod_national_measles_coverage_different_sources_ui <- function(id){
   )
 }
 
-#' The application server-side
+
+#' Create shiny module server side for chart 6
+#'
+#' @description `mod_national_measles_coverage_different_sources_server()`
+#'  Creates a shiny Module for the server of National MCV coverage (%) by different sources
+#'  currently chart 6
+#'
+#' @inherit mod_confirmed_measles_cases_MCV1_coverage_server return
+#' @param id,input,output,session Internal parameters for {shiny}.
 #'
 
-
-#' national_measles_coverage_different_sources Server Functions
-#' @importFrom dplyr collect tbl mutate arrange filter across group_by summarise ungroup
-#' @importFrom plotly renderPlotly plot_ly  add_trace layout config add_annotations export
-#' @importFrom webshot webshot
-#'
-#' @noRd
 mod_national_measles_coverage_different_sources_server <- function(id){
 
 
   moduleServer( id, function(input, output, session){
 
     ns <- session$ns
-
-    # slide 1
 
     chart_data <- reactive({
         dplyr::tbl(connection, "mcv_different_sources") %>%
@@ -255,7 +250,7 @@ indicator_plot <- reactive({
         on.exit(setwd(owd))
         saveWidget(indicator_plot(), "temp.html", selfcontained = FALSE)
         webshot("temp.html", file = file, cliprect = "viewport")
-        #export(indicator_plot(), file=file)
+
       }
     )
 

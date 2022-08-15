@@ -1,15 +1,11 @@
-#' map_confirmed_measles_cases_mcv1_coverage_annual_data UI Function
+#' Create shiny module UI side for Chart 7 for Measles and chart 5 (Yellow and Meningitis )
 #'
-#' @description A shiny Module. slide 11
+#' @description `mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_ui()`
+#' Creates a shiny Module UI of map of confirmed Measles cases, MCV 1 coverage
+#'  currently chart 7
 #'
-#' @param id,input,output,session Internal parameters for {shiny}.
+#' @inherit mod_confirmed_measles_cases_MCV1_coverage_ui return
 #'
-#' @noRd
-#'
-#' @importFrom shiny NS tagList
-#' @importFrom shinyMobile f7Shadow f7Col f7Card f7DownloadButton
-#' @importFrom leaflet leafletOutput
-#' @importFrom shinycssloaders withSpinner
 mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_ui <- function(id){
   ns <- NS(id)
   tagList(
@@ -65,12 +61,16 @@ mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_ui <- function(id){
   )
 }
 
-#' map_confirmed_measles_cases_mcv1_coverage_annual_data Server Functions
-#' @importFrom leaflet leaflet renderLeaflet colorFactor addProviderTiles setView addPolygons addMarkers labelOptions addLegend markerClusterOptions
-#' @importFrom GADMTools gadm_subset
-#' @importFrom dplyr left_join
-#' @importFrom leaflet.extras addResetMapButton
-#' @noRd
+#' Create shiny module server side for chart 7 and chart 5 (Yellow and Meningitis )
+#'
+#' @description `mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_server()`
+#'  Creates a shiny Module for the server of map of confirmed Measles cases, MCV 1 coverage
+#'  currently chart 7
+#'
+#' @inherit mod_confirmed_measles_cases_MCV1_coverage_server return
+#' @param id,input,output,session Internal parameters for {shiny}.
+#'
+#'
 mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_server <- function(id){
   moduleServer( id, function(input, output, session){
 

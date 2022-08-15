@@ -1,12 +1,6 @@
-#' map_confirmed_meningitis_cases_coverage_annual_data UI Function
+#' @rdname mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_ui
 #'
-#' @description A shiny Module.
 #'
-#' @param id,input,output,session Internal parameters for {shiny}.
-#'
-#' @noRd
-#'
-#' @importFrom shiny NS tagList
 mod_map_confirmed_meningitis_cases_coverage_annual_data_ui <- function(id){
   ns <- NS(id)
   tagList(
@@ -68,9 +62,10 @@ mod_map_confirmed_meningitis_cases_coverage_annual_data_ui <- function(id){
   )
 }
 
-#' map_confirmed_meningitis_cases_coverage_annual_data Server Functions
+
+#' @rdname mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_server
 #'
-#' @noRd
+#'
 mod_map_confirmed_meningitis_cases_coverage_annual_data_server <- function(id){
   moduleServer( id, function(input, output, session){
 
@@ -304,7 +299,7 @@ mod_map_confirmed_meningitis_cases_coverage_annual_data_server <- function(id){
         on.exit(setwd(owd))
         saveWidget(  mvc_map_leaflet() , "temp.html", selfcontained = FALSE)
         webshot("temp.html", file = file, cliprect = "viewport")
-        #export(indicator_plot(), file=file)
+        
       }
     )
 

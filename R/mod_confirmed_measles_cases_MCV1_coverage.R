@@ -1,15 +1,14 @@
-#' confirmed_measles_cases_MCV1_coverage UI Function
+#' Create shiny module UI side for chart 1
 #'
-#' @description A shiny Module for slide 3
+#' @description `mod_confirmed_measles_cases_MCV1_coverage_ui()`
+#' Creates a shiny Module UI of Confirmed Measles cases,MCV 1 coverage,Alt denominator
+#'  currently chart 1
 #'
-#' @param id,input,output,session Internal parameters for {shiny}.
-#'
-#' @noRd
+#' @return A shiny UI Module
 #'
 #' @importFrom shiny NS tagList
-#' @importFrom shinyMobile f7Shadow f7Col f7Card f7DownloadButton
-#' @importFrom plotly plotlyOutput
-#' @importFrom shinycssloaders withSpinner
+
+
 mod_confirmed_measles_cases_MCV1_coverage_ui <- function(id){
   ns <- NS(id)
   tagList(
@@ -41,12 +40,18 @@ mod_confirmed_measles_cases_MCV1_coverage_ui <- function(id){
 }
 
 
-#' confirmed_measles_cases_MCV1_coverage Server Functions
-#' @importFrom plotly renderPlotly plot_ly  add_trace layout config
-#' @importFrom dplyr collect tbl mutate arrange filter across
-#' @import future
-#' @import promises
-#' @noRd
+#' Create shiny module server side for chart 1
+#'
+#' @description `mod_confirmed_measles_cases_MCV1_coverage_server()`
+#'  Creates a shiny Module for the server of Confirmed Measles cases,MCV 1 coverage,Alt denominator
+#'  currently chart 1
+#'
+#' @return A shiny server Module
+#' @param id,input,output,session Internal parameters for {shiny}.
+#' @param picker_year_var,picker_month_var,picker_state_var,picker_lga_var  the selected reactive values from `mod_inputs Module`
+#'  for picker_year, picker_month, picker_state, picker_lga respectively
+#'
+
 mod_confirmed_measles_cases_MCV1_coverage_server <- function(id,
                                                              picker_year_var,
                                                              picker_month_var,
@@ -225,7 +230,7 @@ mod_confirmed_measles_cases_MCV1_coverage_server <- function(id,
         on.exit(setwd(owd))
         saveWidget(indicator_plot(), "temp.html", selfcontained = FALSE)
         webshot("temp.html", file = file, cliprect = "viewport")
-        #export(indicator_plot(), file=file)
+        
       }
     )
 

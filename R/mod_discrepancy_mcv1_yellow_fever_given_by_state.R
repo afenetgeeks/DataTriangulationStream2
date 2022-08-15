@@ -1,15 +1,11 @@
-#' discrepancy_mcv1_yellow_fever_given_by_state UI Function
+#' Create shiny module UI side for chart 4
 #'
-#' @description
+#' @description `mod_discrepancy_mcv1_yellow_fever_given_by_state_ui()`
+#' Creates a shiny Module UI of  Co-administered antigen discrepancy: MCV 1 & Yellow Fever given
+#'  currently chart 4
 #'
-#' @param id,input,output,session Internal parameters for {shiny}.
+#' @inherit mod_confirmed_measles_cases_MCV1_coverage_ui return
 #'
-#' @noRd
-#'
-#' @importFrom shiny NS tagList
-#' @importFrom shinyMobile f7Shadow f7Col f7Card f7DownloadButton
-#' @importFrom plotly plotlyOutput
-#' @importFrom shinycssloaders withSpinner
 mod_discrepancy_mcv1_yellow_fever_given_by_state_ui <- function(id){
   ns <- NS(id)
   tagList(
@@ -42,13 +38,14 @@ mod_discrepancy_mcv1_yellow_fever_given_by_state_ui <- function(id){
   )
 }
 
-#' discrepancy_mcv1_yellow_fever_given_by_state Server Functions
+#' Create shiny module server side for chart 4
 #'
-#' @importFrom plotly renderPlotly plot_ly  add_trace layout config
-#' @importFrom dplyr collect tbl mutate arrange filter across
-#' @importFrom forcats fct_reorder
+#' @description `mod_discrepancy_mcv1_yellow_fever_given_by_state_server()`
+#'  Creates a shiny Module for the server of Co-administered antigen discrepancy: MCV 1 & Yellow Fever given
+#'  currently chart 4
 #'
-#' @noRd
+#' @inherit mod_confirmed_measles_cases_MCV1_coverage_server return params
+#'
 mod_discrepancy_mcv1_yellow_fever_given_by_state_server <- function(id,
                                                                     picker_year_var,
                                                                     picker_month_var,

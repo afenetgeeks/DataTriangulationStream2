@@ -1,12 +1,6 @@
-#' age_group_of_confirmed_meningitis_cases_by_vaccination_status UI Function
+#' @rdname mod_age_group_of_confirmed_measles_cases_by_vaccination_status_ui
 #'
-#' @description A shiny Module.
-#'
-#' @param id,input,output,session Internal parameters for {shiny}.
-#'
-#' @noRd
-#'
-#' @importFrom shiny NS tagList
+
 mod_age_group_of_confirmed_meningitis_cases_by_vaccination_status_ui <- function(id){
   ns <- NS(id)
   tagList(
@@ -39,9 +33,8 @@ mod_age_group_of_confirmed_meningitis_cases_by_vaccination_status_ui <- function
   )
 }
 
-#' age_group_of_confirmed_meningitis_cases_by_vaccination_status Server Functions
-#'
-#' @noRd
+#' @rdname mod_age_group_of_confirmed_measles_cases_by_vaccination_status_server
+
 mod_age_group_of_confirmed_meningitis_cases_by_vaccination_status_server <- function(id,
                                                                                      picker_year_var,
                                                                                      picker_month_var,
@@ -164,7 +157,7 @@ mod_age_group_of_confirmed_meningitis_cases_by_vaccination_status_server <- func
         on.exit(setwd(owd))
         saveWidget(indicator_plot(), "temp.html", selfcontained = FALSE)
         webshot("temp.html", file = file, cliprect = "viewport")
-        #export(indicator_plot(), file=file)
+        
       }
     )
 

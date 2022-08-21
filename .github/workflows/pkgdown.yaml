@@ -1,8 +1,5 @@
 # Workflow derived from https://github.com/r-lib/actions/tree/master/examples
 # Need help debugging build failures? Start at https://github.com/r-lib/actions#where-to-find-help
-
-name: Data-Triangulation CI
-
 on:
   push:
     branches: [main, master]
@@ -23,7 +20,6 @@ jobs:
       DBPWD :  ${{ secrets.DBPWD }}
       DBHOST :  ${{ secrets.DBHOST }}
       database_name :  ${{ secrets.database_name }}
-
     steps:
       - uses: actions/checkout@v2
 

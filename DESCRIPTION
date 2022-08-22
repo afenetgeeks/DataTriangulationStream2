@@ -13,8 +13,8 @@ Description: The Nigeria Routine Immunization (RI) & Vaccine Preventable
     information required for decision making at the national and
     sub-national levels.
 License: MIT + file LICENSE
-URL: https://github.com/amanyiraho/DataTriangulationStream2
-BugReports: https://github.com/amanyiraho/DataTriangulationStream2/issues
+URL: https://github.com/afenetgeeks/DataTriangulationStream2
+BugReports: https://github.com/afenetgeeks/DataTriangulationStream2/issues
 Depends: 
     R (>= 2.10)
 Imports: 

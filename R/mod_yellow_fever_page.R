@@ -1,20 +1,9 @@
 
+#' @rdname measles_page
+yellow_fever_page <- function() {
+  id <- "yellow_fever_page"
+  href <-  "/yellow_fever_page"
 
-#' Page Functions
-#'
-#' @noRd
-#' @importFrom brochure page
-#'
-# connect_sql_db
-#'
-#' @description A fct function
-#'
-#' @return The return value, if any, from executing the function.
-#'
-#' @noRd
-#' @importFrom RMariaDB MariaDB
-#' @importFrom pool dbPool
-yellow_fever_page <- function(id = "yellow_fever_page", href = "/yellow_fever_page") {
   page(
     href = href,
 
@@ -36,12 +25,9 @@ yellow_fever_page <- function(id = "yellow_fever_page", href = "/yellow_fever_pa
 
         loading_screen(),
 
-
-
-
         mod_dashboard_heading_ui("dashboard_heading_2"),
 
-        mod_inputs_ui("inputs_2",disease = "Yellow Fever"),
+        mod_inputs_ui("inputs_2",disease = disease_list_util()$yellow_fever_page),
 
         div(class = "row-page",
             mod_yf_coverage_confirmed_cases_ui("yf_coverage_confirmed_cases_1"),

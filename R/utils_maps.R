@@ -41,7 +41,7 @@ make_shapes <- function(colors, sizes, borders, shapes) {
   paste0(colors, "; width:", sizes, "px; height:", sizes, "px; border:3px solid ", borders, "; border-radius:", shapes)
 }
 
-#####
+#
 
 make_labels <- function(sizes, labels) {
 
@@ -52,7 +52,10 @@ make_labels <- function(sizes, labels) {
 
 
 
-## Creating  add_state_clusters function to create clusters at state level.
+#' Create case clusters at state level.
+#'
+#' @description
+#' `add_state_clusters()` creates clusters for each state level
 
 
 add_state_clusters <- function(leaflet_map, data, states){

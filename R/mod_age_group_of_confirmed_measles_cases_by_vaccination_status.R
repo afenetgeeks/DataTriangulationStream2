@@ -1,15 +1,11 @@
-#' age_group_of_confirmed_measles_cases_by_vaccination_status UI Function
+#' Create shiny module UI side for chart 2
 #'
-#' @description A shiny Module. slide 4
+#' @description `mod_age_group_of_confirmed_measles_cases_by_vaccination_status_ui()`
+#' Creates a shiny Module UI of confirmed age group of disease cases vaccination status
+#'  currently chart 2
 #'
-#' @param id,input,output,session Internal parameters for {shiny}.
+#' @inherit mod_confirmed_measles_cases_MCV1_coverage_ui return
 #'
-#' @noRd
-#'
-#' @importFrom shiny NS tagList
-#' @importFrom shinyMobile f7Shadow f7Col f7Card f7DownloadButton
-#' @importFrom plotly plotlyOutput
-#' @importFrom shinycssloaders withSpinner
 mod_age_group_of_confirmed_measles_cases_by_vaccination_status_ui <- function(id){
   ns <- NS(id)
   tagList(
@@ -43,18 +39,20 @@ mod_age_group_of_confirmed_measles_cases_by_vaccination_status_ui <- function(id
   )
 }
 
-#' age_group_of_confirmed_measles_cases_by_vaccination_status Server Functions
-#' @importFrom plotly renderPlotly plot_ly  add_trace layout config
-#' @importFrom dplyr collect tbl mutate arrange filter across group_by summarise ungroup
+#' Create shiny module server side for chart 2
 #'
-#' @noRd
+#' @description `mod_age_group_of_confirmed_measles_cases_by_vaccination_status_server()`
+#'  Creates a shiny Module for the server of confirmed age group of disease cases vaccination status
+#'  currently chart 2
+#'
+#' @inherit mod_confirmed_measles_cases_MCV1_coverage_server return params
+#'
 mod_age_group_of_confirmed_measles_cases_by_vaccination_status_server <-  function(id,
                                                                                    picker_year_var,
                                                                                    picker_month_var,
                                                                                    picker_state_var,
                                                                                    picker_lga_var
                                                                                    ){
-
   stopifnot(is.reactive(picker_year_var))
   stopifnot(is.reactive(picker_month_var))
   stopifnot(is.reactive(picker_state_var))

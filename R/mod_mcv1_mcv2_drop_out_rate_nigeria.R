@@ -1,14 +1,11 @@
-#' mcv1_mcv2_drop_out_rate_nigeria UI Function
+#' Create shiny module UI side for chart 5
 #'
-#' @description A shiny Module slide 8 -----
+#' @description `mod_mcv1_mcv2_drop_out_rate_nigeria_ui()`
+#' Creates a shiny Module UI of MCV 1, MCV 2 coverage & drop out rate
+#'  currently chart 5
 #'
-#' @param id,input,output,session Internal parameters for {shiny}.
+#' @inherit mod_confirmed_measles_cases_MCV1_coverage_ui return
 #'
-#' @noRd
-#'
-#' @importFrom shiny NS tagList
-#' @importFrom plotly plotlyOutput
-#' @importFrom shinycssloaders withSpinner
 mod_mcv1_mcv2_drop_out_rate_nigeria_ui <- function(id){
   ns <- NS(id)
   tagList(
@@ -38,10 +35,14 @@ mod_mcv1_mcv2_drop_out_rate_nigeria_ui <- function(id){
   )
 }
 
-#' mcv1_mcv2_drop_out_rate_nigeria Server Functions
-#' @importFrom plotly renderPlotly plot_ly  add_trace layout config
-#' @importFrom dplyr collect tbl mutate arrange filter across
-#' @noRd
+#' Create shiny module server side for chart 5
+#'
+#' @description `mod_mcv1_mcv2_drop_out_rate_nigeria_server()`
+#'  Creates a shiny Module for the server of confirmed age group of disease cases vaccination status
+#'  currently chart 5
+#'
+#' @inherit mod_confirmed_measles_cases_MCV1_coverage_server return params
+#'
 mod_mcv1_mcv2_drop_out_rate_nigeria_server <- function(id,
                                                        picker_year_var,
                                                        picker_month_var,

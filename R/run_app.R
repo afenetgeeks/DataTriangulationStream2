@@ -9,26 +9,6 @@
 #' @importFrom golem with_golem_options
 #' @import brochure
 
-# run_app <- function(
-#     onStart = NULL,
-#     options = list(),
-#     enableBookmarking = NULL,
-#     ...
-# ) {
-#   with_golem_options(
-#     app = brochureApp(
-#       # Putting the resources here
-#       golem_add_external_resources(),
-#       measles_page(),
-#       yellow_fever_page(),
-#       meningitis_page(),
-#       onStart = onStart,
-#       options = options,
-#       enableBookmarking = enableBookmarking
-#     ),
-#     golem_opts = list(...)
-#   )
-# }
 
 
 run_app <- function(

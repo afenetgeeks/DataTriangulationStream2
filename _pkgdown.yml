@@ -10,16 +10,20 @@ navbar:
     articles:
       text: Articles
       menu:
+      - text: The whole system
+        href: articles/the-whole-system.html
       - text: Data sources
-        href: articles/a1.html
-      - text: Remote Database
-        href: articles/a2.html
-      - text: The Dashboard
-        href: articles/b1.html
+        href: articles/data-sources.html
+      - text: Remote database
+        href: articles/remote-database.html
+      - text: The actual dashboard
+        href: articles/the-actual-dashboard.html
       - text: Integrated Systems
-        href: articles/b2.html
-      - text: Future Developers
-        href: articles/b3.html
+        href: articles/integrated-systems.html
+      - text: Future developers
+        href: articles/future-developers.html
+
+
 
 home:
   sidebar:
@@ -28,16 +32,6 @@ home:
       custom:
         title: Funding
         text: List of Funders
-
-reference:
-- title: "How to use the Dashboard"
-  desc: >
-    Functions for installing Spark components and managing
-    connections to Spark
-  contents:
-  - run_app
-
-
 news:
   releases:
   - text: "Version 1.0.0"

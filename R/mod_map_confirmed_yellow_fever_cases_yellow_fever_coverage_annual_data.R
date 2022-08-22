@@ -1,13 +1,6 @@
-#' map_confirmed_yellow_fever_cases_yellow_fever_coverage_annual_data UI Function
+#' @rdname mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_ui
 #'
-#' @description A shiny Module.
 #'
-#' @param id,input,output,session Internal parameters for {shiny}.
-#'
-#' @noRd
-#'
-#' @importFrom shiny NS tagList
-#' @importFrom leaflet leafletOutput
 mod_map_confirmed_yellow_fever_cases_yellow_fever_coverage_annual_data_ui <- function(id){
   ns <- NS(id)
   tagList(
@@ -64,11 +57,8 @@ mod_map_confirmed_yellow_fever_cases_yellow_fever_coverage_annual_data_ui <- fun
  )
 }
 
-#' map_confirmed_yellow_fever_cases_yellow_fever_coverage_annual_data Server Functions
-#' @importFrom leaflet leaflet renderLeaflet colorFactor addProviderTiles setView addPolygons addMarkers labelOptions addLegend markerClusterOptions
-#' @importFrom stringr str_replace
-#' @importFrom leaflet.extras addResetMapButton
-#' @noRd
+#' @rdname mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_server
+#'
 mod_map_confirmed_yellow_fever_cases_yellow_fever_coverage_annual_data_server <- function(id ){
 
   moduleServer( id, function(input, output, session){

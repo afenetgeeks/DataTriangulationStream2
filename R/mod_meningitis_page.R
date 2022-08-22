@@ -1,9 +1,12 @@
 
-#' Page Functions
+#' @rdname measles_page
 #'
-#' @noRd
-#' @importFrom brochure page
-meningitis_page <- function(id = "meningitis_page", href = "/meningitis_page") {
+meningitis_page <- function() {
+
+  id <- "meningitis_page"
+
+  href <-  "/meningitis_page"
+
   page(
     href = href,
     ui = fluidPage( theme =  bslib::bs_theme(version = 4,
@@ -29,7 +32,7 @@ meningitis_page <- function(id = "meningitis_page", href = "/meningitis_page") {
 
         mod_dashboard_heading_ui("dashboard_heading_3"),
 
-        mod_inputs_ui("inputs_3", disease = "Meningitis"),
+        mod_inputs_ui("inputs_3", disease = disease_list_util()$meningitis_page),
 
         div(class = "row-page",
             mod_meningitis_coverage_confirmed_cases_ui("meningitis_coverage_confirmed_cases_1"),
@@ -43,15 +46,9 @@ meningitis_page <- function(id = "meningitis_page", href = "/meningitis_page") {
 
         ),
 
-
       mod_map_confirmed_meningitis_cases_coverage_annual_data_ui("map_confirmed_meningitis_cases_coverage_annual_data_1"),
 
-
-
         mod_footer_information_ui("mod_footer_information_3")
-        # mod_home_ui(id = id),
-        # nav_links,
-        # mod_simple_plot_ui(id)
       ),
 
     server = function(input, output, session) {
@@ -84,8 +81,7 @@ meningitis_page <- function(id = "meningitis_page", href = "/meningitis_page") {
                                     picker_lga_var   = reactive({dropdown_inputs$picker_lga_var}))
 
 
-
-mod_map_confirmed_meningitis_cases_coverage_annual_data_server("map_confirmed_meningitis_cases_coverage_annual_data_1")
+  mod_map_confirmed_meningitis_cases_coverage_annual_data_server("map_confirmed_meningitis_cases_coverage_annual_data_1")
 
     }
   )

@@ -1,14 +1,6 @@
-#' yellow_fever_vaccine_stock_analysis_yellow_fever_coverage UI Function
+
+#' @rdname mod_measles_vaccine_stock_analysis_measles_coverage_ui
 #'
-#' @description A shiny Module.
-#'
-#' @param id,input,output,session Internal parameters for {shiny}.
-#'
-#' @noRd
-#'
-#' @importFrom shiny NS tagList
-#' @importFrom plotly plotlyOutput
-#' @importFrom shinycssloaders withSpinner
 mod_yellow_fever_vaccine_stock_analysis_yellow_fever_coverage_ui <- function(id){
   ns <- NS(id)
   tagList(
@@ -39,10 +31,8 @@ mod_yellow_fever_vaccine_stock_analysis_yellow_fever_coverage_ui <- function(id)
   )
 }
 
-#' yellow_fever_vaccine_stock_analysis_yellow_fever_coverage Server Functions
-#' @importFrom plotly renderPlotly plot_ly  add_trace layout config
-#' @importFrom dplyr collect tbl mutate arrange filter across
-#' @noRd
+#' @rdname mod_measles_vaccine_stock_analysis_measles_coverage_server
+#'
 mod_yellow_fever_vaccine_stock_analysis_yellow_fever_coverage_server <- function(id,
                                                                                  picker_year_var,
                                                                                  picker_month_var,
@@ -215,7 +205,7 @@ mod_yellow_fever_vaccine_stock_analysis_yellow_fever_coverage_server <- function
         on.exit(setwd(owd))
         saveWidget(indicator_plot(), "temp.html", selfcontained = FALSE)
         webshot("temp.html", file = file, cliprect = "viewport")
-        #export(indicator_plot(), file=file)
+        
       }
     )
 

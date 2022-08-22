@@ -6,3 +6,5 @@
 .Renviron
 docs
 inst/doc
+/doc/
+/Meta/

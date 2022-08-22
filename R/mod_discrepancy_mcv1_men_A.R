@@ -1,12 +1,5 @@
-#' discrepancy_mcv1_men_A UI Function
+#'@rdname mod_discrepancy_mcv1_yellow_fever_given_by_state_ui
 #'
-#' @description A shiny Module.
-#'
-#' @param id,input,output,session Internal parameters for {shiny}.
-#'
-#' @noRd
-#'
-#' @importFrom shiny NS tagList
 mod_discrepancy_mcv1_men_A_ui <- function(id){
   ns <- NS(id)
   tagList(
@@ -40,9 +33,8 @@ mod_discrepancy_mcv1_men_A_ui <- function(id){
 }
 
 
-#' discrepancy_mcv1_men_A Server Functions
+#' @rdname mod_discrepancy_mcv1_yellow_fever_given_by_state_server
 #'
-#' @noRd
 mod_discrepancy_mcv1_men_A_server <- function(id,
                                               picker_year_var,
                                               picker_month_var,

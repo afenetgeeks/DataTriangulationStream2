@@ -1,12 +1,6 @@
-#' yf_coverage_confirmed_cases UI Function
+#' @rdname mod_confirmed_measles_cases_MCV1_coverage_ui
 #'
-#' @description A shiny Module.
 #'
-#' @param id,input,output,session Internal parameters for {shiny}.
-#'
-#' @noRd
-#'
-#' @importFrom shiny NS tagList
 mod_yf_coverage_confirmed_cases_ui <- function(id){
   ns <- NS(id)
   tagList(
@@ -38,9 +32,9 @@ mod_yf_coverage_confirmed_cases_ui <- function(id){
   )
 }
 
-#' yf_coverage_confirmed_cases Server Functions
+#' @rdname mod_confirmed_measles_cases_MCV1_coverage_server
 #'
-#' @noRd
+
 mod_yf_coverage_confirmed_cases_server <- function(id,
                                                    picker_year_var,
                                                    picker_month_var,
@@ -196,7 +190,7 @@ mod_yf_coverage_confirmed_cases_server <- function(id,
         on.exit(setwd(owd))
         saveWidget(indicator_plot(), "temp.html", selfcontained = FALSE)
         webshot("temp.html", file = file, cliprect = "viewport")
-        #export(indicator_plot(), file=file)
+        
       }
     )
 

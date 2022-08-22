@@ -1,12 +1,5 @@
-#' meningitis_coverage_confirmed_cases UI Function
+#' @rdname mod_confirmed_measles_cases_MCV1_coverage_ui
 #'
-#' @description A shiny Module.
-#'
-#' @param id,input,output,session Internal parameters for {shiny}.
-#'
-#' @noRd
-#'
-#' @importFrom shiny NS tagList
 mod_meningitis_coverage_confirmed_cases_ui <- function(id){
   ns <- NS(id)
   tagList(
@@ -41,9 +34,9 @@ mod_meningitis_coverage_confirmed_cases_ui <- function(id){
   )
 }
 
-#' meningitis_coverage_confirmed_cases Server Functions
+#' @rdname mod_confirmed_measles_cases_MCV1_coverage_server
 #'
-#' @noRd
+#'
 mod_meningitis_coverage_confirmed_cases_server <- function(id,
                                                            picker_year_var,
                                                            picker_month_var,

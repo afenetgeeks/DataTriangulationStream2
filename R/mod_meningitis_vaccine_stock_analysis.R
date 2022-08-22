@@ -1,12 +1,6 @@
-#' meningitis_vaccine_stock_analysis UI Function
+#' @rdname mod_measles_vaccine_stock_analysis_measles_coverage_ui
 #'
-#' @description A shiny Module.
 #'
-#' @param id,input,output,session Internal parameters for {shiny}.
-#'
-#' @noRd
-#'
-#' @importFrom shiny NS tagList
 mod_meningitis_vaccine_stock_analysis_ui <- function(id){
   ns <- NS(id)
   tagList(
@@ -37,9 +31,9 @@ mod_meningitis_vaccine_stock_analysis_ui <- function(id){
   )
 }
 
-#' meningitis_vaccine_stock_analysis Server Functions
+#' @rdname mod_measles_vaccine_stock_analysis_measles_coverage_server
 #'
-#' @noRd
+#'
 mod_meningitis_vaccine_stock_analysis_server <- function(id,
                                                          picker_year_var,
                                                          picker_month_var,

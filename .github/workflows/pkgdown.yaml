@@ -16,6 +16,10 @@ jobs:
     runs-on: ubuntu-latest
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      DBUSER : ${{ secrets.DBUSER }}
+      DBPWD :  ${{ secrets.DBPWD }}
+      DBHOST :  ${{ secrets.DBHOST }}
+      database_name :  ${{ secrets.database_name }}
     steps:
       - uses: actions/checkout@v2
 

@@ -1,6 +1,6 @@
 
 test_that("Data from database has constant column names", {
-  testServer(mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_server, {
+  shiny::testServer(mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_server, {
 
     session$setInputs(picker_state = national_util(),
                       picker_year =  "2022",

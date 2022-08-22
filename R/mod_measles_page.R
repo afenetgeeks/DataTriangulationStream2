@@ -1,21 +1,30 @@
 
-#' Page Functions
+#' Create a Measles/ Yellow Fever/ Meningitis page
 #'
-#' @noRd
-#' @importFrom brochure page
+#' @description
 #'
-#' @import shiny
-#' @importFrom RMariaDB MariaDB
-#' @importFrom dplyr collect tbl mutate arrange filter across ungroup
-#' @importFrom readr read_csv
-#' @importFrom GADMTools gadm_sp_loadCountries
-#' @importFrom stringr str_c
-#' @importFrom magrittr %>%
+#' `measles_page()` creates the measles page
 #'
+#' `yellow_fever_page()` creates the yellow fever page
+#'
+#' `meningitis_page()` creates the meningitis page
+#'
+#' @details
+#' Since the output is a Brochure page that means the ui and server function are defined in the page
+#'  and hence contains code for the UI and server of the page
+#'
+#' @returns A Brochure Page
 #'
 #'
 
-measles_page <- function(id = "measles_page", href = "/") {
+
+measles_page <- function() {
+
+  id <- "measles_page"
+
+  href <- "/"
+
+
   page(
 
     href = href,
@@ -42,7 +51,7 @@ measles_page <- function(id = "measles_page", href = "/") {
 
         mod_dashboard_heading_ui("dashboard_heading_ui_1"),
 
-        mod_inputs_ui("inputs_1",disease = "Measles"),
+        mod_inputs_ui("inputs_1",disease = disease_list_util()$measles_page),
 
         div(class = "row-page",
             mod_confirmed_measles_cases_MCV1_coverage_ui("confirmed_measles_cases_MCV1_coverage_1"),
@@ -68,21 +77,18 @@ measles_page <- function(id = "measles_page", href = "/") {
         mod_footer_information_ui("footer_information_1")
 
         ),
-        # mod_home_ui(id = id),
-        # nav_links,
-        # mod_simple_plot_ui(id)
 
     server = function(input, output, session) {
 
       dropdown_inputs <- mod_inputs_server("inputs_1")
-
-      mod_confirmed_measles_cases_MCV1_coverage_server("confirmed_measles_cases_MCV1_coverage_1",
-                                                       picker_year_var = reactive({dropdown_inputs$picker_year_var}),
-                                                       picker_month_var = reactive({dropdown_inputs$picker_month_var}),
-                                                       picker_state_var = reactive({dropdown_inputs$picker_state_var}),
-                                                       picker_lga_var   = reactive({dropdown_inputs$picker_lga_var})
-                                                      )
-
+#
+#       mod_confirmed_measles_cases_MCV1_coverage_server("confirmed_measles_cases_MCV1_coverage_1",
+#                                                        picker_year_var = reactive({dropdown_inputs$picker_year_var}),
+#                                                        picker_month_var = reactive({dropdown_inputs$picker_month_var}),
+#                                                        picker_state_var = reactive({dropdown_inputs$picker_state_var}),
+#                                                        picker_lga_var   = reactive({dropdown_inputs$picker_lga_var})
+#                                                       )
+#
 #    mod_age_group_of_confirmed_measles_cases_by_vaccination_status_server("age_group_of_confirmed_measles_cases_by_vaccination_status_1",
 #                                                                          picker_year_var = reactive({dropdown_inputs$picker_year_var}),
 #                                                                          picker_month_var = reactive({dropdown_inputs$picker_month_var}),
@@ -104,14 +110,14 @@ measles_page <- function(id = "measles_page", href = "/") {
 #                                               picker_lga_var   = reactive({dropdown_inputs$picker_lga_var})
 #                                               )
 #
-#        mod_discrepancy_mcv1_yellow_fever_given_by_state_server("discrepancy_mcv1_yellow_fever_given_by_state_1",
-#                                                                picker_year_var = reactive({dropdown_inputs$picker_year_var}),
-#                                                                picker_month_var = reactive({dropdown_inputs$picker_month_var}),
-#                                                                picker_state_var = reactive({dropdown_inputs$picker_state_var}),
-#                                                                picker_lga_var   = reactive({dropdown_inputs$picker_lga_var})
-#        )
-#
-  mod_national_measles_coverage_different_sources_server("national_measles_coverage_different_sources_1")
+       mod_discrepancy_mcv1_yellow_fever_given_by_state_server("discrepancy_mcv1_yellow_fever_given_by_state_1",
+                                                               picker_year_var = reactive({dropdown_inputs$picker_year_var}),
+                                                               picker_month_var = reactive({dropdown_inputs$picker_month_var}),
+                                                               picker_state_var = reactive({dropdown_inputs$picker_state_var}),
+                                                               picker_lga_var   = reactive({dropdown_inputs$picker_lga_var})
+       )
+
+#  mod_national_measles_coverage_different_sources_server("national_measles_coverage_different_sources_1")
 #
 # mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_server("map_confirmed_measles_cases_mcv1_coverage_annual_data_1")
 

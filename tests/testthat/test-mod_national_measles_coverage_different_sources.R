@@ -1,5 +1,5 @@
 test_that("Data from database has constant column names", {
-  testServer(mod_national_measles_coverage_different_sources_server, {
+  shiny::testServer(mod_national_measles_coverage_different_sources_server, {
 
                            expect_equal(chart_data() %>% names(),
                                          #dplyr::tbl(connection, "mcv_different_sources")%>%head(1) %>% collect() %>% names(),

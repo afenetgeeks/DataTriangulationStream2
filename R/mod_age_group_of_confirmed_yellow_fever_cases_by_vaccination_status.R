@@ -1,15 +1,6 @@
-#' age_group_of_confirmed_yellow_fever_cases_by_vaccination_status UI Function
+#' @rdname mod_age_group_of_confirmed_measles_cases_by_vaccination_status_ui
 #'
-#' @description A shiny Module
-#'
-#' @param id,input,output,session Internal parameters for {shiny}.
-#'
-#' @noRd
-#'
-#' @importFrom shiny NS tagList
-#' @importFrom shinyMobile f7Shadow f7Col f7Card f7DownloadButton
-#' @importFrom plotly plotlyOutput
-#' @importFrom shinycssloaders withSpinner
+
 mod_age_group_of_confirmed_yellow_fever_cases_by_vaccination_status_ui <- function(id){
   ns <- NS(id)
   tagList(
@@ -39,13 +30,8 @@ mod_age_group_of_confirmed_yellow_fever_cases_by_vaccination_status_ui <- functi
   )
 }
 
-#' age_group_of_confirmed_yellow_fever_cases_by_vaccination_status Server Functions
-#'
-#' @param id,input,output,session Internal parameters for {shiny}.
-#' @param picker_year_var,picker_month_var,picker_state_var Selected parameters from the inputs
-#' @importFrom dplyr collect tbl mutate arrange filter across group_by summarise ungroup
-#'
-#' @noRd
+#' @rdname mod_age_group_of_confirmed_measles_cases_by_vaccination_status_server
+
 mod_age_group_of_confirmed_yellow_fever_cases_by_vaccination_status_server <- function(id,
                                                                                        picker_year_var,
                                                                                        picker_month_var,

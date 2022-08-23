@@ -19,3 +19,69 @@ knitr::opts_chunk$set(
 ```{r setup}
 library(DataTriangulationStream2)
 ```
+
+
+
+You can install the development version of DataTriangulationStream2 from [GitHub](https://github.com/) with:
+
+``` r
+# install.packages("devtools")
+devtools::install_github("afenetgeeks/DataTriangulationStream2")
+```
+
+
+## Process of the Dashboard development 
+
+First, the dashboard was built using R shiny and hosted on the shinyapps.io servers the Rstudio hosting services, then the app url was used to integrate into the 3 platforms using an iframe.
+
+
+
+You'll still need to render `README.Rmd` regularly, to keep `README.md` up-to-date. `devtools::build_readme()` is handy for this. You could also use GitHub Actions to re-render `README.Rmd` every time you push. An example workflow can be found here: <https://github.com/r-lib/actions/tree/v1/examples>.
+
+
+In that case, don't forget to commit and push the resulting figure files, so they display on GitHub and CRAN.
+
+
+### 1.	Data sources
+
+The data sources used for this project are:
+
+1.	DHIS2 National instance: 
+
+- This is aggregated data and is collected via the web-api and it's updated monthly
+
+
+2.	SORMAS (NCDC)
+
+- This is case based data and each row is a case.
+
+3.	Other sources available as csv files for the alternative denominator 
+
+
+### 2.	Remote database 
+
+The remote database is a cloud based SQL database that was aimed to store the combined data from Dhis2 and SORMAS for provide high scalability and reliability of the dashboard even if one of the data sources is down.
+
+The remote database is an Aurora MySQL database. 
+
+
+#### 2 i). Anto-update database cloud server 
+
+This is a cloud server,which automatically pulls the data from `Dhis2` and combines it with `SORMAS` data, `alternative denominator` data and then update the remote Database this is done once a month.
+
+This is a server on AWS, it has Kubernetes (eks) which uses the docker containerized image to automatically pull the data from Dhis2 and update the remote Database.
+The Kubernetes Cronjobs were used to achieve the automation. The image is stored on the Aws ecr (Elastic Container Registry). 
+To Build the Kubernetes cluster terraform was used to keep track of infrastructure as code.
+Connecting to the Kubernetes cluster was done via aws cli and kubectl. 
+The R scripts in the images are described below under R code and scripts section.
+
+
+
+### 3.	RStudio servers to host the dashboard.
+
+Based on the dashboard architecture, deploying the dashboard on RStudio hosting services i.e., shinyapps.io was the best choice to use because about 70% (Note this number can change depending on the server configurations) of the users won’t need to pull data from the remote database directly, For example if they access the dashboard in the same time frame like of 5 minutes (Note this number can change depending on the server configurations) the remaining 30% users will pull the data directly from the database and therefore improving speed and performance.
+
+
+### 4.	Integration without systems 
+
+Since the dashboard is web-based technology, it gives us the ability to integrate with most of the already existing systems i.e `Dhis2`, `SORMAS`, and `MSDAT`  via an iframe since they also web-based technologies.

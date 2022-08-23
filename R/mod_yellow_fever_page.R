@@ -23,7 +23,7 @@ yellow_fever_page <- function() {
       </head>
     </html>"),
 
-        loading_screen(),
+       # loading_screen(),
 
         mod_dashboard_heading_ui("dashboard_heading_2"),
 

@@ -26,7 +26,7 @@ meningitis_page <- function() {
               </html>"
             ),
 
-            loading_screen(),
+       #     loading_screen(),
 
 
 

@@ -10,7 +10,8 @@ vignette: >
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  echo = F
 )
 
 options(rmarkdown.html_vignette.check_title = FALSE)
@@ -19,3 +20,62 @@ options(rmarkdown.html_vignette.check_title = FALSE)
 ```{r setup}
 library(DataTriangulationStream2)
 ```
+
+### How everything connects
+
+The end product **(the dashboard)** has several systems that make it fast, reliable even when the main data sources (Dhis2 or SORMAS) are down. 
+
+**Below is a figure to illustrate how the whole system works starting from the data sources to final integrated systems** 
+
+
+```{r whole-system,fig.cap = "The whole system",  out.width = '90%'}
+knitr::include_graphics("figures/whole-system.png")
+```
+
+
+
+```{r key-of-whole-system,fig.cap = "The key of the whole system", out.width = '90%'}
+knitr::include_graphics("figures/key-of-whole-system.png")
+```
+
+
+**The whole system is made up of the:**
+
+### 1.	Data sources
+
+The data sources used for this project are:
+
+-	DHIS2 National instance
+-	SORMAS (NCDC)
+-	Other sources available as csv files for the alternative denominator 
+
+
+### 2.	Remote database 
+
+***This stores Dhis2 data, SORMAS data, other csv files data***
+
+The remote database is a cloud based SQL database that was aimed to store the combined data from Dhis2 and SORMAS to provide high scalability and reliability of the dashboard even if one of the data sources is down.
+
+#### 2 i). Anto-update database cloud server 
+
+***Pulls data to update remote database***
+
+This is a cloud server,which automatically pulls the data from `Dhis2` and combines it with `SORMAS` data, `alternative denominator` data and then update the remote Database this is done once a month
+
+
+### 3.	Servers that are hosting the dashboard.
+
+The servers that are hosting and providing compute power to the dashboard are different from the integrated systems. This means the speed and availability of dashhboard is independent of them.
+
+
+### 4.	Integration without systems 
+
+Since the dashboard is web-based technology, it gives us the ability to integrate with most of the already existing systems i.e `Dhis2`, `SORMAS`, and `MSDAT` since they also web-based technologies.
+
+
+
+
+
+
+
+

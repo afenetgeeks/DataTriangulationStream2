@@ -7,7 +7,9 @@
 plot_number_range(min_number, max_number)
 }
 \arguments{
-\item{min_number}{The maximum number in the vector}
+\item{min_number}{The mininum number in the vector}
+
+\item{max_number}{The maximum number in the vector}
 }
 \value{
 A a vector of 2 numbers

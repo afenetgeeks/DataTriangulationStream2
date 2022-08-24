@@ -10,21 +10,12 @@ A data frame with 850 rows and 2 columns
 \item{State}{States in Nigeria}
 \item{LGA}{LGAs in Nigeria}
 }
-
-A data frame with 38 rows and 1 column
-\describe{
-\item{state_name}{States in Nigeria}
-}
 }
 \usage{
-lga
-
 lga
 }
 \description{
 A dataset containing the Nigeria's LGAs and their States as defined by Dhis2 system as of June-2022
-
-A dataset containing the Nigeria's States
 }
 \details{
 The \verb{State level data} LGA is meant to be a place holder of State level data in the dashboard.

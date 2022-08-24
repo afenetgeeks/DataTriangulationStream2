@@ -216,7 +216,7 @@ plot_rate_range <- function(min_rate, max_rate){
 #' the maximum point in the data plus 50% of that maximum point
 #'
 #' @param min_number The mininum number in the vector
-#' @param min_number The maximum number in the vector
+#' @param max_number The maximum number in the vector
 #'
 #' @details
 #'

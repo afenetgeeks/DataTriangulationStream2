@@ -32,5 +32,5 @@
 #'   \item{state_name}{States in Nigeria}
 #
 #' }
-"lga"
+"states"
 

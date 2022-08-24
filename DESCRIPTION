@@ -1,12 +1,15 @@
 Package: DataTriangulationStream2
 Title: Nigeria RI/VPDs Data Triangulation Dashboard
 Version: 0.0.0.9000
-Authors@R: person('AFENET', 'GEEKS', email = 'afenetgeeks@gmail.com', role = c('cre', 'aut'))
-Description: The `Nigeria Routine Immunization (RI) & Vaccine Preventable Diseases Surveillance (VPDs)`
-  Data Triangulation Dashboard visualizes selected indicators across `RI & VPDs` programme.
-  The dashboard is be integrated with the country's `DHIS2 national instance (FMoH)`,
-  `Surveillance Outbreak Response Management and Analysis System (SORMAS) (NCDC)`,
-  and the `Multi-Source Data Analytics and Triangulation (MSDAT) (FMoH)` Platform
+Authors@R: 
+    person("AFENET", "GEEKS", , "afenetgeeks@gmail.com", role = c("cre", "aut"))
+Description: The `Nigeria Routine Immunization (RI) & Vaccine Preventable
+    Diseases Surveillance (VPDs)` Data Triangulation Dashboard visualizes
+    selected indicators across `RI & VPDs` programme.  The dashboard is be
+    integrated with the country's `DHIS2 national instance (FMoH)`,
+    `Surveillance Outbreak Response Management and Analysis System
+    (SORMAS) (NCDC)`, and the `Multi-Source Data Analytics and
+    Triangulation (MSDAT) (FMoH)` Platform
 License: MIT + file LICENSE
 URL: https://github.com/afenetgeeks/DataTriangulationStream2
 BugReports: https://github.com/afenetgeeks/DataTriangulationStream2/issues
@@ -45,9 +48,7 @@ Suggests:
 VignetteBuilder: 
     knitr
 Remotes: 
-    ColinFay/brochure,
-    JohnCoene/waiter,
-    tidyverse/dplyr
+    ColinFay/brochure
 Config/testthat/edition: 3
 Encoding: UTF-8
 Language: en-US

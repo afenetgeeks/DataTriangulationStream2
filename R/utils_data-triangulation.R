@@ -64,7 +64,7 @@ loading_screen  <-  function(){
 
   waiter::waiterPreloader(html =  tags$div(waiter::spin_loaders(42, color = "#008686"),
                                    tags$p("Loading ...", style = "color:gray;"),
-                                   tags$p('Hausa: Sannu da zuwa \U0001f44b\U0001f3ff ..., Yoruba: E kaab\u1ecd \U0001f64b\U0001f3ff\u200d\u2640 ...,Igbo: Nn\u1ecd\u1ecd\U0001f1f3\U0001f1ec'),
+                                   tags$p('Hausa: Sannu da zuwa \U0001f44b\U0001f3ff ..., Yoruba: E kaab\u1ecd \U0001f64b\U0001f3ff\u200d\u2640 ...,Igbo: Nn\u1ecd\u1ecd\U0001f1f3\U0001f1ec',style = "color:gray;"),
 
   ),
   color = "#eff3f4",
@@ -82,7 +82,7 @@ loading_screen  <-  function(){
 #' place of the chart title.
 #'
 #' @param picker_state_var reactive value of the selected State
-#' @param picker_lga_var reactive value of the selected State
+#' @param picker_lga_var reactive value of the selected LGA
 
 
 chart_label <- function(picker_state_var,picker_lga_var ){

@@ -3,68 +3,68 @@
 
 <img src="man/figures/nphcda-logo.svg" align="center" />
 
-# Data Triangulation Stream 2 Dashboard
+# Data Triangulation Dashboard
 
 <!-- badges: start -->
 
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
-[![R-CMD-check](https://github.com/amanyiraho/DataTriangulationStream2/workflows/R-CMD-check/badge.svg)](https://github.com/amanyiraho/DataTriangulationStream2/actions)
+[![R-CMD-check](https://github.com/afenetgeeks/DataTriangulationStream2/workflows/R-CMD-check/badge.svg)](https://github.com/afenetgeeks/DataTriangulationStream2/actions)
 <!-- badges: end -->
 
 ## Overview
 
-The goal of Data Triangulation Stream 2 Dashboard is to is to
-Triangulate Nigeria Routine Immunization And Vaccine Preventable
-Diseases Surveillance Data
+The goal of data triangulation project is to conduct a Data
+triangulation exercise that will turn Nigeria Routine Immunization And
+Vaccine Preventable Diseases Surveillance datasets into interactive
+dashboards.
 
 ## Description
 
-The Nigeria Routine Immunization (RI) & Vaccine Preventable Diseases
-Surveillance (VPDs) Data Triangulation Dashboard visualizes selected
-indicators across RI & VPDs programme.
+The
+`Nigeria Routine Immunization (RI) & Vaccine Preventable Diseases Surveillance (VPDs)`
+Data Triangulation Dashboard visualizes selected indicators across
+`RI & VPDs` programme.
 
-The dashboard developed on R Shiny technology will be integrated with
-the country’s DHIS2 national instance, Surveillance Outbreak Response
-Management and Analysis System (SORMAS), and the Multi-Source Data
-Analytics and Triangulation (MSDAT) Platform.
+The dashboard is be integrated with the country’s
+`DHIS2 national instance (FMoH)`,
+`Surveillance Outbreak Response Management and Analysis System (SORMAS) (NCDC)`,
+and the `Multi-Source Data Analytics and Triangulation (MSDAT) (FMoH)`
+Platform.
 
-The dashboard provides access to timely information required for
-decision making at the national and sub-national levels.
+The updates on the dashboard will still be controlled by the
+`AFENET geeks` team.
 
-## Installation
+The servers and database powering the dashboard are independent of the
+three platforms hence in case any of them is down for any reason you can
+still access the dashboard from the alternative system or contact the
+AFENET team.
 
-You can install the development version of DataTriangulationStream2 from
-[GitHub](https://github.com/) with:
+The dashboard provides access to timely information (data updated on
+monthly basis) required for decision making at the national and
+sub-national levels.
 
-``` r
-# install.packages("devtools")
-devtools::install_github("afenetgeeks/DataTriangulationStream2")
-```
+## How to use the dashboard
 
-## Process of the Dashboard development
+Use the filters at the top of dashboard that is to say, you can select
+the `Disease`, `State`, `LGA`, `year`, `month` that suits your needs and
+then press `UPDATE`.
 
-First, the dashboard was built using R shiny and hosted on the
-shinyapps.io servers the Rstudio hosting services, then the app url was
-used to integrate into the 3 platforms using an iframe.
+<img src="man/figures/dashboard-inputs.png" align="center" />
 
-What is special about using `README.Rmd` instead of just `README.md`?
-You can include R chunks like so:
+***Note: The maps have separate filters in their own panels***
 
-You’ll still need to render `README.Rmd` regularly, to keep `README.md`
-up-to-date. `devtools::build_readme()` is handy for this. You could also
-use GitHub Actions to re-render `README.Rmd` every time you push. An
-example workflow can be found here:
-<https://github.com/r-lib/actions/tree/v1/examples>.
-
-In that case, don’t forget to commit and push the resulting figure
-files, so they display on GitHub and CRAN.
-
-## The Maps
+## Quick note about the maps
 
 The boundaries and names shown and the designations used on this map do
 not imply the expression of any opinion whatsoever on the part of the
-AFENET GEEKs concerning the legal status of any country, territory, city
-or area or of its authorities, or concerning the delimitation of its
-frontiers or boundaries. Dotted and dashed lines on maps represent
+`AFENET GEEKs` concerning the legal status of any country, territory,
+city or area or of its authorities, or concerning the delimitation of
+its frontiers or boundaries. Dotted and dashed lines on maps represent
 approximate border lines for which there may not yet be full agreement.
+
+## For More indepth details of how the dashboard works
+
+-   Go to `articles > The whole system`
+
+-   If you a developer go to `articles > Future developers`

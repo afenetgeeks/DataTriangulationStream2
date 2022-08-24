@@ -4,7 +4,7 @@
 #' Creates a shiny Module UI of map of confirmed Measles cases, MCV 1 coverage
 #'  currently chart 7
 #'
-#' @inherit mod_confirmed_measles_cases_MCV1_coverage_ui return
+#' @inherit mod_confirmed_measles_cases_MCV1_coverage_ui return params
 #'
 mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_ui <- function(id){
   ns <- NS(id)
@@ -68,7 +68,8 @@ mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_ui <- function(id){
 #'  currently chart 7
 #'
 #' @inherit mod_confirmed_measles_cases_MCV1_coverage_server return
-#' @param id,input,output,session Internal parameters for {shiny}.
+#'
+#' @inherit mod_confirmed_measles_cases_MCV1_coverage_ui params
 #'
 #'
 mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_server <- function(id){

@@ -4,8 +4,7 @@
 #' Creates a shiny Module UI of MCV stock analysis & MCV (1 & 2) given
 #'  currently chart 3
 #'
-#' @inherit mod_confirmed_measles_cases_MCV1_coverage_ui return
-#'
+#' @inherit mod_confirmed_measles_cases_MCV1_coverage_ui return params
 #'
 mod_measles_vaccine_stock_analysis_measles_coverage_ui <- function(id){
   ns <- NS(id)

@@ -6,6 +6,11 @@
 \usage{
 chart_label(picker_state_var, picker_lga_var)
 }
+\arguments{
+\item{picker_state_var}{reactive value of the selected State}
+
+\item{picker_lga_var}{reactive value of the selected LGA}
+}
 \value{
 a character string
 }

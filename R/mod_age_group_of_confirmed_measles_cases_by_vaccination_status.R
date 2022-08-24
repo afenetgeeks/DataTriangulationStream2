@@ -4,7 +4,7 @@
 #' Creates a shiny Module UI of confirmed age group of disease cases vaccination status
 #'  currently chart 2
 #'
-#' @inherit mod_confirmed_measles_cases_MCV1_coverage_ui return
+#' @inherit mod_confirmed_measles_cases_MCV1_coverage_ui return params
 #'
 mod_age_group_of_confirmed_measles_cases_by_vaccination_status_ui <- function(id){
   ns <- NS(id)

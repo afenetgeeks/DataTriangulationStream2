@@ -14,6 +14,9 @@ mod_meningitis_coverage_confirmed_cases_ui(id)
 
 mod_yf_coverage_confirmed_cases_ui(id)
 }
+\arguments{
+\item{id}{The id (string) to be used  for name-spacing in the module.}
+}
 \value{
 A shiny UI Module
 }

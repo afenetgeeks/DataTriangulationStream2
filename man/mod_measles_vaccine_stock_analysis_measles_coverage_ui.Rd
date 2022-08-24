@@ -15,6 +15,9 @@ mod_meningitis_vaccine_stock_analysis_ui(id)
 
 mod_yellow_fever_vaccine_stock_analysis_yellow_fever_coverage_ui(id)
 }
+\arguments{
+\item{id}{The id (string) to be used  for name-spacing in the module.}
+}
 \value{
 A shiny UI Module
 }

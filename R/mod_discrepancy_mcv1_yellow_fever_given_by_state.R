@@ -1,10 +1,10 @@
 #' Create shiny module UI side for chart 4
 #'
 #' @description `mod_discrepancy_mcv1_yellow_fever_given_by_state_ui()`
-#' Creates a shiny Module UI of  Co-administered antigen discrepancy: MCV 1 & Yellow Fever given
+#' Creates a shiny Module UI of Co-administered antigen discrepancy: MCV 1 & Yellow Fever given
 #'  currently chart 4
 #'
-#' @inherit mod_confirmed_measles_cases_MCV1_coverage_ui return
+#' @inherit mod_confirmed_measles_cases_MCV1_coverage_ui return params
 #'
 mod_discrepancy_mcv1_yellow_fever_given_by_state_ui <- function(id){
   ns <- NS(id)

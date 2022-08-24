@@ -10,11 +10,14 @@ mod_discrepancy_mcv1_men_A_ui(id)
 
 mod_discrepancy_mcv1_yellow_fever_given_by_state_ui(id)
 }
+\arguments{
+\item{id}{The id (string) to be used  for name-spacing in the module.}
+}
 \value{
 A shiny UI Module
 }
 \description{
 \code{mod_discrepancy_mcv1_yellow_fever_given_by_state_ui()}
-Creates a shiny Module UI of  Co-administered antigen discrepancy: MCV 1 & Yellow Fever given
+Creates a shiny Module UI of Co-administered antigen discrepancy: MCV 1 & Yellow Fever given
 currently chart 4
 }

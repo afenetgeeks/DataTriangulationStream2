@@ -8,7 +8,7 @@
 mod_national_measles_coverage_different_sources_server(id)
 }
 \arguments{
-\item{id, input, output, session}{Internal parameters for {shiny}.}
+\item{id}{The id (string) to be used  for name-spacing in the module.}
 }
 \value{
 A shiny server Module

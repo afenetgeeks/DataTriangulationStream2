@@ -34,7 +34,7 @@ mod_age_group_of_confirmed_yellow_fever_cases_by_vaccination_status_server(
 )
 }
 \arguments{
-\item{id}{Internal parameters for {shiny}.}
+\item{id}{The id (string) to be used  for name-spacing in the module.}
 
 \item{picker_year_var}{the selected reactive values from \verb{mod_inputs Module}
 for picker_year, picker_month, picker_state, picker_lga respectively}

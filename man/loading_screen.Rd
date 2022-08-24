@@ -10,5 +10,5 @@ loading_screen()
 "a List"
 }
 \description{
-The loading with "Hausa: Sannu da zuwa👋🏿 ..., Yoruba: E kaabọ🙋🏿‍♀ ...,Igbo: Nnọọ 🇳🇬️", style = "color:gray;"
+The loading with
 }

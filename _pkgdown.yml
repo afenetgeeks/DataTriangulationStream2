@@ -12,14 +12,6 @@ navbar:
       menu:
       - text: The whole system
         href: articles/the-whole-system.html
-      - text: Data sources
-        href: articles/data-sources.html
-      - text: Remote database
-        href: articles/remote-database.html
-      - text: The actual dashboard
-        href: articles/the-actual-dashboard.html
-      - text: Integrated Systems
-        href: articles/integrated-systems.html
       - text: Future developers
         href: articles/future-developers.html
 

@@ -33,7 +33,7 @@ mod_yf_coverage_confirmed_cases_server(
 )
 }
 \arguments{
-\item{id, input, output, session}{Internal parameters for {shiny}.}
+\item{id}{The id (string) to be used  for name-spacing in the module.}
 
 \item{picker_year_var, picker_month_var, picker_state_var, picker_lga_var}{the selected reactive values from \verb{mod_inputs Module}
 for picker_year, picker_month, picker_state, picker_lga respectively}

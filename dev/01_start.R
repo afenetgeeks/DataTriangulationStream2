@@ -22,9 +22,12 @@ golem::fill_desc(
   pkg_name = "DataTriangulationStream2", # The Name of the package containing the App
   pkg_title = "Nigeria RI/VPDs Data Triangulation Dashboard", # The Title of the package containing the App
 
-  pkg_description = "The Nigeria Routine Immunization (RI) & Vaccine Preventable Diseases Surveillance (VPDs) Data Triangulation Dashboard visualizes selected indicators across RI & VPDs programme.
-  The dashboard developed on R Shiny technology will be integrated with the country's DHIS2 national instance, Surveillance Outbreak Response Management and Analysis System (SORMAS), and the Multi-Source Data Analytics and Triangulation (MSDAT) Platform
-  The dashboard provides access to timely information required for decision making at the national and sub-national levels.", # The Description of the package containing the App
+  pkg_description = "The `Nigeria Routine Immunization (RI) & Vaccine Preventable Diseases Surveillance (VPDs)`
+  Data Triangulation Dashboard visualizes selected indicators across `RI & VPDs` programme.
+  The dashboard is be integrated with the country's `DHIS2 national instance (FMoH)`,
+  `Surveillance Outbreak Response Management and Analysis System (SORMAS) (NCDC)`,
+  and the `Multi-Source Data Analytics and Triangulation (MSDAT) (FMoH)` Platform",
+
   author_first_name = "AFENET", # Your First Name
   author_last_name = "GEEKS", # Your Last Name
   author_email = "afenetgeeks@gmail.com", # Your Email

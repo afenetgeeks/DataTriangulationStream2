@@ -42,10 +42,6 @@
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/the-whole-system.html">The whole system</a>
-    <a class="dropdown-item" href="../articles/data-sources.html">Data sources</a>
-    <a class="dropdown-item" href="../articles/remote-database.html">Remote database</a>
-    <a class="dropdown-item" href="../articles/the-actual-dashboard.html">The actual dashboard</a>
-    <a class="dropdown-item" href="../articles/integrated-systems.html">Integrated Systems</a>
     <a class="dropdown-item" href="../articles/future-developers.html">Future developers</a>
   </div>
 </li>
@@ -90,9 +86,62 @@
 
     
     
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/afenetgeeks/DataTriangulationStream2" class="external-link">DataTriangulationStream2</a></span><span class="op">)</span></span></code></pre></div>
-  </main>
+<div class="section level3">
+<h3 id="who-should-read-this">Who should read this<a class="anchor" aria-label="anchor" href="#who-should-read-this"></a>
+</h3>
+<p>If you are an End user and you want to get a glimpse of how the whole system works and the building blocks of the system.</p>
+</div>
+<div class="section level3">
+<h3 id="how-everything-connects">How everything connects<a class="anchor" aria-label="anchor" href="#how-everything-connects"></a>
+</h3>
+<p>The end product <strong>(the dashboard)</strong> has several systems that make it fast, reliable even when the main data sources (Dhis2 or SORMAS) are down.</p>
+<p><strong>Below is a figure to illustrate how the whole system works starting from the data sources to final integrated systems</strong></p>
+<div class="figure">
+<img src="figures/whole-system.png" alt="The whole system" width="90%"><p class="caption">
+The whole system
+</p>
+</div>
+<div class="figure">
+<img src="figures/key-of-whole-system.png" alt="The key of the whole system" width="90%"><p class="caption">
+The key of the whole system
+</p>
+</div>
+<p><strong>The whole system is made up of the:</strong></p>
+</div>
+<div class="section level3">
+<h3 id="data-sources">1. Data sources<a class="anchor" aria-label="anchor" href="#data-sources"></a>
+</h3>
+<p>The data sources used for this project are:</p>
+<ul>
+<li>DHIS2 National instance</li>
+<li>SORMAS (NCDC)</li>
+<li>Other sources available as csv files for the alternative denominator</li>
+</ul>
+</div>
+<div class="section level3">
+<h3 id="remote-database">2. Remote database<a class="anchor" aria-label="anchor" href="#remote-database"></a>
+</h3>
+<p><strong><em>This stores Dhis2 data, SORMAS data, other csv files data</em></strong></p>
+<p>The remote database is a cloud based SQL database that was aimed to store the combined data from Dhis2 and SORMAS to provide high scalability and reliability of the dashboard even if one of the data sources is down.</p>
+<div class="section level4">
+<h4 id="i--anto-update-database-cloud-server">2 i). Anto-update database cloud server<a class="anchor" aria-label="anchor" href="#i--anto-update-database-cloud-server"></a>
+</h4>
+<p><strong><em>Pulls data to update remote database</em></strong></p>
+<p>This is a cloud server,which automatically pulls the data from <code>Dhis2</code> and combines it with <code>SORMAS</code> data and <code>alternative denominator</code> data and then updates the remote Database this is done once a month</p>
+</div>
+</div>
+<div class="section level3">
+<h3 id="servers-that-are-hosting-the-dashboard-">3. Servers that are hosting the dashboard.<a class="anchor" aria-label="anchor" href="#servers-that-are-hosting-the-dashboard-"></a>
+</h3>
+<p>The servers that are hosting and providing compute power to the dashboard are different from the integrated systems. This means that speed and availability of dashboard is independent of them.</p>
+</div>
+<div class="section level3">
+<h3 id="integration-without-systems">4. Integration without systems<a class="anchor" aria-label="anchor" href="#integration-without-systems"></a>
+</h3>
+<p>Since the dashboard is a web-based technology, it gives us the ability to integrate with most of the already existing systems i.e <code>Dhis2</code>, <code>SORMAS</code>, and <code>MSDAT</code> since they also web-based technologies.</p>
+</div>
+  </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
+    </nav></aside>
 </div>
 
 

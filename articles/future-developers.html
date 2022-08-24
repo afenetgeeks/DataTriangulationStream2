@@ -42,10 +42,6 @@
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/the-whole-system.html">The whole system</a>
-    <a class="dropdown-item" href="../articles/data-sources.html">Data sources</a>
-    <a class="dropdown-item" href="../articles/remote-database.html">Remote database</a>
-    <a class="dropdown-item" href="../articles/the-actual-dashboard.html">The actual dashboard</a>
-    <a class="dropdown-item" href="../articles/integrated-systems.html">Integrated Systems</a>
     <a class="dropdown-item" href="../articles/future-developers.html">Future developers</a>
   </div>
 </li>
@@ -90,9 +86,73 @@
 
     
     
+<div class="section level3">
+<h3 id="who-should-read-this">Who should read this<a class="anchor" aria-label="anchor" href="#who-should-read-this"></a>
+</h3>
+<p>If you a developer, and you want to build a similar dashboard, and want to understand why we used some technologies and those who taking on this project.</p>
+<p>You can install the development version of DataTriangulationStream2 from <a href="https://github.com/" class="external-link">GitHub</a> with:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/afenetgeeks/DataTriangulationStream2" class="external-link">DataTriangulationStream2</a></span><span class="op">)</span></span></code></pre></div>
-  </main>
+<code class="sourceCode R"><span><span class="co"># install.packages("devtools")</span></span>
+<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"afenetgeeks/DataTriangulationStream2"</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="process-of-the-dashboard-development">Process of the Dashboard development<a class="anchor" aria-label="anchor" href="#process-of-the-dashboard-development"></a>
+</h2>
+<p>First, most of parts of the dashboard were built using R and R shiny and hosted on the <code>shinyapps.io</code> servers, so then the app URL was used to integrate into the 3 platforms using an iframe.</p>
+<p>You’ll still need to render <code>README.Rmd</code> regularly, to keep <code>README.md</code> up-to-date. <code>devtools::build_readme()</code> is handy for this. You could also use GitHub Actions to re-render <code>README.Rmd</code> every time you push. An example workflow can be found here: <a href="https://github.com/r-lib/actions/tree/v1/examples" class="external-link uri">https://github.com/r-lib/actions/tree/v1/examples</a>.</p>
+<div class="section level3">
+<h3 id="data-sources">1. Data sources<a class="anchor" aria-label="anchor" href="#data-sources"></a>
+</h3>
+<p>The data sources used for this project are:</p>
+<ol style="list-style-type: decimal">
+<li>DHIS2 National instance:</li>
+</ol>
+<ul>
+<li>This is aggregated data and is collected via the web-api and it’s updated monthly</li>
+</ul>
+<ol start="2" style="list-style-type: decimal">
+<li>SORMAS (NCDC)</li>
+</ol>
+<ul>
+<li>This is case based data and each row is a case.</li>
+</ul>
+<ol start="3" style="list-style-type: decimal">
+<li>Other sources available as csv files for the alternative denominator</li>
+</ol>
+</div>
+<div class="section level3">
+<h3 id="remote-database">2. Remote database<a class="anchor" aria-label="anchor" href="#remote-database"></a>
+</h3>
+<p>The remote database is a cloud based SQL database that was aimed to store the combined data from Dhis2 and SORMAS to provide high scalability and reliability of the dashboard even if one of the data sources is down.</p>
+<p>The remote database is an Aurora MySQL database on AWS (was developed using AWS console) and is updated by the <code>Anto-update database cloud server</code>.</p>
+<div class="section level4">
+<h4 id="i--anto-update-database-cloud-server">2 i). Anto-update database cloud server<a class="anchor" aria-label="anchor" href="#i--anto-update-database-cloud-server"></a>
+</h4>
+<p>This is a cloud server,which automatically pulls the data from <code>Dhis2</code> and combines it with <code>SORMAS</code> data and <code>alternative denominator</code> data and then updates the remote Database this is done once a month.</p>
+<p>This is a server on AWS, it has Kubernetes (eks) which uses the docker containerized image to automatically pull the data from Dhis2 and updates the remote Database. The Kubernetes Cronjobs were used to achieve the automation. The image is stored on the Aws ecr (Elastic Container Registry). To Build the Kubernetes cluster terraform was used to keep track of infrastructure as code. Connecting to the Kubernetes cluster was done via aws cli and kubectl. The R scripts in the images are described below under R code and scripts section.</p>
+</div>
+</div>
+<div class="section level3">
+<h3 id="shinyapps-io-servers-were-used-to-host-the-dashboard-">3. Shinyapps.io servers were used to host the dashboard.<a class="anchor" aria-label="anchor" href="#shinyapps-io-servers-were-used-to-host-the-dashboard-"></a>
+</h3>
+<p>Based on the dashboard architecture, deploying the dashboard on RStudio hosting services i.e., <code>shinyapps.io</code> was the best choice to use because about 70% (Note this number can change depending on the server configurations) of the users won’t need to pull data from the remote database directly, For example if they access the dashboard in the same time frame like of 5 minutes (Note this number can change depending on the server configurations) the remaining 30% users will pull the data directly from the database and therefore improving speed and performance.</p>
+</div>
+<div class="section level3">
+<h3 id="integration-without-systems">4. Integration without systems<a class="anchor" aria-label="anchor" href="#integration-without-systems"></a>
+</h3>
+<p>Since the dashboard is web-based technology, it gives us the ability to integrate with most of the already existing systems i.e <code>Dhis2</code>, <code>SORMAS</code>, and <code>MSDAT</code> via an iframe since they also web-based technologies.</p>
+<p>An iframe is an HTML tag i.e (a piece of code) like <code>&lt;iframe&gt; URL &lt;/iframe&gt;</code></p>
+<p><strong>For the Dhis2 App</strong></p>
+<p>Using the Dhis2 Application development platform, a custom Dhis2 app was developed to hold the <code>iframe</code>. A zipped folder was compiled containing the custom App, which was later uploaded to the Dhis2 instance via the App Management App in Dhis2.</p>
+</div>
+<div class="section level3">
+<h3 id="developers-taking-on-this-extact-project">Developers taking on this extact project<a class="anchor" aria-label="anchor" href="#developers-taking-on-this-extact-project"></a>
+</h3>
+<p>Refer to the <code>Reference</code> tab on the website for documentation of the functions used in the project.</p>
+</div>
+</div>
+  </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
+    </nav></aside>
 </div>
 
 

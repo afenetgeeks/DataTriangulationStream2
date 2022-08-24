@@ -20,7 +20,7 @@ Imports:
     bslib,
     config,
     dbplyr,
-    dplyr (>= 1.0.8.9000),
+    dplyr,
     GADMTools,
     golem,
     htmltools,
@@ -38,7 +38,7 @@ Imports:
     shinyWidgets,
     stringr,
     utils,
-    waiter (>= 0.2.5.9000),
+    waiter,
     webshot
 Suggests: 
     knitr,

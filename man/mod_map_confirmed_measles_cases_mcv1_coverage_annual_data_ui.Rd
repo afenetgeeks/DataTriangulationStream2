@@ -15,6 +15,9 @@ mod_map_confirmed_meningitis_cases_coverage_annual_data_ui(id)
 
 mod_map_confirmed_yellow_fever_cases_yellow_fever_coverage_annual_data_ui(id)
 }
+\arguments{
+\item{id}{The id (string) to be used  for name-spacing in the module.}
+}
 \value{
 A shiny UI Module
 }

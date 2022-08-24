@@ -1,5 +1,5 @@
 
-#' project_imports
+#' @title project_imports
 #'
 #' @description A utils function
 #'

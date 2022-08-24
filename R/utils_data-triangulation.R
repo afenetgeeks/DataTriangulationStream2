@@ -80,6 +80,9 @@ loading_screen  <-  function(){
 #'
 #' @description Create the chart label which shows the State:LGA text in the
 #' place of the chart title.
+#'
+#' @param picker_state_var reactive value of the selected State
+#' @param picker_lga_var reactive value of the selected State
 
 
 chart_label <- function(picker_state_var,picker_lga_var ){
@@ -163,6 +166,11 @@ plot_margin_one_side <- function(){
 #' Determine the percentage y-axis where if its beyond 100% let the upper limit be
 #' the maximum point in the data plus 50% of that maximum point
 #'
+#' @param min_rate The mininum percentage in the vector
+#' @param max_rate The maximum percentage in the vector
+#'
+#' @return A a vector of 2 percentages
+#'
 #' @details
 #'
 #' formula used
@@ -207,6 +215,9 @@ plot_rate_range <- function(min_rate, max_rate){
 #' Determine the number y-axis where if its beyond 100% let the upper limit be
 #' the maximum point in the data plus 50% of that maximum point
 #'
+#' @param min_number The mininum number in the vector
+#' @param min_number The maximum number in the vector
+#'
 #' @details
 #'
 #' formula used
@@ -214,6 +225,8 @@ plot_rate_range <- function(min_rate, max_rate){
 #' if(max_number > 100){  max_number+ (max_number/ 2) }
 #'
 #' Same rule applies to other min_number but towards the negative side
+#'
+#' @return A a vector of 2 numbers
 
 
 
@@ -237,6 +250,8 @@ plot_number_range <-  function( min_number, max_number){
 #' @description
 #' Create a list of diseases in the Dashboard in one place. So that you keep track of the spellings and
 #'  easy additional extra diseases in the future
+#'
+#' @return A list
 
 disease_list_util <-  function(){
 

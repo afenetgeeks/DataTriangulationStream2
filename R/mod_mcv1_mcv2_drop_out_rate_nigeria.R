@@ -4,7 +4,8 @@
 #' Creates a shiny Module UI of MCV 1, MCV 2 coverage & drop out rate
 #'  currently chart 5
 #'
-#' @inherit mod_confirmed_measles_cases_MCV1_coverage_ui return
+#'
+#' @inherit mod_confirmed_measles_cases_MCV1_coverage_ui return params
 #'
 mod_mcv1_mcv2_drop_out_rate_nigeria_ui <- function(id){
   ns <- NS(id)

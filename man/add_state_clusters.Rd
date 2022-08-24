@@ -6,6 +6,13 @@
 \usage{
 add_state_clusters(leaflet_map, data, states)
 }
+\arguments{
+\item{leaflet_map}{a leaflet object created by leaflet::addPolygons}
+
+\item{data}{reactive value as data frame of SORMAS case based data}
+
+\item{states}{A vector of states in Nigeria returned by states_vector_util()}
+}
 \description{
 \code{add_state_clusters()} creates clusters for each state level
 }

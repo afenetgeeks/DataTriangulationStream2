@@ -18,7 +18,7 @@ mod_map_confirmed_yellow_fever_cases_yellow_fever_coverage_annual_data_server(
 )
 }
 \arguments{
-\item{id, input, output, session}{Internal parameters for {shiny}.}
+\item{id}{The id (string) to be used  for name-spacing in the module.}
 }
 \value{
 A shiny server Module

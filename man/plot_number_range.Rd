@@ -6,6 +6,12 @@
 \usage{
 plot_number_range(min_number, max_number)
 }
+\arguments{
+\item{min_number}{The maximum number in the vector}
+}
+\value{
+A a vector of 2 numbers
+}
 \description{
 Determine the number y-axis where if its beyond 100\% let the upper limit be
 the maximum point in the data plus 50\% of that maximum point

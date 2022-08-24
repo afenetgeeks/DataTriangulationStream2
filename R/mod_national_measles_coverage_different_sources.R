@@ -4,7 +4,7 @@
 #' Creates a shiny Module UI of National MCV coverage (%) by different sources
 #'  currently chart 6
 #'
-#' @inherit mod_confirmed_measles_cases_MCV1_coverage_ui return
+#' @inherit mod_confirmed_measles_cases_MCV1_coverage_ui return params
 #'
 mod_national_measles_coverage_different_sources_ui <- function(id){
   ns <- NS(id)
@@ -52,8 +52,7 @@ mod_national_measles_coverage_different_sources_ui <- function(id){
 #'  Creates a shiny Module for the server of National MCV coverage (%) by different sources
 #'  currently chart 6
 #'
-#' @inherit mod_confirmed_measles_cases_MCV1_coverage_server return
-#' @param id,input,output,session Internal parameters for {shiny}.
+#' @inherit mod_confirmed_measles_cases_MCV1_coverage_server return params
 #'
 
 mod_national_measles_coverage_different_sources_server <- function(id){

@@ -6,6 +6,9 @@
 \usage{
 disease_list_util()
 }
+\value{
+A list
+}
 \description{
 Create a list of diseases in the Dashboard in one place. So that you keep track of the spellings and
 easy additional extra diseases in the future

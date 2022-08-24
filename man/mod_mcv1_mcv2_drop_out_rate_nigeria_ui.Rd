@@ -6,6 +6,9 @@
 \usage{
 mod_mcv1_mcv2_drop_out_rate_nigeria_ui(id)
 }
+\arguments{
+\item{id}{The id (string) to be used  for name-spacing in the module.}
+}
 \value{
 A shiny UI Module
 }

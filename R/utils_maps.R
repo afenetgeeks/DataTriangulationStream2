@@ -56,6 +56,10 @@ make_labels <- function(sizes, labels) {
 #'
 #' @description
 #' `add_state_clusters()` creates clusters for each state level
+#'
+#' @param leaflet_map a leaflet object created by leaflet::addPolygons
+#' @param data reactive value as data frame of SORMAS case based data
+#' @param states A vector of states in Nigeria returned by states_vector_util()
 
 
 add_state_clusters <- function(leaflet_map, data, states){

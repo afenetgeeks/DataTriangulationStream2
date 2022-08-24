@@ -6,6 +6,14 @@
 \usage{
 plot_rate_range(min_rate, max_rate)
 }
+\arguments{
+\item{min_rate}{The mininum percentage in the vector}
+
+\item{max_rate}{The maximum percentage in the vector}
+}
+\value{
+A a vector of 2 percentages
+}
 \description{
 Determine the percentage y-axis where if its beyond 100\% let the upper limit be
 the maximum point in the data plus 50\% of that maximum point

@@ -6,6 +6,8 @@
 #'
 #' @return A shiny UI Module
 #'
+#' @param id The id (string) to be used  for name-spacing in the module.
+#'
 #' @importFrom shiny NS tagList
 
 
@@ -47,7 +49,7 @@ mod_confirmed_measles_cases_MCV1_coverage_ui <- function(id){
 #'  currently chart 1
 #'
 #' @return A shiny server Module
-#' @param id,input,output,session Internal parameters for {shiny}.
+#' @param id The id (string) to be used  for name-spacing in the module.
 #' @param picker_year_var,picker_month_var,picker_state_var,picker_lga_var  the selected reactive values from `mod_inputs Module`
 #'  for picker_year, picker_month, picker_state, picker_lga respectively
 #'
@@ -230,7 +232,7 @@ mod_confirmed_measles_cases_MCV1_coverage_server <- function(id,
         on.exit(setwd(owd))
         saveWidget(indicator_plot(), "temp.html", selfcontained = FALSE)
         webshot("temp.html", file = file, cliprect = "viewport")
-        
+
       }
     )
 

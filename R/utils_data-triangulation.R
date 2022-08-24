@@ -58,14 +58,13 @@ nav_links <- function(disease){
 #'
 #' @returns "a List"
 #'
-#' @description The loading with "Hausa: Sannu da zuwa👋🏿 ..., Yoruba: E kaabọ🙋🏿‍♀ ...,Igbo: Nnọọ 🇳🇬️", style = "color:gray;"
-
+#' @description The loading with
 
 loading_screen  <-  function(){
 
   waiter::waiterPreloader(html =  tags$div(waiter::spin_loaders(42, color = "#008686"),
                                    tags$p("Loading ...", style = "color:gray;"),
-                                   tags$p("Hausa: Sannu da zuwa👋🏿 ..., Yoruba: E kaabọ🙋🏿‍♀ ...,Igbo: Nnọọ 🇳🇬️", style = "color:gray;"),
+                                   tags$p('Hausa: Sannu da zuwa \U0001f44b\U0001f3ff ..., Yoruba: E kaab\u1ecd \U0001f64b\U0001f3ff\u200d\u2640 ...,Igbo: Nn\u1ecd\u1ecd\U0001f1f3\U0001f1ec'),
 
   ),
   color = "#eff3f4",

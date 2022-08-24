@@ -21,6 +21,10 @@ options(rmarkdown.html_vignette.check_title = FALSE)
 library(DataTriangulationStream2)
 ```
 
+### Who should read this
+
+If you are an End user and you want to get a glimpse of how the whole system works and the building blocks of the system.
+
 ### How everything connects
 
 The end product **(the dashboard)** has several systems that make it fast, reliable even when the main data sources (Dhis2 or SORMAS) are down. 
@@ -60,17 +64,17 @@ The remote database is a cloud based SQL database that was aimed to store the co
 
 ***Pulls data to update remote database***
 
-This is a cloud server,which automatically pulls the data from `Dhis2` and combines it with `SORMAS` data, `alternative denominator` data and then update the remote Database this is done once a month
+This is a cloud server,which automatically pulls the data from `Dhis2` and combines it with `SORMAS` data and  `alternative denominator` data and then updates the remote Database this is done once a month
 
 
 ### 3.	Servers that are hosting the dashboard.
 
-The servers that are hosting and providing compute power to the dashboard are different from the integrated systems. This means the speed and availability of dashhboard is independent of them.
+The servers that are hosting and providing compute power to the dashboard are different from the integrated systems. This means that speed and availability of dashboard is independent of them.
 
 
 ### 4.	Integration without systems 
 
-Since the dashboard is web-based technology, it gives us the ability to integrate with most of the already existing systems i.e `Dhis2`, `SORMAS`, and `MSDAT` since they also web-based technologies.
+Since the dashboard is a web-based technology, it gives us the ability to integrate with most of the already existing systems i.e `Dhis2`, `SORMAS`, and `MSDAT` since they also web-based technologies.
 
 
 

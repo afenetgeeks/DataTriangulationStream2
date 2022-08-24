@@ -62,3 +62,9 @@ not imply the expression of any opinion whatsoever on the part of the
 city or area or of its authorities, or concerning the delimitation of
 its frontiers or boundaries. Dotted and dashed lines on maps represent
 approximate border lines for which there may not yet be full agreement.
+
+## For More indepth details of how the dashboard works
+
+-   Go to `articles > The whole system`
+
+-   If you a developer go to `articles > Future developers`

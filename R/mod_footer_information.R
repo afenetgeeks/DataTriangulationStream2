@@ -21,7 +21,7 @@ mod_footer_information_ui <- function(id){
 
         div(class = "last_updated_div",
             p("Last Updated:"),
-            p("-16/08/2022")
+            p("-31/08/2022")
         )
     ),
 

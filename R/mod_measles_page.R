@@ -80,6 +80,8 @@ measles_page <- function() {
 
     server = function(input, output, session) {
 
+      waiter::waiter_hide()
+
       dropdown_inputs <- mod_inputs_server("inputs_1")
 
       mod_confirmed_measles_cases_MCV1_coverage_server("confirmed_measles_cases_MCV1_coverage_1",

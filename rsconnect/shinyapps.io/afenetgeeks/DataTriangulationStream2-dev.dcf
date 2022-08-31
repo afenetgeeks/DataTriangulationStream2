@@ -5,10 +5,10 @@ account: afenetgeeks
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 6685808
-bundleId: 6225462
+bundleId: 6256610
 url: https://afenetgeeks.shinyapps.io/DataTriangulationStream2-dev/
-when: 1661173157.38811
-lastSyncTime: 1661173157.38814
+when: 1661974620.85688
+lastSyncTime: 1661974620.85693
 asMultiple: FALSE
 asStatic: FALSE
-ignoredFiles: doc|docs|man|tests|vignettes
+ignoredFiles: NEWS.md|README.md|README.Rmd|doc|docs|man|tests|vignettes

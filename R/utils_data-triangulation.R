@@ -62,13 +62,12 @@ nav_links <- function(disease){
 
 loading_screen  <-  function(){
 
-  waiter::waiterPreloader(html =  tags$div(waiter::spin_loaders(42, color = "#008686"),
+  waiter::waiterShowOnLoad(html =  tags$div(waiter::spin_loaders(42, color = "#008686"),
                                    tags$p("Loading ...", style = "color:gray;"),
                                    tags$p('Hausa: Sannu da zuwa \U0001f44b\U0001f3ff ..., Yoruba: E kaab\u1ecd \U0001f64b\U0001f3ff\u200d\u2640 ...,Igbo: Nn\u1ecd\u1ecd\U0001f1f3\U0001f1ec',style = "color:gray;"),
 
   ),
-  color = "#eff3f4",
-  fadeout = 100)
+  color = "#eff3f4")
 }
 
 

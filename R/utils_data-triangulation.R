@@ -16,13 +16,13 @@ nav_links <- function(disease){
                    tags$ul(
 
                      tags$li(
-                       tags$a(href = "/data-triangulation-dashboard-temp/", "Measles"),
+                       tags$a(href = "/data-triangulation-monthly-review/", "Measles"),
                      ),
                      tags$li(
-                       tags$a(href = "/data-triangulation-dashboard-temp/yellow_fever_page", "Yellow Fever"),
+                       tags$a(href = "/data-triangulation-monthly-review/yellow_fever_page", "Yellow Fever"),
                      ),
                      tags$li(
-                       tags$a(href = "/data-triangulation-dashboard-temp/meningitis_page", "Meningitis"),
+                       tags$a(href = "/data-triangulation-monthly-review/meningitis_page", "Meningitis"),
                      )
                    )
           )

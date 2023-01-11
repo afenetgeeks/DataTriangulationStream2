@@ -5,4 +5,4 @@ default:
 production:
   app_prod: yes
 dev:
-  golem_wd: /Volumes/Robinson/Afenet-projects/DataTriangulationStream2
+  golem_wd: /Volumes/Robinson/Afenet-projects/afenet-nigeria/DataTriangulationStream2

@@ -177,7 +177,7 @@ mod_map_confirmed_yellow_fever_cases_yellow_fever_coverage_annual_data_server <-
       req(picker_state_var(), cancelOutput = T)
 
       pal_yf <- colorFactor(c('red','yellow','green','#424242'),
-                            levels = c("0 - 50%","50 - 85%","85 - 100%", "> 100%"),
+                            levels = c("0 - 49%", "50 - 79%", "85 - 100%", "> 100%"),
                             na.color = 'red')
 
       if(sum(picker_state_var() == "Federal Government") == 1){

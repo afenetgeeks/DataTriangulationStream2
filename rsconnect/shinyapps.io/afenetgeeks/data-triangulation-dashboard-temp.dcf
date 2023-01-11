@@ -1,0 +1,14 @@
+name: data-triangulation-dashboard-temp
+title: data-triangulation-dashboard-temp
+username:
+account: afenetgeeks
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 6896948
+bundleId: 6342137
+url: https://afenetgeeks.shinyapps.io/data-triangulation-dashboard-temp/
+when: 1664264974.21375
+lastSyncTime: 1664264974.21376
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: _pkgdown.yml|.github/.gitignore|.github/workflows/pkgdown.yaml|.github/workflows/R-CMD-check.yaml|data-raw/lga.R|data-raw/NGA_adm1.rds|data-raw/states_gadm_sp_data.R|data-raw/states.csv|data-raw/states.R|README.md|README.Rmd

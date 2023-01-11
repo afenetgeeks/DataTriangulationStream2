@@ -8,7 +8,7 @@ test_that("Data from database has constant column names", {
 
     expect_equal( names(stream2_data$dhis2_data),
                   # dplyr::tbl(connection, "measles_coverage_map")%>%head(1) %>% collect() %>% names(),
-                  c("Year", "State", "LGA", "Months", "Coverage %"))
+                  c("Year", "Coverage", "State", "LGA", "Months", "Coverage %"))
 
 
     expect_equal( names(stream2_data$sormas_mvc),

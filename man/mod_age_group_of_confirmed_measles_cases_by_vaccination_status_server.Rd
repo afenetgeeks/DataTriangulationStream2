@@ -36,16 +36,7 @@ mod_age_group_of_confirmed_yellow_fever_cases_by_vaccination_status_server(
 \arguments{
 \item{id}{The id (string) to be used  for name-spacing in the module.}
 
-\item{picker_year_var}{the selected reactive values from \verb{mod_inputs Module}
-for picker_year, picker_month, picker_state, picker_lga respectively}
-
-\item{picker_month_var}{the selected reactive values from \verb{mod_inputs Module}
-for picker_year, picker_month, picker_state, picker_lga respectively}
-
-\item{picker_state_var}{the selected reactive values from \verb{mod_inputs Module}
-for picker_year, picker_month, picker_state, picker_lga respectively}
-
-\item{picker_lga_var}{the selected reactive values from \verb{mod_inputs Module}
+\item{picker_year_var, picker_month_var, picker_state_var, picker_lga_var}{the selected reactive values from \verb{mod_inputs Module}
 for picker_year, picker_month, picker_state, picker_lga respectively}
 }
 \value{

@@ -18,10 +18,9 @@ mod_footer_information_ui <- function(id){
             p("*NDHS - National Demographic and Health Survey"),
             p("*SMART survey - National Nutrition and Health Survey")),
 
-
         div(class = "last_updated_div",
             p("Last Updated:"),
-            p("-16/08/2022")
+            p("-26/12/2022")
         )
     ),
 
@@ -35,7 +34,7 @@ mod_footer_information_ui <- function(id){
           "<p style = 'text-align: center;'><small>&copy; <script>document.write(yyyy);</script></small> <a href='https://nphcda.gov.ng/' target='_blank', style = 'color:#ffffff;'> All Rights Reserved |NPHCDA </a> </p>")
         ),
         img(class = "npchcda-img", src = "www/nphcda-logo.svg", height = 35, width = 100, alt="nphcda logo", role="img"),
-        p("Terms of Service | Dashboard website")
+        tags$a(href="https://afenetgeeks.github.io/DataTriangulationStream2/", "Dashboard website")
 
     )
 

@@ -21,7 +21,7 @@ Imports:
     config,
     dbplyr,
     dplyr,
-    GADMTools,
+    GADMTools (>= 3.9.1),
     golem,
     htmltools,
     htmlwidgets,
@@ -47,8 +47,9 @@ Suggests:
     testthat (>= 3.0.0)
 VignetteBuilder: 
     knitr
-Remotes: 
-    ColinFay/brochure
+Remotes:  
+    ColinFay/brochure,
+    IamKDO/GADMTools
 Config/testthat/edition: 3
 Encoding: UTF-8
 Language: en-US

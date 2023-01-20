@@ -28,7 +28,6 @@ Imports:
     leaflet,
     leaflet.extras,
     magrittr,
-    pkgdown,
     plotly,
     pool,
     readr,
@@ -44,6 +43,7 @@ Imports:
 Suggests: 
     covr,
     knitr,
+    pkgdown,
     rmarkdown,
     spelling,
     testthat (>= 3.0.0)

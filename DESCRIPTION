@@ -41,13 +41,15 @@ Imports:
     waiter,
     webshot
 Suggests: 
+    covr,
     knitr,
+    pkgdown,
     rmarkdown,
     spelling,
     testthat (>= 3.0.0)
 VignetteBuilder: 
     knitr
-Remotes:  
+Remotes: 
     ColinFay/brochure,
     IamKDO/GADMTools
 Config/testthat/edition: 3

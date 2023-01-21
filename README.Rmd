@@ -19,7 +19,6 @@ knitr::opts_chunk$set(
 
 # Data Triangulation Dashboard
 
-
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/amanyiraho/DataTriangulationStream2/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/amanyiraho/DataTriangulationStream2/actions/workflows/R-CMD-check.yaml)
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
@@ -49,7 +48,7 @@ Use the filters at the top of the dashboard; that is to say, you can select the 
 <img src="man/figures/dashboard-inputs.png" align="center" />
 
 
-***Note: The maps have separate filters in their own panels***
+***Note: The maps have separate filters in their own panels.***
 
 ## Quick note about the maps
 

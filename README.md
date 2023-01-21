@@ -50,7 +50,7 @@ needs and then press `UPDATE`.
 
 <img src="man/figures/dashboard-inputs.png" align="center" />
 
-***Note: The maps have separate filters in their own panels***
+***Note: The maps have separate filters in their own panels.***
 
 ## Quick note about the maps
 

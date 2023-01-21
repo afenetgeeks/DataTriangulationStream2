@@ -1,6 +1,6 @@
 #' Turn an R list into an HTML list
 #'
-#' @param list An R list
+#' @param list An R List
 #' @param class a class for the list
 #'
 #' @return an HTML list

@@ -28,6 +28,7 @@ Imports:
     leaflet,
     leaflet.extras,
     magrittr,
+    pkgdown,
     plotly,
     pool,
     readr,

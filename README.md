@@ -7,9 +7,9 @@
 
 <!-- badges: start -->
 
+[![R-CMD-check](https://github.com/amanyiraho/DataTriangulationStream2/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/amanyiraho/DataTriangulationStream2/actions/workflows/R-CMD-check.yaml)
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
-[![R-CMD-check](https://github.com/afenetgeeks/DataTriangulationStream2/workflows/R-CMD-check/badge.svg)](https://github.com/afenetgeeks/DataTriangulationStream2/actions)
 [![Codecov test
 coverage](https://codecov.io/gh/amanyiraho/DataTriangulationStream2/branch/master/graph/badge.svg)](https://app.codecov.io/gh/amanyiraho/DataTriangulationStream2?branch=master)
 <!-- badges: end -->
@@ -50,7 +50,7 @@ needs and then press `UPDATE`.
 
 <img src="man/figures/dashboard-inputs.png" align="center" />
 
-***Note: The maps have separate filters in their own panels***
+***Note: The maps have separate filters in their own panels.***
 
 ## Quick note about the maps
 

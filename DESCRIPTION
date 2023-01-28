@@ -19,6 +19,7 @@ Imports:
     brochure (>= 0.0.0.9023),
     bslib,
     config,
+    DBI,
     dbplyr,
     dplyr,
     GADMTools (>= 3.9.1),

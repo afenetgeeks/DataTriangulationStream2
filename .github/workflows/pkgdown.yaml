@@ -19,6 +19,11 @@ jobs:
       group: pkgdown-${{ github.event_name != 'pull_request' || github.run_id }}
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      DBUSER : ${{ secrets.DBUSER }}
+      DBPWD :  ${{ secrets.DBPWD }}
+      DBHOST :  ${{ secrets.DBHOST }}
+      database_name :  ${{ secrets.database_name }}
     steps:
       - uses: actions/checkout@v2
 

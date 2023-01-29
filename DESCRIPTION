@@ -22,7 +22,6 @@ Imports:
     DBI,
     dbplyr,
     dplyr,
-    GADMTools (>= 3.9.1),
     golem,
     htmltools,
     htmlwidgets,

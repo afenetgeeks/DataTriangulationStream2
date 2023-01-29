@@ -115,6 +115,7 @@ mod_inputs_server <- function(id){
   })
 }
 
+#[![Codecov test coverage](https://codecov.io/gh/afenetgeeks/DataTriangulationStream2/branch/master/graph/badge.svg)](https://app.codecov.io/gh/afenetgeeks/DataTriangulationStream2?branch=master)
 ## To be copied in the UI
 # mod_inputs_ui("inputs_1")
 

@@ -10,7 +10,7 @@
 #' @importFrom RMariaDB MariaDB
 #' @importFrom pool dbPool
 #' @import dbplyr
-#' @importFrom dplyr collect tbl mutate arrange filter across group_by summarise ungroup left_join
+#' @importFrom dplyr collect tbl mutate arrange filter across group_by summarise ungroup left_join case_when
 #' @importFrom readr read_csv
 #' @importFrom stringr str_c str_replace
 #' @importFrom magrittr %>%

@@ -83,15 +83,29 @@ mod_map_confirmed_yellow_fever_cases_yellow_fever_coverage_annual_data_server <-
 
           stream2_data$dhis2_data <- dplyr::tbl(connection, "yf_coverage_map") %>%
             filter(Year %in% !!picker_year_var() & Months %in% "Ann" & LGA  %in% "State level data") %>% dplyr::collect() %>%
-            dplyr::mutate(dplyr::across(.col = c(Year,State,`Coverage %`), as.factor),
-                          State = str_replace(State,pattern = "Federal Capital Territory",replacement = "Fct"))
+            mutate("Coverage %" = case_when(
+              Coverage < 50 ~ "0 - 49%",
+              Coverage >= 50 & Coverage < 80 ~ "50 - 79%",
+              Coverage >= 80 & Coverage <= 100 ~ "80 - 100%",
+              Coverage > 100 ~ "> 100%",
+              TRUE ~ "Others"
+            )) %>%
+            mutate(`Coverage %` = factor(`Coverage %`, levels = c("0 - 49%", "50 - 79%", "80 - 100%", "> 100%"))) %>%
+            dplyr::mutate(dplyr::across(.col = c(Year,State,`Coverage %`), as.factor))
 
         }else{
 
           stream2_data$dhis2_data <- dplyr::tbl(connection, "yf_coverage_map") %>%
             filter(Year %in% !!picker_year_var() & Months  %in% !!picker_month_var() & LGA  %in% !!"State level data") %>% dplyr::collect() %>%
-            dplyr::mutate(dplyr::across(.col = c(Year,State,`Coverage %`), as.factor),
-                          State = str_replace(State,pattern = "Federal Capital Territory",replacement = "Fct"))
+            mutate("Coverage %" = case_when(
+              Coverage < 50 ~ "0 - 49%",
+              Coverage >= 50 & Coverage < 80 ~ "50 - 79%",
+              Coverage >= 80 & Coverage <= 100 ~ "80 - 100%",
+              Coverage > 100 ~ "> 100%",
+              TRUE ~ "Others"
+            )) %>%
+            mutate(`Coverage %` = factor(`Coverage %`, levels = c("0 - 49%", "50 - 79%", "80 - 100%", "> 100%"))) %>%
+            dplyr::mutate(dplyr::across(.col = c(Year,State,`Coverage %`), as.factor))
 
         }
 
@@ -102,16 +116,30 @@ mod_map_confirmed_yellow_fever_cases_yellow_fever_coverage_annual_data_server <-
           stream2_data$dhis2_data <- dplyr::tbl(connection, "yf_coverage_map") %>%
             filter(Year %in% !!picker_year_var() &
                      State %in% !!picker_state_var() & Months %in% "Ann" & LGA %in% "State level data")%>%dplyr::collect() %>%
-            dplyr::mutate(dplyr::across(.col = c(Year,State,`Coverage %`), as.factor),
-                          State = str_replace(State,pattern = "Federal Capital Territory",replacement = "Fct"))
+            mutate("Coverage %" = case_when(
+              Coverage < 50 ~ "0 - 49%",
+              Coverage >= 50 & Coverage < 80 ~ "50 - 79%",
+              Coverage >= 80 & Coverage <= 100 ~ "80 - 100%",
+              Coverage > 100 ~ "> 100%",
+              TRUE ~ "Others"
+            )) %>%
+            mutate(`Coverage %` = factor(`Coverage %`, levels = c("0 - 49%", "50 - 79%", "80 - 100%", "> 100%"))) %>%
+            dplyr::mutate(dplyr::across(.col = c(Year,State,`Coverage %`), as.factor))
 
         }else{
 
           stream2_data$dhis2_data <- dplyr::tbl(connection, "yf_coverage_map") %>%
             filter(Year %in% !!picker_year_var() &
                      State %in% !!picker_state_var() & Months %in% !!picker_month_var() & LGA %in% "State level data")%>%dplyr::collect() %>%
-            dplyr::mutate(dplyr::across(.col = c(Year,State,`Coverage %`), as.factor),
-                          State = str_replace(State,pattern = "Federal Capital Territory",replacement = "Fct"))
+            mutate("Coverage %" = case_when(
+              Coverage < 50 ~ "0 - 49%",
+              Coverage >= 50 & Coverage < 80 ~ "50 - 79%",
+              Coverage >= 80 & Coverage <= 100 ~ "80 - 100%",
+              Coverage > 100 ~ "> 100%",
+              TRUE ~ "Others"
+            )) %>%
+            mutate(`Coverage %` = factor(`Coverage %`, levels = c("0 - 49%", "50 - 79%", "80 - 100%", "> 100%"))) %>%
+            dplyr::mutate(dplyr::across(.col = c(Year,State,`Coverage %`), as.factor))
 
         }
 
@@ -129,16 +157,14 @@ mod_map_confirmed_yellow_fever_cases_yellow_fever_coverage_annual_data_server <-
 
           stream2_data$sormas_yfc <- dplyr::tbl(connection, "yf_cases_map") %>%
             filter(Year %in% !!picker_year_var()) %>% dplyr::collect()%>%
-            dplyr::mutate(dplyr::across(.col = c(Year,State, Months, LGA), as.factor),
-                          State = str_replace(State,pattern = "Federal Capital Territory",replacement = "Fct"))
+            dplyr::mutate(dplyr::across(.col = c(Year,State, Months, LGA), as.factor))
 
         }else{
 
           stream2_data$sormas_yfc <- dplyr::tbl(connection, "yf_cases_map") %>%
             filter(Year %in% !!picker_year_var() & Months %in% !!picker_month_var()) %>%
             dplyr::collect()%>%
-            dplyr::mutate(dplyr::across(.col = c(Year,State, Months, LGA), as.factor),
-                          State = str_replace(State,pattern = "Federal Capital Territory",replacement = "Fct"))
+            dplyr::mutate(dplyr::across(.col = c(Year,State, Months, LGA), as.factor))
 
         }
 
@@ -150,16 +176,14 @@ mod_map_confirmed_yellow_fever_cases_yellow_fever_coverage_annual_data_server <-
           stream2_data$sormas_yfc <- dplyr::tbl(connection, "yf_cases_map") %>%
             filter(Year == !!picker_year_var()&
                      State %in% !!picker_state_var() ) %>% dplyr::collect()%>%
-            dplyr::mutate(dplyr::across(.col = c(Year,State, LGA), as.factor),
-                          State = str_replace(State,pattern = "Federal Capital Territory",replacement = "Fct"))
+            dplyr::mutate(dplyr::across(.col = c(Year,State, LGA), as.factor))
 
         }else{
 
           stream2_data$sormas_yfc <- dplyr::tbl(connection, "yf_cases_map") %>%
             filter(Year == !!picker_year_var()&
                      State %in% !!picker_state_var()  & Months %in% !!picker_month_var()) %>% dplyr::collect()%>%
-            dplyr::mutate(dplyr::across(.col = c(Year,State, LGA), as.factor),
-                          State = str_replace(State,pattern = "Federal Capital Territory",replacement = "Fct"))
+            dplyr::mutate(dplyr::across(.col = c(Year,State, LGA), as.factor))
 
         }
 
@@ -177,7 +201,7 @@ mod_map_confirmed_yellow_fever_cases_yellow_fever_coverage_annual_data_server <-
       req(picker_state_var(), cancelOutput = T)
 
       pal_yf <- colorFactor(c('red','yellow','green','#424242'),
-                            levels = c("0 - 49%", "50 - 79%", "85 - 100%", "> 100%"),
+                            levels = c("0 - 49%", "50 - 79%", "80 - 100%", "> 100%"),
                             na.color = 'red')
 
       if(sum(picker_state_var() == "Federal Government") == 1){
@@ -208,7 +232,7 @@ mod_map_confirmed_yellow_fever_cases_yellow_fever_coverage_annual_data_server <-
           addResetMapButton()
 
         yfc_map  <- add_state_clusters(leaflet_map =   yfc_map ,
-                                       states = str_replace(states_vector_util(),pattern = "Federal Capital Territory",replacement = "Fct"),
+                                       states = states_vector_util(),
                                        data =  stream2_data$sormas_yfc)
 
       }

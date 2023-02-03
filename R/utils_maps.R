@@ -12,7 +12,7 @@ colors <- function(){
 }
 
 labels <- function(){
-  c("0 - 49%", "50 - 79%", "85 - 100%", "> 100%", "Cases from Sormas")
+  c("0 - 49%", "50 - 79%", "80 - 100%", "> 100%", "Cases from Sormas")
 }
 
 

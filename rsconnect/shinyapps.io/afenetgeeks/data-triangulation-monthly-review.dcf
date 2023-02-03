@@ -9,6 +9,7 @@ bundleId: 6805321
 url: https://afenetgeeks.shinyapps.io/data-triangulation-monthly-review/
 when: 1675409120.54049
 lastSyncTime: 1675409120.5405
+
 asMultiple: FALSE
 asStatic: FALSE
 ignoredFiles: _pkgdown.yml|.github/workflows/pkgdown.yaml|.github/workflows/R-CMD-check.yaml|.github/workflows/test-coverage.yaml|codecov.yml|data-raw/lga.R|data-raw/NGA_adm1.rds|data-raw/states_gadm_sp_data.R|data-raw/states.csv|data-raw/states.R|dev/01_start.R|dev/02_dev.R|dev/03_deploy.R|dev/run_dev.R|LICENSE|NEWS.md|README.md|README.Rmd|doc|docs|tests|vignettes

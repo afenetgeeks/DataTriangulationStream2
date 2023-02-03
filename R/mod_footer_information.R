@@ -34,6 +34,7 @@ mod_footer_information_ui <- function(id){
           "<p style = 'text-align: center;'><small>&copy; <script>document.write(yyyy);</script></small> <a href='https://nphcda.gov.ng/' target='_blank', style = 'color:#ffffff;'> All Rights Reserved |NPHCDA </a> </p>")
         ),
         img(class = "npchcda-img", src = "www/nphcda-logo.svg", height = 35, width = 100, alt="nphcda logo", role="img"),
+
         tags$a(href="https://afenetgeeks.github.io/DataTriangulationStream2/", "Dashboard website", target="_blank", style = "color:#eec487;")
 
     )

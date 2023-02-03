@@ -5,10 +5,10 @@ account: afenetgeeks
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 6896948
-bundleId: 6342137
+bundleId: 6805308
 url: https://afenetgeeks.shinyapps.io/data-triangulation-dashboard-temp/
-when: 1664264974.21375
-lastSyncTime: 1664264974.21376
+when: 1675408736.66761
+lastSyncTime: 1675408736.66763
 asMultiple: FALSE
 asStatic: FALSE
-ignoredFiles: _pkgdown.yml|.github/.gitignore|.github/workflows/pkgdown.yaml|.github/workflows/R-CMD-check.yaml|data-raw/lga.R|data-raw/NGA_adm1.rds|data-raw/states_gadm_sp_data.R|data-raw/states.csv|data-raw/states.R|README.md|README.Rmd
+ignoredFiles: _pkgdown.yml|.github/.gitignore|.github/workflows/pkgdown.yaml|.github/workflows/R-CMD-check.yaml|data-raw/lga.R|data-raw/NGA_adm1.rds|data-raw/states_gadm_sp_data.R|data-raw/states.csv|data-raw/states.R|README.md|README.Rmd|doc|docs|tests|vignettes

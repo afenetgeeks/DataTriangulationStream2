@@ -25,4 +25,4 @@
 #' @importFrom utils write.csv zip
 #'
 
-webshot::install_phantomjs(version = "2.1.1", force = FALSE)
+#webshot::install_phantomjs(version = "2.1.1", force = FALSE)

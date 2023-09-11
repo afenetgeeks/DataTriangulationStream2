@@ -21,9 +21,11 @@ run_app <- function(
     app = brochureApp(
       # Putting the resources here
       golem_add_external_resources(),
+      diphtheria_page(),
       measles_page(),
       yellow_fever_page(),
       meningitis_page(),
+      #diphtheria_page(),
       redirect(
         from = "/measles_page",
         to = "/"

@@ -5,33 +5,9 @@
 #' @return a shiny.tag of the disease filter
 #'
 
-nav_links <- function(disease){
-
-  stopifnot(disease %in% c("Measles","Yellow Fever","Meningitis"))
-
-  tags$ul(id="nav",
-
-          tags$li( tags$a(disease),
-
-                   tags$ul(
-
-                     tags$li(
-                       tags$a(href = "/data-triangulation-monthly-review/", "Measles"),
-                     ),
-                     tags$li(
-                       tags$a(href = "/data-triangulation-monthly-review/yellow_fever_page", "Yellow Fever"),
-                     ),
-                     tags$li(
-                       tags$a(href = "/data-triangulation-monthly-review/meningitis_page", "Meningitis"),
-                     )
-                   )
-          )
-  )
-}
-
-
 # nav_links <- function(disease){
 #
+#   stopifnot(disease %in% c("Measles","Yellow Fever","Meningitis","Diphtheria" ))
 #
 #   tags$ul(id="nav",
 #
@@ -40,18 +16,48 @@ nav_links <- function(disease){
 #                    tags$ul(
 #
 #                      tags$li(
-#                        tags$a(href = "/measles_page", "Measles"),
+#                        tags$a(href = "/data-triangulation-monthly-review/", "Measles"),
 #                      ),
 #                      tags$li(
-#                        tags$a(href = "/yellow_fever_page", "Yellow Fever"),
+#                        tags$a(href = "/data-triangulation-monthly-review/yellow_fever_page", "Yellow Fever"),
 #                      ),
 #                      tags$li(
-#                        tags$a(href = "/meningitis_page", "Meningitis"),
+#                        tags$a(href = "/data-triangulation-monthly-review/meningitis_page", "Meningitis"),
+#                      ),
+#                      tags$li(
+#                        tags$a(href = "/data-triangulation-monthly-review/diphtheria_page", "Diphtheria"),
 #                      )
 #                    )
 #           )
 #   )
 # }
+
+
+nav_links <- function(disease){
+
+
+  tags$ul(id="nav",
+
+          tags$li( tags$a(disease),
+
+                   tags$ul(
+
+                     tags$li(
+                       tags$a(href = "/measles_page", "Measles"),
+                     ),
+                     tags$li(
+                       tags$a(href = "/yellow_fever_page", "Yellow Fever"),
+                     ),
+                     tags$li(
+                       tags$a(href = "/meningitis_page", "Meningitis"),
+                     ),
+                     tags$li(
+                       tags$a(href = "/diphtheria_page", "Diphtheria"),
+                     )
+                   )
+          )
+  )
+}
 
 
 #' Create the loading screen

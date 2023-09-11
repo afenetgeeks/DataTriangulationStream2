@@ -17,13 +17,13 @@ mod_map_confirmed_yellow_fever_cases_yellow_fever_coverage_annual_data_ui <- fun
         div(class ="column-icon-div yf-column-icon-div",
             img(class = "column-icon", src = "www/fully-vaccinated-today-icon.svg",  height = 40, width = 80, alt="nigeria coat of arms", role="img")),
 
-        HTML("<h6 class = 'column-title column-title-map'>Chart 5: Confirmed Yellow Fever cases, Yellow Fever coverage</h6>"),
+        HTML("<h6 class = 'column-title column-title-map'>Chart 5: Confirmed yellow fever cases and coverage</h6>"),
 
 
         div(class = "map_charts_inputs",
 
             pickerInput(inputId = ns("picker_year"), label =  NULL,
-                        choices = years_vector_util(), multiple = F, selected = "2022",
+                        choices = years_vector_util(), multiple = F, selected = "2023",
                         options = list(title = "Years",`actions-box` = TRUE,size = 10,`selected-text-format` = "count > 2")),
 
             pickerInput(inputId = ns("picker_month"), label =  NULL,

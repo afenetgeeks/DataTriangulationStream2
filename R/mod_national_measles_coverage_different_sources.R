@@ -28,7 +28,7 @@ mod_national_measles_coverage_different_sources_ui <- function(id){
                      <i class="fa fa-chart-bar"></i>
                       <div class = tooltipdiv>
                           <p class="tooltiptext">
-                              Download this Chart
+                              Download this chart
                           </p>
                       </div>
                      </a>')),
@@ -37,7 +37,7 @@ mod_national_measles_coverage_different_sources_ui <- function(id){
                     type = 6, size = 0.3,hide.ui = F),
 
 
-                p(style="text-align:center;", "***Note: This Chart is fixed, All the above filters don't affect the this chart (Chart 6)***"),
+                p(style="text-align:center;", "***Note: This chart is fixed, all the above filters don't affect this chart (Chart 6)***"),
 
 
     )

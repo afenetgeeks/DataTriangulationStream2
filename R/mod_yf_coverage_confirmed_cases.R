@@ -10,7 +10,7 @@ mod_yf_coverage_confirmed_cases_ui <- function(id){
             img(class = "column-icon", src = "www/partially-vaccinated-today-icon.svg",  height = 40, width = 80, alt="nigeria coat of arms", role="img")),
 
 
-        HTML("<h6 class = 'column-title'> Chart 1: Confirmed Yellow Fever cases, Coverage, Alt denominator</h6>"),
+        HTML("<h6 class = 'column-title'> Chart 1: Confirmed yellow fever cases and coverage</h6>"),
 
         HTML(paste0('<a id="', ns("downloadData"), '" class="btn btn-default shiny-download-link download-data-btn" href="" target="_blank" download>
                       <i class="fa fa-download" aria-hidden="true"></i>
@@ -190,7 +190,7 @@ mod_yf_coverage_confirmed_cases_server <- function(id,
         on.exit(setwd(owd))
         saveWidget(indicator_plot(), "temp.html", selfcontained = FALSE)
         webshot("temp.html", file = file, cliprect = "viewport")
-        
+
       }
     )
 

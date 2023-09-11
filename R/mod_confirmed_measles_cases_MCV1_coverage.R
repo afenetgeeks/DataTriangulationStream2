@@ -19,7 +19,7 @@ mod_confirmed_measles_cases_MCV1_coverage_ui <- function(id){
         div(class ="column-icon-div measles-column-icon-div",
             img(class = "column-icon", src = "www/partially-vaccinated-today-icon.svg",  height = 40, width = 80, alt="nigeria coat of arms", role="img")),
 
-        HTML("<h6 class = 'column-title'>Chart 1: Confirmed Measles cases,MCV 1 coverage,Alt denominator </h6>"),
+        HTML("<h6 class = 'column-title'>Chart 1: Confirmed Measles cases and MCV 1 coverage </h6>"),
 
        HTML(paste0('<a id="', ns("downloadData"), '" class="btn btn-default shiny-download-link download-data-btn" href="" target="_blank" download>
                       <i class="fa fa-download" aria-hidden="true"></i>

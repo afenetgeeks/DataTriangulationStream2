@@ -20,7 +20,7 @@ mod_footer_information_ui <- function(id){
 
         div(class = "last_updated_div",
             p("Last Updated:"),
-            p("-26/06/2023")
+            p("-04/09/2023")
         )
     ),
 
@@ -31,11 +31,11 @@ mod_footer_information_ui <- function(id){
           "var today = new Date();",
           "var yyyy = today.getFullYear();",
           "</script>",
-          "<p style = 'text-align: center;'><small>&copy; <script>document.write(yyyy);</script></small> <a href='https://nphcda.gov.ng/' target='_blank', style = 'color:#ffffff;'> All Rights Reserved |NPHCDA </a> </p>")
+          "<p style = 'text-align: center;'>&copy; <script>document.write(yyyy);</script> All Rights Reserved </p>")
         ),
         img(class = "npchcda-img", src = "www/nphcda-logo.svg", height = 35, width = 100, alt="nphcda logo", role="img"),
 
-        tags$a(href="https://afenetgeeks.github.io/DataTriangulationStream2/", "Dashboard website", target="_blank", style = "color:#eec487;")
+        img(class = "npchcda-img", src = "www/ncdc-logo.jpg", height = 35, width = 100, alt="ncdc logo", role="img")
 
     )
 

@@ -22,7 +22,7 @@ mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_ui <- function(id){
         div(class ="column-icon-div measles-column-icon-div",
             img(class = "column-icon", src = "www/partially-vaccinated-today-icon.svg",  height = 40, width = 80, alt="nigeria coat of arms", role="img")),
 
-        HTML("<h6 class = 'column-title column-title-map'>Chart 7: Confirmed Measles cases, MCV 1 coverage </h6>"),
+        HTML("<h6 class = 'column-title column-title-map'>Chart 7: Confirmed measles cases, MCV 1 coverage </h6>"),
 
 
         div(class = "map_charts_inputs",

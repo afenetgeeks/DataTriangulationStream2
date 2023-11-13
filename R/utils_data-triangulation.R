@@ -262,7 +262,9 @@ disease_list_util <-  function(){
 
   list(measles_page= "Measles",
        yellow_fever_page =  "Yellow Fever",
-       meningitis_page = "Meningitis")
+       meningitis_page = "Meningitis",
+       diphtheria_page = "Diphtheria")
+
 }
 
 

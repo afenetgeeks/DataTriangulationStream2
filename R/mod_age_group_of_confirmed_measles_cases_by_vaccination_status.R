@@ -64,7 +64,7 @@ mod_age_group_of_confirmed_measles_cases_by_vaccination_status_server <-  functi
 
     chart_data <- reactive({
 
-      dplyr::tbl(connection, "measles_age_group")%>%
+      dplyr::tbl(connection, "measles_age_group2")%>%
         filter(Year %in% !!picker_year_var() &
                  State %in% !!picker_state_var() &
                  Months %in%  !!picker_month_var() &

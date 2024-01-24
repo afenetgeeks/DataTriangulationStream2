@@ -1,11 +1,9 @@
-
 #' @title project_imports
 #' @name project_imports
 #'
 #' @description A utils function
 #'
-#' @import shiny stringr
-#' @importFrom shiny NS tagList
+#' @import shiny
 #' @importFrom brochure page
 #' @importFrom RMariaDB MariaDB
 #' @importFrom pool dbPool
@@ -17,12 +15,12 @@
 #' @importFrom waiter waiterPreloader spin_loaders
 #' @importFrom shinycssloaders withSpinner
 #' @importFrom plotly plotlyOutput renderPlotly plot_ly add_trace layout config add_annotations
-#' @importFrom GADMTools gadm_sp_loadCountries gadm_subset
+#' @importFrom geodata gadm
+#' @importFrom sf st_as_sf
 #' @importFrom leaflet leaflet leafletOutput renderLeaflet colorFactor addProviderTiles setView addPolygons addMarkers labelOptions addLegend markerClusterOptions
 #' @importFrom leaflet.extras addResetMapButton
 #' @importFrom htmlwidgets saveWidget
 #' @importFrom webshot webshot
 #' @importFrom utils write.csv zip
-#'
 
-#webshot::install_phantomjs(version = "2.1.1", force = FALSE)
+webshot::install_phantomjs(version = "2.1.1", baseURL = "https://bitbucket.org/ariya/phantomjs/downloads/", force = FALSE)

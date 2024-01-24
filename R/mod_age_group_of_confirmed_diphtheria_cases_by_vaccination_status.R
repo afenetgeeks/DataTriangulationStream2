@@ -43,10 +43,124 @@ mod_age_group_of_confirmed_diphtheria_cases_by_vaccination_status_ui <- function
 #'
 #' @noRd
 mod_age_group_of_confirmed_diphtheria_cases_by_vaccination_status_server <- function(id){
-  moduleServer( id, function(input, output, session){
-    ns <- session$ns
+  ns <- session$ns
+
+  chart_data <- reactive({
+
+    dplyr::tbl(connection, "diphtheria_age_group")%>%
+      filter(Year %in% !!picker_year_var() &
+               State %in% !!picker_state_var() &
+               Months %in%  !!picker_month_var() &
+               LGA %in% !!picker_lga_var()) %>%group_by(`Age group`) %>%
+      summarise(across(c(Vaccinated,Unvaccinated,Unknown), ~ sum(.x, na.rm = TRUE))) %>%  ungroup() %>% dplyr::collect() %>%
+      dplyr::mutate(`Age group` = factor(`Age group`, labels = c("< 9","9 - 59" , "60 - 180","> 180"),
+                                         levels = c("< 9","9 - 59" , "60 - 180","> 180")))
+  })
+
+  # chart_data <-  dplyr::tbl(connection,"diphtheria_age_group") %>%
+  #   dplyr::filter(Year %in% !! "2023"&
+  #                   Months %in% !!"Aug" &
+  #                   State %in% !!"Federal Government" &
+  #                   LGA %in% !!"State level data")%>% collect() %>%
+  #   group_by(`Age group`) %>%
+  #   summarise(across(c(Vaccinated,Unvaccinated,Unknown), ~ sum(.x, na.rm = TRUE))) %>%  ungroup() %>% dplyr::collect() %>%
+  #   dplyr::mutate(`Age group` = factor(`Age group`, labels = c("< 9","9 - 59" , "60 - 180","> 180"),
+  #                                      levels = c("< 9","9 - 59" , "60 - 180","> 180")))
+
+
+  indicator_plot <- reactive({
+
+    plot <- plot_ly(chart_data(),
+                    x = ~`Age group`,
+                    y = ~Unknown,
+                    hovertemplate = paste('<b>Cases</b>: %{y:.0f}',
+                                          '<br><b style="text-align:left;">Age group</b>: %{x}<br>'),
+                    type = "bar",
+                    color =  I("#004e64"),
+                    name = "Unknown") %>%
+      add_trace(y = ~Unvaccinated,
+                color = I("#00a5cf"),
+                hovertemplate = paste('<b>Cases</b>: %{y:.0f}',
+                                      '<br><b style="text-align:left;">Age group</b>: %{x}<br>'),
+
+                name = "Unvaccinated") %>%
+      add_trace(y = ~Vaccinated,
+                hovertemplate = paste('<b>Cases</b>: %{y:.0f}',
+                                      '<br><b style="text-align:left;">Age group</b>: %{x}<br>'),
+                color = I("#edb952"),
+                name = "Vaccinated") %>%
+
+      layout(title = chart_label(picker_state_var = picker_state_var(),
+                                 picker_lga_var = picker_lga_var()),
+             barmode = 'stack',
+             xaxis = list(tickfont = font_plot(),
+                          title = "Age group (in Months)",
+                          fixedrange = TRUE,
+                          title= font_axis_title(),
+                          ticks = "outside",
+                          showline = TRUE
+             ),
+             plot_bgcolor = measles_plot_bgcolor(),
+             paper_bgcolor = measles_paper_bgcolor(),
+
+             margin = plot_margin_one_side(),
+
+             yaxis = list(side = 'left',
+                          rangemode="tozero",
+                          title = 'Number of cases',
+                          showline = TRUE,
+                          showgrid = FALSE,
+                          fixedrange = TRUE,
+                          zeroline = T,
+                          ticks = "outside",
+                          title = font_axis_title(),
+                          tickfont = font_plot()),
+
+             legend = list(orientation = "h",   # show entries horizontally
+                           xanchor = "center",  # use center of legend as anchor
+                           x = 0.5,
+                           y = -0.25),
+             hoverlabel = list(font = font_hoverlabel()),
+             font = font_plot())%>%
+      config(displayModeBar = FALSE)
+
+
+    plot
 
   })
+
+
+
+
+  output$plot <- renderPlotly({indicator_plot()})
+
+
+  output$downloadData <- downloadHandler(
+
+    filename = function() {
+      paste0("Chart 2- Diphtheria", picker_state_var(), picker_lga_var(), picker_year_var(), picker_month_var()[1] ," - ", picker_month_var()[length(picker_month_var())] ,".csv")
+    },
+    content = function(file) {
+      readr::write_csv(chart_data(), file)
+    }
+  )
+
+
+  output$downloadChart <- downloadHandler(
+    filename = function() {
+      paste0("Chart 2- Diphtheria", picker_state_var(),picker_lga_var(), picker_year_var(),  picker_month_var()[1] ," - ", picker_month_var()[length(picker_month_var())] ,".png")
+    },
+    content = function(file) {
+      owd <- setwd(tempdir())
+      on.exit(setwd(owd))
+      saveWidget(indicator_plot(), "temp.html", selfcontained = FALSE)
+      webshot("temp.html", file = file, cliprect = "viewport")
+
+    }
+  )
+
+
+
 }
 
 ## To be copied in the UI

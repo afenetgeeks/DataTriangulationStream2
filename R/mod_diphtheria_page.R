@@ -53,16 +53,16 @@ diphtheria_page <- function() {
                                              picker_state_var = reactive({dropdown_inputs$picker_state_var}),
                                              picker_lga_var   = reactive({dropdown_inputs$picker_lga_var})
       )
-      #
-      #
-      # mod_age_group_of_confirmed_diphtheria_cases_by_vaccination_status_server("age_group_of_confirmed_diphtheria_cases_by_vaccination_status_1",
-      #                                                                            picker_year_var = reactive({dropdown_inputs$picker_year_var}),
-      #                                                                            picker_month_var = reactive({dropdown_inputs$picker_month_var}),
-      #                                                                            picker_state_var = reactive({dropdown_inputs$picker_state_var}),
-      #                                                                            picker_lga_var   = reactive({dropdown_inputs$picker_lga_var})
-      # )
-      #
-      #
+
+
+      mod_age_group_of_confirmed_diphtheria_cases_by_vaccination_status_server("age_group_of_confirmed_diphtheria_cases_by_vaccination_status_1",
+                                                                                 picker_year_var = reactive({dropdown_inputs$picker_year_var}),
+                                                                                 picker_month_var = reactive({dropdown_inputs$picker_month_var}),
+                                                                                 picker_state_var = reactive({dropdown_inputs$picker_state_var}),
+                                                                                 picker_lga_var   = reactive({dropdown_inputs$picker_lga_var})
+      )
+
+
       # mod_diphtheria_vaccine_stock_analysis_diphtheria_coverage_server("diphtheria_vaccine_stock_analysis_diphtheria_coverage_1",
       #                                                                      picker_year_var = reactive({dropdown_inputs$picker_year_var}),
       #                                                                      picker_month_var = reactive({dropdown_inputs$picker_month_var}),

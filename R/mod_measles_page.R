@@ -3,6 +3,7 @@
 #'
 #' @description
 #'
+#'
 #' `measles_page()` creates the measles page
 #'
 #' `yellow_fever_page()` creates the yellow fever page
@@ -16,7 +17,7 @@
 #'  and hence contains code for the UI and server of the page
 #'
 #' @returns A Brochure Page
-#'
+
 #'
 
 
@@ -121,9 +122,9 @@ measles_page <- function() {
 #                                                                picker_lga_var   = reactive({dropdown_inputs$picker_lga_var})
 #        )
 #
-#  mod_national_measles_coverage_different_sources_server("national_measles_coverage_different_sources_1")
-#
-# mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_server("map_confirmed_measles_cases_mcv1_coverage_annual_data_1")
+# mod_national_measles_coverage_different_sources_server("national_measles_coverage_different_sources_1")
+
+mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_server("map_confirmed_measles_cases_mcv1_coverage_annual_data_1")
 
     }
   )

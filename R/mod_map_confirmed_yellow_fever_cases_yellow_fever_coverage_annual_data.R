@@ -205,21 +205,21 @@ mod_map_confirmed_yellow_fever_cases_yellow_fever_coverage_annual_data_server <-
                             na.color = 'red')
 
       if(sum(picker_state_var() == "Federal Government") == 1){
-        states_gadm_sp_data$spdf@data <- states_gadm_sp_data$spdf@data %>%
+        states_gadm_sp_data <- states_gadm_sp_data %>%
           left_join(as.data.frame(stream2_data$dhis2_data),
                     by = c("NAME_1" = "State"))
 
         yfc_map <-  leaflet() %>%
           addProviderTiles("TomTom.Basic") %>%
           setView(lat =  9.077751,lng = 8.6774567, zoom = 6) %>%
-          addPolygons( data = states_gadm_sp_data$spdf,
-                       fillColor = ~pal_yf(states_gadm_sp_data$spdf@data$`Coverage %`),
+          addPolygons( data = states_gadm_sp_data,
+                       fillColor = ~pal_yf(states_gadm_sp_data$`Coverage %`),
                        stroke = TRUE,
                        color = "black",
                        weight = 2.5,
                        fillOpacity = 0.5,
                        fill = T,
-                       label = ~paste0("<span>", states_gadm_sp_data$spdf@data$NAME_1,"</span>")%>%
+                       label = ~paste0("<span>", states_gadm_sp_data$NAME_1,"</span>")%>%
                          lapply(htmltools::HTML),
                        labelOptions = labelOptions(
                          textsize = "10px",
@@ -237,26 +237,25 @@ mod_map_confirmed_yellow_fever_cases_yellow_fever_coverage_annual_data_server <-
 
       }
       else{
-        states_gadm_sp_data_state <- gadm_subset(states_gadm_sp_data,
-                                                 level = 1,
-                                                 regions = picker_state_var())
+        states_gadm_sp_data_state <- states_gadm_sp_data |>
+          filter(NAME_1 == picker_state_var())
 
-        states_gadm_sp_data_state$spdf@data <- states_gadm_sp_data_state$spdf@data %>%
+         states_gadm_sp_data_state <-  states_gadm_sp_data_state %>%
           left_join(as.data.frame(stream2_data$dhis2_data),
                     by = c("NAME_1" = "State"))
 
         yfc_map <-  leaflet() %>%
           addProviderTiles("TomTom.Basic") %>%
-          # setView(lat =  states_gadm_sp_data_state$spdf@data$Lat,
-          #         lng = states_gadm_sp_data_state$spdf@data$Long, zoom = 6) %>%
-          addPolygons( data = states_gadm_sp_data_state$spdf,
-                       fillColor = ~pal_yf(states_gadm_sp_data_state$spdf@data$`Coverage %`),
+          # setView(lat =   states_gadm_sp_data_state$Lat,
+          #         lng =  states_gadm_sp_data_state$Long, zoom = 6) %>%
+          addPolygons( data = states_gadm_sp_data_state,
+                       fillColor = ~pal_yf( states_gadm_sp_data_state$`Coverage %`),
                        stroke = TRUE,
                        color = "black",
                        weight = 2.5,
                        fillOpacity = 0.5,
                        fill = T,
-                       label = ~paste0("<span>", states_gadm_sp_data_state$spdf@data$NAME_1,"</span>"
+                       label = ~paste0("<span>",  states_gadm_sp_data_state$NAME_1,"</span>"
                        )%>%
                          lapply(htmltools::HTML),
                        labelOptions = labelOptions(

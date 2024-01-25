@@ -124,7 +124,7 @@ measles_page <- function() {
 #
 # mod_national_measles_coverage_different_sources_server("national_measles_coverage_different_sources_1")
 
-mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_server("map_confirmed_measles_cases_mcv1_coverage_annual_data_1")
+#mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_server("map_confirmed_measles_cases_mcv1_coverage_annual_data_1")
 
     }
   )

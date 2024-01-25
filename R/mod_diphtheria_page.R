@@ -36,7 +36,11 @@ diphtheria_page <- function() {
 
                     div(class = "row-page",
                         mod_penta_vaccine_stock_analysis_penta_coverage_ui("penta_vaccine_stock_analysis_penta_coverage_1"),
-                        mod_penta1_penta3_drop_out_rate_nigeria_ui("penta1_penta3_drop_out_rate_nigeria_1")
+                        mod_discrepancy_penta1_opv1_given_by_state_ui("discrepancy_penta1_opv1_given_by_state_1")
+                    ),
+                    div(class = "row-page",
+                        mod_penta1_penta3_drop_out_rate_nigeria_ui("penta1_penta3_drop_out_rate_nigeria_1"),
+                        mod_national_penta_coverage_different_sources_ui("national_penta_coverage_different_sources_1")
                     ),
 
                     mod_map_confirmed_diphtheria_cases_penta1_coverage_annual_data_ui("map_confirmed_diphtheria_cases_penta1_coverage_annual_data_1"),
@@ -47,39 +51,45 @@ diphtheria_page <- function() {
 
       dropdown_inputs <- mod_inputs_server("inputs_4")
 
-      mod_penta_coverage_diphtheria_confirmed_cases_server("diphtheria_coverage_confirmed_cases_1"  ,
-                                             picker_year_var = reactive({dropdown_inputs$picker_year_var}),
-                                             picker_month_var = reactive({dropdown_inputs$picker_month_var}),
-                                             picker_state_var = reactive({dropdown_inputs$picker_state_var}),
-                                             picker_lga_var   = reactive({dropdown_inputs$picker_lga_var})
-      )
+      # mod_penta_coverage_diphtheria_confirmed_cases_server("penta_coverage_diphtheria_confirmed_cases_1"  ,
+      #                                        picker_year_var = reactive({dropdown_inputs$picker_year_var}),
+      #                                        picker_month_var = reactive({dropdown_inputs$picker_month_var}),
+      #                                        picker_state_var = reactive({dropdown_inputs$picker_state_var}),
+      #                                        picker_lga_var   = reactive({dropdown_inputs$picker_lga_var})
+      # )
 
 
-      mod_age_group_of_confirmed_diphtheria_cases_by_vaccination_status_server("age_group_of_confirmed_diphtheria_cases_by_vaccination_status_1",
-                                                                                 picker_year_var = reactive({dropdown_inputs$picker_year_var}),
-                                                                                 picker_month_var = reactive({dropdown_inputs$picker_month_var}),
-                                                                                 picker_state_var = reactive({dropdown_inputs$picker_state_var}),
-                                                                                 picker_lga_var   = reactive({dropdown_inputs$picker_lga_var})
-      )
+      # mod_age_group_of_confirmed_diphtheria_cases_by_vaccination_status_server("age_group_of_confirmed_diphtheria_cases_by_vaccination_status_1",
+      #                                                                            picker_year_var = reactive({dropdown_inputs$picker_year_var}),
+      #                                                                            picker_month_var = reactive({dropdown_inputs$picker_month_var}),
+      #                                                                            picker_state_var = reactive({dropdown_inputs$picker_state_var}),
+      #                                                                            picker_lga_var   = reactive({dropdown_inputs$picker_lga_var})
+      # )
 
 
-      # mod_diphtheria_vaccine_stock_analysis_diphtheria_coverage_server("diphtheria_vaccine_stock_analysis_diphtheria_coverage_1",
+      # mod_penta_vaccine_stock_analysis_penta_coverage_server("penta_vaccine_stock_analysis_penta_coverage_1",
       #                                                                      picker_year_var = reactive({dropdown_inputs$picker_year_var}),
       #                                                                      picker_month_var = reactive({dropdown_inputs$picker_month_var}),
       #                                                                      picker_state_var = reactive({dropdown_inputs$picker_state_var}),
       #                                                                      picker_lga_var   = reactive({dropdown_inputs$picker_lga_var})
       # )
+
       #
       #
-      #
-      # mod_discrepancy_mcv1_diphtheria_given_by_state_server("discrepancy_mcv1_diphtheria_given_by_state_2",
+      # mod_discrepancy_penta1_opv1_given_by_state_server("discrepancy_penta1_opv1_given_by_state_1",
       #                                                         picker_year_var = reactive({dropdown_inputs$picker_year_var}),
       #                                                         picker_month_var = reactive({dropdown_inputs$picker_month_var}),
       #                                                         picker_state_var = reactive({dropdown_inputs$picker_state_var}),
-      #                                                         picker_lga_var   = reactive({dropdown_inputs$picker_lga_var})
-      # )
-      #
-      #
+      #                                                         picker_lga_var   = reactive({dropdown_inputs$picker_lga_var}))
+
+      mod_penta1_penta3_drop_out_rate_nigeria_server("penta1_penta3_drop_out_rate_nigeria_1",
+                                                     picker_year_var = reactive({dropdown_inputs$picker_year_var}),
+                                                     picker_month_var = reactive({dropdown_inputs$picker_month_var}),
+                                                     picker_state_var = reactive({dropdown_inputs$picker_state_var}),
+                                                     picker_lga_var   = reactive({dropdown_inputs$picker_lga_var}))
+
+      mod_national_penta_coverage_different_sources_server("national_penta_coverage_different_sources_1")
+       #
       # mod_map_confirmed_diphtheria_cases_diphtheria_coverage_annual_data_server("map_confirmed_diphtheria_cases_diphtheria_coverage_annual_data_1")
     }
   )

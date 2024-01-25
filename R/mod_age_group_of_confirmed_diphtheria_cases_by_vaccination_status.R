@@ -42,7 +42,19 @@ mod_age_group_of_confirmed_diphtheria_cases_by_vaccination_status_ui <- function
 #' age_group_of_confirmed_diphtheria_cases_by_vaccination_status Server Functions
 #'
 #' @noRd
-mod_age_group_of_confirmed_diphtheria_cases_by_vaccination_status_server <- function(id){
+mod_age_group_of_confirmed_diphtheria_cases_by_vaccination_status_server <- function(id,
+                                                                                     picker_year_var,
+                                                                                     picker_month_var,
+                                                                                     picker_state_var,
+                                                                                     picker_lga_var ){
+
+  stopifnot(is.reactive(picker_year_var))
+  stopifnot(is.reactive(picker_month_var))
+  stopifnot(is.reactive(picker_state_var))
+  stopifnot(is.reactive(picker_lga_var))
+
+  moduleServer( id, function(input, output, session){
+
   ns <- session$ns
 
   chart_data <- reactive({
@@ -160,7 +172,7 @@ mod_age_group_of_confirmed_diphtheria_cases_by_vaccination_status_server <- func
   )
 
 
-
+  })
 }
 
 ## To be copied in the UI

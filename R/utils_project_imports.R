@@ -23,4 +23,4 @@
 #' @importFrom webshot webshot
 #' @importFrom utils write.csv zip
 
-webshot::install_phantomjs(version = "2.1.1", baseURL = "https://bitbucket.org/ariya/phantomjs/downloads/", force = FALSE)
+#webshot::install_phantomjs(version = "2.1.1", baseURL = "https://bitbucket.org/ariya/phantomjs/downloads/", force = FALSE)

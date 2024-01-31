@@ -65,7 +65,7 @@ mod_discrepancy_mcv1_yellow_fever_given_by_state_server <- function(id,
 
     chart_data <- reactive({
 
-      dplyr::tbl(connection, "measles_yf_discrepancy")%>%
+      dplyr::tbl(connection, "measles_yf_discrepancy2")%>%
         filter(Year %in% !!picker_year_var() &
                  Months %in%  !!picker_month_var() &
                 State %in% !!picker_state_var() &

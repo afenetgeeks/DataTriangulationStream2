@@ -17,7 +17,26 @@
 #'  and hence contains code for the UI and server of the page
 #'
 #' @returns A Brochure Page
-
+#' @import pkgload
+#' @import shiny
+#' @importFrom brochure page
+#' @importFrom RMariaDB MariaDB
+#' @importFrom pool dbPool
+#' @import dbplyr
+#' @importFrom dplyr collect tbl mutate arrange filter across group_by summarise ungroup left_join case_when
+#' @importFrom readr read_csv
+#' @importFrom stringr str_c str_replace
+#' @importFrom magrittr %>%
+#' @importFrom waiter waiterPreloader spin_loaders
+#' @importFrom shinycssloaders withSpinner
+#' @importFrom plotly plotlyOutput renderPlotly plot_ly add_trace layout config add_annotations
+#' @importFrom geodata gadm
+#' @importFrom sf st_as_sf
+#' @importFrom leaflet leaflet leafletOutput renderLeaflet colorFactor addProviderTiles setView addPolygons addMarkers labelOptions addLegend markerClusterOptions
+#' @importFrom leaflet.extras addResetMapButton
+#' @importFrom htmlwidgets saveWidget
+#' @importFrom webshot webshot
+#' @importFrom utils write.csv zip
 #'
 
 
@@ -86,45 +105,45 @@ measles_page <- function() {
       waiter::waiter_hide()
 
       dropdown_inputs <- mod_inputs_server("inputs_1")
-#
-#       mod_confirmed_measles_cases_MCV1_coverage_server("confirmed_measles_cases_MCV1_coverage_1",
-#                                                        picker_year_var = reactive({dropdown_inputs$picker_year_var}),
-#                                                        picker_month_var = reactive({dropdown_inputs$picker_month_var}),
-#                                                        picker_state_var = reactive({dropdown_inputs$picker_state_var}),
-#                                                        picker_lga_var   = reactive({dropdown_inputs$picker_lga_var})
-#                                                       )
-#
-#    mod_age_group_of_confirmed_measles_cases_by_vaccination_status_server("age_group_of_confirmed_measles_cases_by_vaccination_status_1",
-#                                                                          picker_year_var = reactive({dropdown_inputs$picker_year_var}),
-#                                                                          picker_month_var = reactive({dropdown_inputs$picker_month_var}),
-#                                                                          picker_state_var = reactive({dropdown_inputs$picker_state_var}),
-#                                                                          picker_lga_var   = reactive({dropdown_inputs$picker_lga_var})
-#                                                                          )
-#
-#    mod_measles_vaccine_stock_analysis_measles_coverage_server("measles_vaccine_stock_analysis_measles_coverage_1",
-#                                                               picker_year_var = reactive({dropdown_inputs$picker_year_var}),
-#                                                               picker_month_var = reactive({dropdown_inputs$picker_month_var}),
-#                                                               picker_state_var = reactive({dropdown_inputs$picker_state_var}),
-#                                                               picker_lga_var   = reactive({dropdown_inputs$picker_lga_var})
-#                                                               )
-#
-#    mod_mcv1_mcv2_drop_out_rate_nigeria_server("mcv1_mcv2_drop_out_rate_nigeria_1",
-#                                               picker_year_var = reactive({dropdown_inputs$picker_year_var}),
-#                                               picker_month_var = reactive({dropdown_inputs$picker_month_var}),
-#                                               picker_state_var = reactive({dropdown_inputs$picker_state_var}),
-#                                               picker_lga_var   = reactive({dropdown_inputs$picker_lga_var})
-#                                               )
-#
-#        mod_discrepancy_mcv1_yellow_fever_given_by_state_server("discrepancy_mcv1_yellow_fever_given_by_state_1",
-#                                                                picker_year_var = reactive({dropdown_inputs$picker_year_var}),
-#                                                                picker_month_var = reactive({dropdown_inputs$picker_month_var}),
-#                                                                picker_state_var = reactive({dropdown_inputs$picker_state_var}),
-#                                                                picker_lga_var   = reactive({dropdown_inputs$picker_lga_var})
-#        )
-#
-# mod_national_measles_coverage_different_sources_server("national_measles_coverage_different_sources_1")
 
-#mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_server("map_confirmed_measles_cases_mcv1_coverage_annual_data_1")
+      mod_confirmed_measles_cases_MCV1_coverage_server("confirmed_measles_cases_MCV1_coverage_1",
+                                                       picker_year_var = reactive({dropdown_inputs$picker_year_var}),
+                                                       picker_month_var = reactive({dropdown_inputs$picker_month_var}),
+                                                       picker_state_var = reactive({dropdown_inputs$picker_state_var}),
+                                                       picker_lga_var   = reactive({dropdown_inputs$picker_lga_var})
+                                                      )
+
+   mod_age_group_of_confirmed_measles_cases_by_vaccination_status_server("age_group_of_confirmed_measles_cases_by_vaccination_status_1",
+                                                                         picker_year_var = reactive({dropdown_inputs$picker_year_var}),
+                                                                         picker_month_var = reactive({dropdown_inputs$picker_month_var}),
+                                                                         picker_state_var = reactive({dropdown_inputs$picker_state_var}),
+                                                                         picker_lga_var   = reactive({dropdown_inputs$picker_lga_var})
+                                                                         )
+
+   mod_measles_vaccine_stock_analysis_measles_coverage_server("measles_vaccine_stock_analysis_measles_coverage_1",
+                                                              picker_year_var = reactive({dropdown_inputs$picker_year_var}),
+                                                              picker_month_var = reactive({dropdown_inputs$picker_month_var}),
+                                                              picker_state_var = reactive({dropdown_inputs$picker_state_var}),
+                                                              picker_lga_var   = reactive({dropdown_inputs$picker_lga_var})
+                                                              )
+
+   mod_mcv1_mcv2_drop_out_rate_nigeria_server("mcv1_mcv2_drop_out_rate_nigeria_1",
+                                              picker_year_var = reactive({dropdown_inputs$picker_year_var}),
+                                              picker_month_var = reactive({dropdown_inputs$picker_month_var}),
+                                              picker_state_var = reactive({dropdown_inputs$picker_state_var}),
+                                              picker_lga_var   = reactive({dropdown_inputs$picker_lga_var})
+                                              )
+
+       mod_discrepancy_mcv1_yellow_fever_given_by_state_server("discrepancy_mcv1_yellow_fever_given_by_state_1",
+                                                               picker_year_var = reactive({dropdown_inputs$picker_year_var}),
+                                                               picker_month_var = reactive({dropdown_inputs$picker_month_var}),
+                                                               picker_state_var = reactive({dropdown_inputs$picker_state_var}),
+                                                               picker_lga_var   = reactive({dropdown_inputs$picker_lga_var})
+       )
+
+  mod_national_measles_coverage_different_sources_server("national_measles_coverage_different_sources_1")
+
+  mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_server("map_confirmed_measles_cases_mcv1_coverage_annual_data_1")
 
     }
   )

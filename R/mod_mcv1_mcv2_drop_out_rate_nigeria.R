@@ -63,7 +63,7 @@ mod_mcv1_mcv2_drop_out_rate_nigeria_server <- function(id,
 
     chart_data <- reactive({
 
-        dplyr::tbl(connection, "mcv1_mcv2_dropout_rate") %>%
+        dplyr::tbl(connection, "mcv1_mcv2_dropout_rate2") %>%
         dplyr::filter(Year %in% !!picker_year_var() &
                       Months %in%  !!picker_month_var() &
                       State %in% !!picker_state_var() &
@@ -94,7 +94,7 @@ mod_mcv1_mcv2_drop_out_rate_nigeria_server <- function(id,
                                                                            '<br><b style="text-align:left;">Month </b>: %{x}<br>'))
 
       plotM12Dropout <- plotM12Dropout %>% add_trace(x = ~Months,
-                                                     y = ~`second_dose`,
+                                                     y = ~`later_dose`,
                                                      type = 'bar',
                                                      color = I("#00a5cf"),
                                                      name = 'MCV 2',

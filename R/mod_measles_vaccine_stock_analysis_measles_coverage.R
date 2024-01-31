@@ -62,7 +62,7 @@ mod_measles_vaccine_stock_analysis_measles_coverage_server <- function(id,
 
     chart_data <- reactive({
 
-       dplyr::tbl(connection, "measles_stock_analysis")%>%
+       dplyr::tbl(connection, "measles_stock_analysis2")%>%
         dplyr::filter(Year %in% !!picker_year_var() &
                         Months %in% !!picker_month_var() &
                         State %in% !!picker_state_var() &

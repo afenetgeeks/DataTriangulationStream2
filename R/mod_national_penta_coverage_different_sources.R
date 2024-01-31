@@ -77,34 +77,34 @@ mod_national_penta_coverage_different_sources_server <- function(id){
       #                           '<br><b style="text-align:left;">Year</b>: %{x}<br>'),
       #     name = "*WUENIC (MCV1)")
       #
-      # fig <- fig %>%
-      #   add_trace(
-      #     x = ~Year,
-      #     y = ~NDHS,
-      #     color = I("#0A9396"),
-      #     hovertemplate = paste('<b>Coverage %</b>: %{y:.0f}',
-      #                           '<br><b style="text-align:left;">Year</b>: %{x}<br>'),
-      #     type = "bar",
-      #     name = "*NDHS (MCV1)")
-      #
-      # fig <- fig %>%
-      #   add_trace(
-      #     x = ~Year,
-      #     y = ~`SMART Survey`,
-      #     color = I("#94D2BD"),
-      #     type = "bar",
-      #     hovertemplate = paste('<b>Coverage %</b>: %{y:.0f}',
-      #                           '<br><b style="text-align:left;">Year</b>: %{x}<br>'),
-      #     name = "*SMART Survey (MCV1)")
-      #
-      # fig <- fig %>%
-      #   add_trace(
-      #     x = ~Year,y = ~`NICS/MICS`,
-      #     type = "bar",
-      #     color = I("#00a5cf"),
-      #     hovertemplate = paste('<b>Coverage %</b>: %{y:.0f}',
-      #                           '<br><b style="text-align:left;">Year</b>: %{x}<br>'),
-      #     name = "*NICS/MICS (MCV1)")
+      fig <- fig %>%
+        add_trace(
+          x = ~Year,
+          y = ~`NDHS (Penta 3)`,
+          color = I("#0A9396"),
+          hovertemplate = paste('<b>Coverage %</b>: %{y:.0f}',
+                                '<br><b style="text-align:left;">Year</b>: %{x}<br>'),
+          type = "bar",
+          name = "*NDHS (Penta3)")
+
+      fig <- fig %>%
+        add_trace(
+          x = ~Year,
+          y = ~`SMART Survey (Penta 3)`,
+          color = I("#94D2BD"),
+          type = "bar",
+          hovertemplate = paste('<b>Coverage %</b>: %{y:.0f}',
+                                '<br><b style="text-align:left;">Year</b>: %{x}<br>'),
+          name = "*SMART Survey (Penta3)")
+
+      fig <- fig %>%
+        add_trace(
+          x = ~Year,y = ~`NICS/MICS (Penta 3)`,
+          type = "bar",
+          color = I("#00a5cf"),
+          hovertemplate = paste('<b>Coverage %</b>: %{y:.0f}',
+                                '<br><b style="text-align:left;">Year</b>: %{x}<br>'),
+          name = "*NICS/MICS (Penta3)")
 
 
       fig <- fig %>% add_trace(

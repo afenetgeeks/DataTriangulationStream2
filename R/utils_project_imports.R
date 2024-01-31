@@ -7,6 +7,7 @@
 #' @importFrom brochure page
 #' @importFrom RMariaDB MariaDB
 #' @importFrom pool dbPool
+#' @import pkgload
 #' @import dbplyr
 #' @importFrom dplyr collect tbl mutate arrange filter across group_by summarise ungroup left_join case_when
 #' @importFrom readr read_csv
@@ -23,4 +24,6 @@
 #' @importFrom webshot webshot
 #' @importFrom utils write.csv zip
 
+
+#pkgload::pkg_path()
 #webshot::install_phantomjs(version = "2.1.1", baseURL = "https://bitbucket.org/ariya/phantomjs/downloads/", force = FALSE)

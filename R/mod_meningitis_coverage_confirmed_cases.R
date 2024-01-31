@@ -54,7 +54,7 @@ mod_meningitis_coverage_confirmed_cases_server <- function(id,
 
     chart_data <- reactive({
 
-      dplyr::tbl(connection, "men_A_alt_denominator")%>%
+      dplyr::tbl(connection, "men_A_alt_denominator2")%>%
         dplyr::filter(Year %in% !!picker_year_var() &
                         Months %in% !!picker_month_var() &
                         State %in% !!picker_state_var() &

@@ -5,10 +5,8 @@ account: afenetgeeks
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 7171385
-bundleId: 7642108
+bundleId: 8202012
 url: https://afenetgeeks.shinyapps.io/data-triangulation-monthly-review/
-when: 1693812739.77129
-lastSyncTime: 1693812739.77131
 asMultiple: FALSE
 asStatic: FALSE
-ignoredFiles: _pkgdown.yml|.github/.gitignore|.github/workflows/pkgdown.yaml|.github/workflows/R-CMD-check.yaml|.github/workflows/test-coverage.yaml|dev/01_start.R|dev/02_dev.R|dev/03_deploy.R|dev/run_dev.R|LICENSE|LICENSE.md|NEWS.md|README.md|README.Rmd|tests|vignettes
+ignoredFiles: .github/workflows/pkgdown.yaml|.github/workflows/R-CMD-check.yaml|.github/workflows/test-coverage.yaml|Meta/vignette.rds|NEWS.md|README.md|README.Rmd|vignettes/figures/key-of-whole-system.png|vignettes/figures/whole-system.png|vignettes/future-developers.Rmd|vignettes/the-whole-system.Rmd|doc|docs|tests

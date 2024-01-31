@@ -73,7 +73,7 @@ mod_confirmed_measles_cases_MCV1_coverage_server <- function(id,
 
     chart_data <- reactive({
 
-      dplyr::tbl(connection, "measles_alt_denominator")%>%
+      dplyr::tbl(connection, "measles_alt_denominator2")%>%
         dplyr::filter(Year %in% !!picker_year_var() &
                         Months %in% !!picker_month_var() &
                         State %in% !!picker_state_var() &
@@ -81,20 +81,26 @@ mod_confirmed_measles_cases_MCV1_coverage_server <- function(id,
         mutate(Months = as.Date(str_c(Year, Months, 01,sep = "-"), "%Y-%b-%d"),
                across(c(Year,State ), as.factor))
     })
-
+    # chart_data <-  dplyr::tbl(connection, "measles_alt_denominator2")%>%
+    #   dplyr::filter(Year %in% !! "2023"&
+    #                   Months %in% !!"Aug" &
+    #                   State %in% !!"Federal Capital Territory" &
+    #                   LGA %in% !!"State level data")%>% collect() %>%
+    #   mutate(Months = as.Date(str_c(Year, Months, 01,sep = "-"), "%Y-%b-%d"),
+    #          across(c(Year,State ), as.factor))
 
 
     indicator_plot <- reactive({
 
-       min_max_rate <- range(chart_data()$`MCV 1 Alt Denominator`,na.rm = T)
+       min_max_rate <- range(chart_data()$`first dose coverage alt denominator`,na.rm = T)
 
-       min_max_number <-  range(chart_data()$`Measles Cases (CaseBased)`,na.rm = T)
+       min_max_number <-  range(chart_data()$`Cases (CaseBased)`,na.rm = T)
 
 
       plotmcac <- plot_ly(data = chart_data() %>% arrange(Months))
 
       plotmcac <- plotmcac %>% add_trace(x = ~Months,
-                                         y = ~`MCV 1`,
+                                         y = ~`first dose coverage`,
                                          yaxis = 'y2',
                                          color = I("#004e64"),
                                          mode = 'lines+markers', type = 'scatter',
@@ -106,7 +112,7 @@ mod_confirmed_measles_cases_MCV1_coverage_server <- function(id,
       )
 
       plotmcac <- plotmcac %>% add_trace(x = ~Months,
-                                         y = ~`MCV 2`,
+                                         y = ~`later dose coverage`,
                                          yaxis = 'y2',
                                          color = I("#94D2BD"),
                                          mode = 'lines+markers', type = 'scatter',
@@ -118,7 +124,7 @@ mod_confirmed_measles_cases_MCV1_coverage_server <- function(id,
       )
 
       plotmcac <- plotmcac %>% add_trace(x = ~ Months,
-                                         y = ~ `MCV 1 Alt Denominator`,
+                                         y = ~ `first dose coverage alt denominator`,
                                          yaxis = 'y2',
                                          color = I("#edb952"),
                                          line = list(shape = 'spline', linetype = I("solid")),
@@ -129,7 +135,7 @@ mod_confirmed_measles_cases_MCV1_coverage_server <- function(id,
                                          name = 'MCV 1 Alt Denominator')
 
       plotmcac <- plotmcac %>% add_trace(x = ~ Months,
-                                         y = ~ `MCV 2 Alt Denominator`,
+                                         y = ~ `later dose coverage alt denominator`,
                                          yaxis = 'y2',
                                          color = I("#E9D8A6"),
                                          line = list(shape = 'spline', linetype = I("solid")),
@@ -140,7 +146,7 @@ mod_confirmed_measles_cases_MCV1_coverage_server <- function(id,
                                          name = 'MCV 2 Alt Denominator')
 
       plotmcac <- plotmcac %>% add_trace(x = ~ Months,
-                                         y = ~ `Measles Cases (CaseBased)`,
+                                         y = ~ `Cases (CaseBased)`,
                                          type = 'bar',
                                          color =  I("#00a5cf"),
                                          name = 'Measles Cases (Sormas)',

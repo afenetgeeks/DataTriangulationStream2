@@ -28,7 +28,7 @@ mod_map_confirmed_meningitis_cases_coverage_annual_data_ui <- function(id){
         div(class = "map_charts_inputs",
 
             pickerInput(inputId = ns("picker_year"), label =  NULL,
-                        choices = years_vector_util(), multiple = F, selected = "2023",
+                        choices = years_vector_util(), multiple = F, selected = "2024",
                         options = list(title = "Years",`actions-box` = TRUE,size = 10,`selected-text-format` = "count > 2")),
 
             pickerInput(inputId = ns("picker_month"), label =  NULL,

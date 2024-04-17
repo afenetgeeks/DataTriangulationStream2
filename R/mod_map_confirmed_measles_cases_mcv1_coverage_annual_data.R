@@ -28,7 +28,7 @@ mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_ui <- function(id){
         div(class = "map_charts_inputs",
 
             pickerInput(inputId = ns("picker_year"), label =  NULL,
-                        choices = years_vector_util(), multiple = F, selected = "2023",
+                        choices = years_vector_util(), multiple = F, selected = "2024",
                         options = list(title = "Years",`actions-box` = TRUE,size = 10,`selected-text-format` = "count > 2")),
 
             pickerInput(inputId = ns("picker_month"), label =  NULL,
@@ -93,7 +93,7 @@ mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_server <- function(id)
 
         if(sum(picker_month_var() == "Year Data") == 1){
 
-          stream2_data$dhis2_data <- dplyr::tbl(connection, "measles_coverage_map") %>%
+          stream2_data$dhis2_data <- dplyr::tbl(connection, "measles_coverage_map2") %>%
         filter(Year %in% !!picker_year_var() & Months %in% "Ann" & LGA  %in% "State level data") %>% dplyr::collect() %>%
             mutate("Coverage %" = case_when(
               Coverage < 50 ~ "0 - 49%",
@@ -107,7 +107,7 @@ mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_server <- function(id)
 
       }else{
 
-        stream2_data$dhis2_data <- dplyr::tbl(connection, "measles_coverage_map") %>%
+        stream2_data$dhis2_data <- dplyr::tbl(connection, "measles_coverage_map2") %>%
           filter(Year %in% !!picker_year_var() & Months  %in% !!picker_month_var() & LGA  %in% !!"State level data") %>% dplyr::collect() %>%
           mutate("Coverage %" = case_when(
             Coverage < 50 ~ "0 - 49%",
@@ -125,7 +125,7 @@ mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_server <- function(id)
 
         if(sum(picker_month_var() == "Year Data") == 1){
 
-          stream2_data$dhis2_data <- dplyr::tbl(connection, "measles_coverage_map") %>%
+          stream2_data$dhis2_data <- dplyr::tbl(connection, "measles_coverage_map2") %>%
             filter(Year %in% !!picker_year_var() &
                      State %in% !!picker_state_var() & Months %in% "Ann" & LGA %in% "State level data")%>%dplyr::collect() %>%
             mutate("Coverage %" = case_when(
@@ -140,7 +140,7 @@ mod_map_confirmed_measles_cases_mcv1_coverage_annual_data_server <- function(id)
 
         }else{
 
-          stream2_data$dhis2_data <- dplyr::tbl(connection, "measles_coverage_map") %>%
+          stream2_data$dhis2_data <- dplyr::tbl(connection, "measles_coverage_map2") %>%
             filter(Year %in% !!picker_year_var() &
                      State %in% !!picker_state_var() & Months %in% !!picker_month_var() & LGA %in% "State level data")%>%dplyr::collect() %>%
             mutate("Coverage %" = case_when(

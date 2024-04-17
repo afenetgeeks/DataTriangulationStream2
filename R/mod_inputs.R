@@ -43,7 +43,7 @@ mod_inputs_ui <- function(id, disease){
                                                                                       tags$a(class = "info-icon-link", href="#",
                                                                                              img(class = "info-icon", src = "www/info_icon.svg", alt="info-icon"),
                                                                                              span(class="info-tooltiptext", "You can select one or more Years"))),
-                                                     choices = years_vector_util(), multiple = T, selected = "2023",
+                                                     choices = years_vector_util(), multiple = T, selected = "2024",
                                                      options = list(title = "Years",`actions-box` = TRUE,size = 10,`selected-text-format` = "count > 2"))),
 
 

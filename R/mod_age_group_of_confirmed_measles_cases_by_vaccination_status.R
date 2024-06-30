@@ -20,15 +20,7 @@ mod_age_group_of_confirmed_measles_cases_by_vaccination_status_ui <- function(id
                       <i class="fa fa-download" aria-hidden="true"></i>
                       <div class = tooltipdiv> <p class="tooltiptext">Download the data for this Chart</p> </div>
                      </a>')),
-
-       HTML(paste0('<a id="', ns("downloadChart"), '" class="btn btn-default shiny-download-link download-data-btn download-chart-btn" href="" target="_blank" download>
-                     <i class="fa fa-chart-bar"></i>
-                      <div class = tooltipdiv>
-                          <p class="tooltiptext">
-                              Download this Chart
-                          </p>
-                      </div>
-                     </a>')),
+       screenshotButton(id = ns("plot"), filename = "Chart 2 Age group of confirmed Measles cases by vaccination status", download =T, scale = 2, label = "", class = "download-data-btn download-chart-btn"),
 
        withSpinner(
          plotlyOutput(ns("plot")),
@@ -153,18 +145,6 @@ mod_age_group_of_confirmed_measles_cases_by_vaccination_status_server <-  functi
     )
 
 
-    output$downloadChart <- downloadHandler(
-      filename = function() {
-        paste0("Chart 2- Measles", picker_state_var(),picker_lga_var(), picker_year_var(),  picker_month_var()[1] ," - ", picker_month_var()[length(picker_month_var())] ,".png")
-      },
-      content = function(file) {
-        owd <- setwd(tempdir())
-        on.exit(setwd(owd))
-        saveWidget(indicator_plot(), "temp.html", selfcontained = FALSE)
-        webshot("temp.html", file = file, cliprect = "viewport")
-
-      }
-    )
 
 
 

@@ -43,14 +43,7 @@ mod_map_confirmed_yellow_fever_cases_yellow_fever_coverage_annual_data_ui <- fun
                       <div class = tooltipdiv> <p class="tooltiptext">Download the data for this Chart</p> </div>
                      </a>')),
 
-       HTML(paste0('<a id="', ns("downloadChart"), '" class="btn btn-default shiny-download-link download-data-btn download-chart-btn" href="" target="_blank" download>
-                     <i class="fa fa-chart-bar"></i>
-                      <div class = tooltipdiv>
-                          <p class="tooltiptext">
-                              Download this Chart
-                          </p>
-                      </div>
-                     </a>')),
+       screenshotButton(id = ns("yfcMap"), filename = "Chart 5- Confirmed yellow fever cases and coverage", download =T, scale = 2, label = "", class = "download-data-btn download-chart-btn"),
         withSpinner(leafletOutput(ns("yfcMap"), height=440),type = 6, size = 0.4,hide.ui = F)
     )
 
@@ -307,19 +300,6 @@ mod_map_confirmed_yellow_fever_cases_yellow_fever_coverage_annual_data_server <-
       contentType = "application/zip"
     )
 
-
-    output$downloadChart <- downloadHandler(
-      filename = function() {
-        paste0("Chart 5- Yellow Fever", picker_state_var(), picker_year_var() , picker_month_var() ,".png")
-      },
-      content = function(file) {
-        owd <- setwd(tempdir())
-        on.exit(setwd(owd))
-        saveWidget(yfc_map_leaflef(), "temp.html", selfcontained = FALSE)
-        webshot("temp.html", file = file, cliprect = "viewport")
-
-      }
-    )
 
   })
 }

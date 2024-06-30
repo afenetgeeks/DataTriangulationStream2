@@ -58,7 +58,7 @@ nav_links <- function(disease){
 #           )
 #   )
 # }
-
+#
 
 #' Create the loading screen
 #'

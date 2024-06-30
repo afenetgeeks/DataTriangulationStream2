@@ -23,14 +23,7 @@ mod_discrepancy_mcv1_yellow_fever_given_by_state_ui <- function(id){
                       <div class = tooltipdiv> <p class="tooltiptext">Download the data for this Chart</p> </div>
                      </a>')),
 
-      HTML(paste0('<a id="', ns("downloadChart"), '" class="btn btn-default shiny-download-link download-data-btn download-chart-btn" href="" target="_blank" download>
-                     <i class="fa fa-chart-bar"></i>
-                      <div class = tooltipdiv>
-                          <p class="tooltiptext">
-                              Download this Chart
-                          </p>
-                      </div>
-                     </a>')),
+      screenshotButton(id = ns("plot"), filename = "Chart 4 Co-administered antigen discrepancy MCV 1 - Yellow Fever given", download =T, scale = 2, label = "", class = "download-data-btn download-chart-btn"),
         withSpinner(plotlyOutput(ns("plot")),type = 6, size = 0.3,hide.ui = F)
 
     )
@@ -177,24 +170,12 @@ mod_discrepancy_mcv1_yellow_fever_given_by_state_server <- function(id,
         paste0("Chart 4 -Measles - Yellow Fever discrepancy", picker_state_var(), picker_lga_var() ,".csv")
       },
       content = function(file) {
-        readr::write_csv(chart_data(), file)
+        readr::write_csv(chart_data() |>
+                           dplyr::rename("MCV1" = "main_vaccine_given",
+                                        "Yellow Fever" = "other_vaccine_given"),
+                         file)
       }
     )
-
-
-    output$downloadChart <- downloadHandler(
-      filename = function() {
-        paste0("Chart 4 - Measles- Yellow Fever discrepancy", picker_state_var(), picker_lga_var() ,".png")
-      },
-      content = function(file) {
-        owd <- setwd(tempdir())
-        on.exit(setwd(owd))
-        saveWidget(indicator_plot(), "temp.html", selfcontained = FALSE)
-        webshot("temp.html", file = file, cliprect = "viewport")
-
-      }
-    )
-
 
   })
 }

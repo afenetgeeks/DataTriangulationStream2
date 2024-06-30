@@ -16,14 +16,7 @@ mod_age_group_of_confirmed_yellow_fever_cases_by_vaccination_status_ui <- functi
                       <div class = tooltipdiv> <p class="tooltiptext">Download the data for this Chart</p> </div>
                      </a>')),
 
-        HTML(paste0('<a id="', ns("downloadChart"), '" class="btn btn-default shiny-download-link download-data-btn download-chart-btn" href="" target="_blank" download>
-                     <i class="fa fa-chart-bar"></i>
-                      <div class = tooltipdiv>
-                          <p class="tooltiptext">
-                              Download this Chart
-                          </p>
-                      </div>
-                     </a>')),
+        screenshotButton(id = ns("plot"), filename = "Chart 2 Age group of confirmed Yellow Fever cases by vaccination status", download =T, scale = 2, label = "", class = "download-data-btn download-chart-btn"),
         withSpinner(plotlyOutput(ns("plot")),type = 6, size = 0.3,hide.ui = F)
 
     )
@@ -135,19 +128,6 @@ mod_age_group_of_confirmed_yellow_fever_cases_by_vaccination_status_server <- fu
       },
       content = function(file) {
         readr::write_csv(chart_data(), file)
-      }
-    )
-
-
-    output$downloadChart <- downloadHandler(
-      filename = function() {
-        paste0("Chart 2- Yellow Fever", picker_state_var(), picker_lga_var(), picker_year_var(),  picker_month_var()[1] ," - ", picker_month_var()[length(picker_month_var())] ,".png")
-      },
-      content = function(file) {
-        owd <- setwd(tempdir())
-        on.exit(setwd(owd))
-        saveWidget(indicator_plot(), "temp.html", selfcontained = FALSE)
-        webshot("temp.html", file = file, cliprect = "viewport")
       }
     )
 

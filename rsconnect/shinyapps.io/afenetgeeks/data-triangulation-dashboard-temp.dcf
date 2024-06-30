@@ -5,7 +5,7 @@ account: afenetgeeks
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 6896948
-bundleId: 8503978
+bundleId: 8797419
 url: https://afenetgeeks.shinyapps.io/data-triangulation-dashboard-temp/
 asMultiple: FALSE
 asStatic: FALSE

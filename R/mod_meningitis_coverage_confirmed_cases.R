@@ -17,15 +17,7 @@ mod_meningitis_coverage_confirmed_cases_ui <- function(id){
                       <div class = tooltipdiv> <p class="tooltiptext">Download the data for this Chart</p> </div>
                      </a>')),
 
-        HTML(paste0('<a id="', ns("downloadChart"), '" class="btn btn-default shiny-download-link download-data-btn download-chart-btn" href="" target="_blank" download>
-                     <i class="fa fa-chart-bar"></i>
-                      <div class = tooltipdiv>
-                          <p class="tooltiptext">
-                              Download this Chart
-                          </p>
-                      </div>
-                     </a>')),
-
+        screenshotButton(id = ns("plot"), filename = ">Chart 1 Confirmed meningitis cases and coverage", download =T, scale = 2, label = "", class = "download-data-btn download-chart-btn"),
         withSpinner(plotlyOutput(ns("plot")),type = 6, size = 0.3,hide.ui = F)
 
     )
@@ -60,7 +52,8 @@ mod_meningitis_coverage_confirmed_cases_server <- function(id,
                         State %in% !!picker_state_var() &
                         LGA %in% !!picker_lga_var())%>% collect() %>%
         mutate(Months = as.Date(str_c(Year, Months, 01,sep = "-"), "%Y-%b-%d"),
-               across(c(Year,State ), as.factor))
+               across(c(Year,State ), as.factor),
+               `Disease Cases` = ifelse(is.na(`Disease Cases`), 0, `Disease Cases`))
     })
 
 
@@ -128,7 +121,7 @@ mod_meningitis_coverage_confirmed_cases_server <- function(id,
 
                                       margin = plot_margin(),
 
-                                      yaxis2 = list(range = plot_rate_range(min_max_rate[1], min_max_rate[2]),
+                                      yaxis2 = list(#range = plot_rate_range(min_max_rate[1], min_max_rate[2]),
                                                     rangemode="tozero",
                                                     fixedrange = TRUE,
                                                     side = 'left',
@@ -179,20 +172,6 @@ mod_meningitis_coverage_confirmed_cases_server <- function(id,
       content = function(file) {
 
         readr::write_csv(chart_data(), file)
-      }
-    )
-
-
-    output$downloadChart <- downloadHandler(
-      filename = function() {
-        paste0("Chart 1- Meningitis", picker_state_var(), picker_lga_var(),".png")
-      },
-      content = function(file) {
-        owd <- setwd(tempdir())
-        on.exit(setwd(owd))
-        saveWidget(indicator_plot(), "temp.html", selfcontained = FALSE)
-        webshot("temp.html", file = file, cliprect = "viewport")
-
       }
     )
 

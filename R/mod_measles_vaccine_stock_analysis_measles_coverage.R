@@ -21,14 +21,7 @@ mod_measles_vaccine_stock_analysis_measles_coverage_ui <- function(id){
                       <div class = tooltipdiv> <p class="tooltiptext">Download the data for this Chart</p> </div>
                      </a>')),
 
-       HTML(paste0('<a id="', ns("downloadChart"), '" class="btn btn-default shiny-download-link download-data-btn download-chart-btn" href="" target="_blank" download>
-                     <i class="fa fa-chart-bar"></i>
-                      <div class = tooltipdiv>
-                          <p class="tooltiptext">
-                              Download this Chart
-                          </p>
-                      </div>
-                     </a>')),
+       screenshotButton(id = ns("plot"), filename = ">Chart 3 MCV stock analysis & MCV 1 - 2 given", download =T, scale = 2, label = "", class = "download-data-btn download-chart-btn"),
         withSpinner(plotlyOutput(ns("plot")),type = 6, size = 0.3,hide.ui = F)
 
     )
@@ -91,9 +84,10 @@ mod_measles_vaccine_stock_analysis_measles_coverage_server <- function(id,
                                    color = I("#B37064"),
                                    hovertemplate = paste('<b>Rate %</b>: %{y:.1f}',
                                                          '<br><b style="text-align:left;">Month </b>: %{x}<br>'),
-                                   name = 'MCV Doses Wastage Rate',
-                                   hoverinfo = "text",
-                                   text = ~scales::number(`Doses Wastage Rate`,big.mark = ","))
+                                   name = 'MCV Doses Wastage Rate'
+                                  # hoverinfo = "text",
+                                  # text = ~scales::number(`Doses Wastage Rate`,big.mark = ",")
+                                  )
 
       plotM <- plotM %>% add_trace(x = ~Months,
                                    y = ~`Vaccine - Doses Opened (used)`,
@@ -210,18 +204,6 @@ mod_measles_vaccine_stock_analysis_measles_coverage_server <- function(id,
     )
 
 
-    output$downloadChart <- downloadHandler(
-      filename = function() {
-        paste0("Chart 3- Measles",  picker_state_var(), picker_lga_var() ,".png")
-      },
-      content = function(file) {
-        owd <- setwd(tempdir())
-        on.exit(setwd(owd))
-        saveWidget(indicator_plot(), "temp.html", selfcontained = FALSE)
-        webshot("temp.html", file = file, cliprect = "viewport")
-
-      }
-    )
 
   })
 }

@@ -48,14 +48,7 @@ mod_map_confirmed_diphtheria_cases_penta1_coverage_annual_data_ui <- function(id
                       <div class = tooltipdiv> <p class="tooltiptext">Download the data for this Chart</p> </div>
                      </a>')),
 
-        HTML(paste0('<a id="', ns("downloadChart"), '" class="btn btn-default shiny-download-link download-data-btn download-chart-btn" href="" target="_blank" download>
-                     <i class="fa fa-chart-bar"></i>
-                      <div class = tooltipdiv>
-                          <p class="tooltiptext">
-                              Download this Chart
-                          </p>
-                      </div>
-                     </a>')),
+        screenshotButton(id = ns("penta_map"), filename = ">Chart 7 Confirmed diphtheria cases Penta 1 coverage", download =T, scale = 2, label = "", class = "download-data-btn download-chart-btn"),
 
         withSpinner(leafletOutput(ns("penta_map"), height=440),type = 6, size = 0.4,hide.ui = F)
     )
@@ -311,22 +304,6 @@ mod_map_confirmed_diphtheria_cases_penta1_coverage_annual_data_server <- functio
       },
       contentType = "application/zip"
     )
-
-
-    output$downloadChart <- downloadHandler(
-      filename = function() {
-        paste0("Chart 7 - Penta",   picker_state_var(), picker_year_var() , picker_month_var() ,".png")
-      },
-      content = function(file) {
-
-        owd <- setwd(tempdir())
-        on.exit(setwd(owd))
-
-        saveWidget(mvc_map_leaflet(), "temp.html", selfcontained = FALSE)
-        webshot("temp.html", file = file, cliprect = "viewport")
-      }
-    )
-
 
 
 

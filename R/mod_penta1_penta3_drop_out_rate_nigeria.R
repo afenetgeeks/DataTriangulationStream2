@@ -21,15 +21,7 @@ mod_penta1_penta3_drop_out_rate_nigeria_ui <- function(id){
                       <i class="fa fa-download" aria-hidden="true"></i>
                       <div class = tooltipdiv> <p class="tooltiptext">Download the data for this Chart</p> </div>
                      </a>')),
-
-        HTML(paste0('<a id="', ns("downloadChart"), '" class="btn btn-default shiny-download-link download-data-btn download-chart-btn" href="" target="_blank" download>
-                     <i class="fa fa-chart-bar"></i>
-                      <div class = tooltipdiv>
-                          <p class="tooltiptext">
-                              Download this Chart
-                          </p>
-                      </div>
-                     </a>')),
+        screenshotButton(id = ns("plot"), filename = ">Chart 5 Penta 1 Penta 3 coverage - drop out rate", download =T, scale = 2, label = "", class = "download-data-btn download-chart-btn"),
         withSpinner(plotlyOutput(ns("plot")),type = 6, size = 0.3,hide.ui = F)
 
     )
@@ -74,9 +66,7 @@ mod_penta1_penta3_drop_out_rate_nigeria_server <- function(id,
     indicator_plot <- reactive({
 
 
-      min_rate <- min(chart_data()$`dropout_rate`,na.rm = T)
-
-      max_rate <-  max(chart_data()$`first_dose`,na.rm = T)
+      min_max_rate <- range(chart_data()$`dropout_rate`, na.rm = T)
 
 
       plotM12Dropout <- plot_ly(data = chart_data())
@@ -129,8 +119,7 @@ mod_penta1_penta3_drop_out_rate_nigeria_server <- function(id,
 
 
                                                    yaxis = list(side = 'left',
-                                                                #  range = if( (max_rate <= 100) & (min_rate <= 0)){ c(0 - min_rate - (min_rate/2), 100) }else{ c(min_rate - (min_rate/2) , max_rate+(max_rate/2))},
-                                                                range =  plot_rate_range(min_rate, max_rate),
+                                                                #range =  plot_rate_range( min_max_rate[1],  min_max_rate[2]),
                                                                 overlaying = "y",
                                                                 fixedrange = TRUE,
                                                                 title = '(%)',
@@ -165,20 +154,9 @@ mod_penta1_penta3_drop_out_rate_nigeria_server <- function(id,
         paste0("Chart 5- Penta",  picker_state_var(), picker_lga_var(),".csv")
       },
       content = function(file) {
-        readr::write_csv(chart_data(), file)
-      }
-    )
-
-
-    output$downloadChart <- downloadHandler(
-      filename = function() {
-        paste0("Chart 5- Penta",   picker_state_var(), picker_lga_var(),".png")
-      },
-      content = function(file) {
-        owd <- setwd(tempdir())
-        on.exit(setwd(owd))
-        saveWidget(indicator_plot(), "temp.html", selfcontained = FALSE)
-        webshot("temp.html", file = file, cliprect = "viewport")
+        readr::write_csv(chart_data()|>
+                           dplyr::rename("penta1" = "first dose",
+                                         "penta3" = "later dose"), file)
       }
     )
 

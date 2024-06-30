@@ -24,14 +24,7 @@ mod_national_measles_coverage_different_sources_ui <- function(id){
                       <div class = tooltipdiv> <p class="tooltiptext">Download the data for this Chart</p> </div>
                      </a>')),
 
-        HTML(paste0('<a id="', ns("downloadChart"), '" class="btn btn-default shiny-download-link download-data-btn download-chart-btn" href="" target="_blank" download>
-                     <i class="fa fa-chart-bar"></i>
-                      <div class = tooltipdiv>
-                          <p class="tooltiptext">
-                              Download this chart
-                          </p>
-                      </div>
-                     </a>')),
+   screenshotButton(id = ns("plot"), filename = "Chart6- National MCV coverage by different sources", download =T, scale = 2, label = "", class = "download-data-btn download-chart-btn"),
 
         withSpinner(plotlyOutput(ns("plot")),
                     type = 6, size = 0.3,hide.ui = F),
@@ -65,7 +58,8 @@ mod_national_measles_coverage_different_sources_server <- function(id){
     chart_data <- reactive({
         dplyr::tbl(connection, "mcv_different_sources") %>%
         dplyr::collect() %>%
-        mutate(Year = as.numeric(Year))
+        mutate(Year = as.numeric(Year)) |>
+        dplyr::select(-PMCCS)
 
       })
 
@@ -112,6 +106,15 @@ indicator_plot <- reactive({
                                 '<br><b style="text-align:left;">Year</b>: %{x}<br>'),
           name = "*NICS/MICS (MCV1)")
 
+      # fig <- fig %>%
+      #   add_trace(
+      #     x = ~Year,y = ~`PMCCS`,
+      #     type = "bar",
+      #     color = I("#b3b04c"),
+      #     hovertemplate = paste('<b>Coverage %</b>: %{y:.0f}',
+      #                           '<br><b style="text-align:left;">Year</b>: %{x}<br>'),
+      #     name = "*PMCCS")
+
 
       fig <- fig %>% add_trace(
         x = ~Year,
@@ -148,6 +151,8 @@ indicator_plot <- reactive({
         hovertemplate = paste('<b>Coverage %</b>: %{y:.0f}',
                               '<br><b style="text-align:left;">Year</b>: %{x}<br>'),
         name = "*WUENIC (MCV2)")
+
+
 
 
 
@@ -238,20 +243,6 @@ indicator_plot <- reactive({
       }
     )
 
-
-
-    output$downloadChart <- downloadHandler(
-      filename = function() {
-        paste0("Chart 6- Measlses National Measles Coverage by different sources.png")
-      },
-      content = function(file) {
-        owd <- setwd(tempdir())
-        on.exit(setwd(owd))
-        saveWidget(indicator_plot(), "temp.html", selfcontained = FALSE)
-        webshot("temp.html", file = file, cliprect = "viewport")
-
-      }
-    )
 
   })
 }

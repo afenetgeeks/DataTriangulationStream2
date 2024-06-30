@@ -22,14 +22,7 @@ mod_mcv1_mcv2_drop_out_rate_nigeria_ui <- function(id){
                       <div class = tooltipdiv> <p class="tooltiptext">Download the data for this Chart</p> </div>
                      </a>')),
 
-        HTML(paste0('<a id="', ns("downloadChart"), '" class="btn btn-default shiny-download-link download-data-btn download-chart-btn" href="" target="_blank" download>
-                     <i class="fa fa-chart-bar"></i>
-                      <div class = tooltipdiv>
-                          <p class="tooltiptext">
-                              Download this Chart
-                          </p>
-                      </div>
-                     </a>')),
+        screenshotButton(id = ns("plot"), filename = ">Chart 5 MCV 1 MCV 2 coverage & drop out rate", download =T, scale = 2, label = "", class = "download-data-btn download-chart-btn"),
         withSpinner(plotlyOutput(ns("plot")),type = 6, size = 0.3,hide.ui = F)
 
     )
@@ -77,10 +70,7 @@ mod_mcv1_mcv2_drop_out_rate_nigeria_server <- function(id,
 
     indicator_plot <- reactive({
 
-
-      min_rate <- min(chart_data()$`dropout_rate`,na.rm = T)
-
-      max_rate <-  max(chart_data()$`first_dose`,na.rm = T)
+      min_max_rate <- range(chart_data()$`dropout_rate`, na.rm = T)
 
 
       plotM12Dropout <- plot_ly(data = chart_data())
@@ -133,8 +123,8 @@ mod_mcv1_mcv2_drop_out_rate_nigeria_server <- function(id,
 
 
                                                    yaxis = list(side = 'left',
-                                                               #  range = if( (max_rate <= 100) & (min_rate <= 0)){ c(0 - min_rate - (min_rate/2), 100) }else{ c(min_rate - (min_rate/2) , max_rate+(max_rate/2))},
-                                                                range =  plot_rate_range(min_rate, max_rate),
+
+                                                                #range =  plot_rate_range(min_max_rate[1], min_max_rate[2]),
                                                                  overlaying = "y",
                                                                  fixedrange = TRUE,
                                                                  title = '(%)',
@@ -169,23 +159,11 @@ mod_mcv1_mcv2_drop_out_rate_nigeria_server <- function(id,
         paste0("Chart 5- Measles",  picker_state_var(), picker_lga_var(),".csv")
       },
       content = function(file) {
-        readr::write_csv(chart_data(), file)
+        readr::write_csv(chart_data() |>
+                           dplyr::rename("MCV1" = "first dose",
+                                        "MCV2" = "later dose"), file)
       }
     )
-
-
-    output$downloadChart <- downloadHandler(
-      filename = function() {
-        paste0("Chart 5- Measles",   picker_state_var(), picker_lga_var(),".png")
-      },
-      content = function(file) {
-        owd <- setwd(tempdir())
-        on.exit(setwd(owd))
-        saveWidget(indicator_plot(), "temp.html", selfcontained = FALSE)
-        webshot("temp.html", file = file, cliprect = "viewport")
-      }
-    )
-
 
 
   })

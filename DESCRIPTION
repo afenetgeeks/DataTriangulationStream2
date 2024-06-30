@@ -39,11 +39,11 @@ Imports:
     sf (>= 1.0.15),
     shiny (>= 1.8.0),
     shinycssloaders (>= 1.0.0),
+    shinyscreenshot (>= 0.2.1),
     shinyWidgets (>= 0.8.1),
     stringr (>= 1.5.1),
     utils (>= 4.3.2),
-    waiter (>= 0.2.5),
-    webshot (>= 0.5.5)
+    waiter (>= 0.2.5)
 Suggests: 
     covr,
     knitr,

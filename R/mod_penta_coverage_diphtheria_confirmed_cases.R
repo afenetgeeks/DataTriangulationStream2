@@ -22,14 +22,7 @@ mod_penta_coverage_diphtheria_confirmed_cases_ui <- function(id){
                       <div class = tooltipdiv> <p class="tooltiptext">Download the data for this Chart</p> </div>
                      </a>')),
 
-        HTML(paste0('<a id="', ns("downloadChart"), '" class="btn btn-default shiny-download-link download-data-btn download-chart-btn" href="" target="_blank" download>
-                     <i class="fa fa-chart-bar"></i>
-                      <div class = tooltipdiv>
-                          <p class="tooltiptext">
-                              Download this Chart
-                          </p>
-                      </div>
-                     </a>')),
+        screenshotButton(id = ns("plot"), filename = ">Chart 1 Confirmed diphtheria cases and Penta 1 coverage", download =T, scale = 2, label = "", class = "download-data-btn download-chart-btn"),
 
         withSpinner(plotlyOutput(ns("plot")),type = 6, size = 0.3,hide.ui = F)
 
@@ -64,7 +57,8 @@ mod_penta_coverage_diphtheria_confirmed_cases_server <- function(id,
                         State %in% !!picker_state_var() &
                         LGA %in% !!picker_lga_var())%>% collect() %>%
         mutate(Months = as.Date(str_c(Year, Months, 01,sep = "-"), "%Y-%b-%d"),
-               across(c(Year,State ), as.factor))
+               across(c(Year,State ), as.factor),
+               `Cases (CaseBased)` = ifelse(is.na(`Cases (CaseBased)`), 0, `Cases (CaseBased)`))
     })
 
     # chart_data <-  dplyr::tbl(connection, "diphtheria_alt_denominator")%>%
@@ -109,7 +103,7 @@ mod_penta_coverage_diphtheria_confirmed_cases_server <- function(id,
                                                                '<br><b style="text-align:left;">Month </b>: %{x}<br>')
       )
 
-      plotmcac <- plotmcac %>% add_trace(x = ~ Months,
+      plotmcac <- plotmcac %>% add_trace(x = ~Months,
                                          y = ~ `first dose coverage alt denominator`,
                                          yaxis = 'y2',
                                          color = I("#edb952"),
@@ -120,7 +114,7 @@ mod_penta_coverage_diphtheria_confirmed_cases_server <- function(id,
                                                                '<br><b style="text-align:left;">Month </b>: %{x}<br>'),
                                          name = 'Penta 1 Alt Denominator')
 
-      plotmcac <- plotmcac %>% add_trace(x = ~ Months,
+      plotmcac <- plotmcac %>% add_trace(x = ~Months,
                                          y = ~ `later dose coverage alt denominator`,
                                          yaxis = 'y2',
                                          color = I("#E9D8A6"),
@@ -131,7 +125,7 @@ mod_penta_coverage_diphtheria_confirmed_cases_server <- function(id,
                                                                '<br><b style="text-align:left;">Month </b>: %{x}<br>'),
                                          name = 'Penta 3 Alt Denominator')
 
-      plotmcac <- plotmcac %>% add_trace(x = ~ Months,
+      plotmcac <- plotmcac %>% add_trace(x = ~Months,
                                          y = ~ `Cases (CaseBased)`,
                                          type = 'bar',
                                          color =  I("#00a5cf"),
@@ -160,7 +154,7 @@ mod_penta_coverage_diphtheria_confirmed_cases_server <- function(id,
 
                                       margin = plot_margin(),
 
-                                      yaxis2 = list(range = plot_rate_range(min_max_rate[1], min_max_rate[2]),
+                                      yaxis2 = list(#range = plot_rate_range(min_max_rate[1], min_max_rate[2]),
                                                     rangemode="tozero",
                                                     fixedrange = TRUE,
                                                     side = 'left',
@@ -210,21 +204,14 @@ mod_penta_coverage_diphtheria_confirmed_cases_server <- function(id,
       },
       content = function(file) {
 
-        readr::write_csv(chart_data(), file)
-      }
-    )
-
-
-    output$downloadChart <- downloadHandler(
-      filename = function() {
-        paste0("Chart 1-  Penta", picker_state_var(), picker_lga_var(),".png")
-      },
-      content = function(file) {
-        owd <- setwd(tempdir())
-        on.exit(setwd(owd))
-        saveWidget(indicator_plot(), "temp.html", selfcontained = FALSE)
-        webshot("temp.html", file = file, cliprect = "viewport")
-
+        readr::write_csv(chart_data()|>
+                           dplyr::rename("penta1 coverage" = "first dose coverage",
+                                         "penta3 coverage" = "later dose coverage",
+                                         "penta 1 given" = "later dose given",
+                                         "penta 3 given" = "first dose given",
+                                         "penta 1 alt denominator" = "first dose coverage alt denominator",
+                                         "penta 3 alt denominator" = "later dose coverage alt denominator"
+                           ), file)
       }
     )
 

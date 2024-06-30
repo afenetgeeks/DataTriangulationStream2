@@ -24,14 +24,7 @@ mod_penta_vaccine_stock_analysis_penta_coverage_ui <- function(id){
                       <div class = tooltipdiv> <p class="tooltiptext">Download the data for this Chart</p> </div>
                      </a>')),
 
-        HTML(paste0('<a id="', ns("downloadChart"), '" class="btn btn-default shiny-download-link download-data-btn download-chart-btn" href="" target="_blank" download>
-                     <i class="fa fa-chart-bar"></i>
-                      <div class = tooltipdiv>
-                          <p class="tooltiptext">
-                              Download this Chart
-                          </p>
-                      </div>
-                     </a>')),
+        screenshotButton(id = ns("plot"), filename = ">Chart 3 Penta stock analysis & Penta 1 - 3 given", download =T, scale = 2, label = "", class = "download-data-btn download-chart-btn"),
         withSpinner(plotlyOutput(ns("plot")),type = 6, size = 0.3,hide.ui = F)
 
     )
@@ -95,9 +88,8 @@ mod_penta_vaccine_stock_analysis_penta_coverage_server <- function(id,
                                    color = I("#B37064"),
                                    hovertemplate = paste('<b>Rate %</b>: %{y:.1f}',
                                                          '<br><b style="text-align:left;">Month </b>: %{x}<br>'),
-                                   name = 'Penta Doses Wastage Rate',
-                                   hoverinfo = "text",
-                                   text = ~scales::number(`Doses Wastage Rate`,big.mark = ","))
+                                   name = 'Penta Doses Wastage Rate'
+                                   )
 
       plotM <- plotM %>% add_trace(x = ~Months,
                                    y = ~`Vaccine - Doses Opened (used)`,
@@ -165,7 +157,7 @@ mod_penta_vaccine_stock_analysis_penta_coverage_server <- function(id,
                                  margin = plot_margin(),
 
 
-                                 yaxis = list(range = plot_rate_range(min_max_rate[1], min_max_rate[2]),
+                                 yaxis = list( range = plot_rate_range(min_max_rate[1], min_max_rate[2]),
                                               side = 'left',
                                               title = 'Rate (%)',
                                               showline = TRUE,
@@ -213,19 +205,6 @@ mod_penta_vaccine_stock_analysis_penta_coverage_server <- function(id,
       }
     )
 
-
-    output$downloadChart <- downloadHandler(
-      filename = function() {
-        paste0("Chart 3- Diphtheria",  picker_state_var(), picker_lga_var() ,".png")
-      },
-      content = function(file) {
-        owd <- setwd(tempdir())
-        on.exit(setwd(owd))
-        saveWidget(indicator_plot(), "temp.html", selfcontained = FALSE)
-        webshot("temp.html", file = file, cliprect = "viewport")
-
-      }
-    )
 
   })
 }

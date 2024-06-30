@@ -23,15 +23,8 @@ mod_discrepancy_penta1_opv1_given_by_state_ui <- function(id){
                       <i class="fa fa-download" aria-hidden="true"></i>
                       <div class = tooltipdiv> <p class="tooltiptext">Download the data for this Chart</p> </div>
                      </a>')),
+        screenshotButton(id = ns("plot"), filename = "Chart 4 Co-administered antigen discrepancy Penta 1 - OPV 1 given", download =T, scale = 2, label = "", class = "download-data-btn download-chart-btn"),
 
-        HTML(paste0('<a id="', ns("downloadChart"), '" class="btn btn-default shiny-download-link download-data-btn download-chart-btn" href="" target="_blank" download>
-                     <i class="fa fa-chart-bar"></i>
-                      <div class = tooltipdiv>
-                          <p class="tooltiptext">
-                              Download this Chart
-                          </p>
-                      </div>
-                     </a>')),
         withSpinner(plotlyOutput(ns("plot")),type = 6, size = 0.3,hide.ui = F)
 
     )
@@ -172,21 +165,9 @@ mod_discrepancy_penta1_opv1_given_by_state_server <- function(id,
         paste0("Chart 4 -Penta 1 - OPV1 discrepancy", picker_state_var(), picker_lga_var() ,".csv")
       },
       content = function(file) {
-        readr::write_csv(chart_data(), file)
-      }
-    )
-
-
-    output$downloadChart <- downloadHandler(
-      filename = function() {
-        paste0("Chart 4 - Penta 1- OPV1 discrepancy", picker_state_var(), picker_lga_var() ,".png")
-      },
-      content = function(file) {
-        owd <- setwd(tempdir())
-        on.exit(setwd(owd))
-        saveWidget(indicator_plot(), "temp.html", selfcontained = FALSE)
-        webshot("temp.html", file = file, cliprect = "viewport")
-
+        readr::write_csv(chart_data()|>
+                           dplyr::rename("penta1" = "main_vaccine_given",
+                                         "opv1" = "other_vaccine_given"), file)
       }
     )
 

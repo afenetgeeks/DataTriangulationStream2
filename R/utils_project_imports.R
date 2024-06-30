@@ -21,9 +21,9 @@
 #' @importFrom leaflet leaflet leafletOutput renderLeaflet colorFactor addProviderTiles setView addPolygons addMarkers labelOptions addLegend markerClusterOptions
 #' @importFrom leaflet.extras addResetMapButton
 #' @importFrom htmlwidgets saveWidget
-#' @importFrom webshot webshot
 #' @importFrom utils write.csv zip
+#' @importFrom shinyscreenshot screenshotButton
 
 
-#pkgload::pkg_path()
-#webshot::install_phantomjs(version = "2.1.1", baseURL = "https://bitbucket.org/ariya/phantomjs/downloads/", force = FALSE)
+
+
